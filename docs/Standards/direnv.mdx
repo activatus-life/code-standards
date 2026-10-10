@@ -1,0 +1,249 @@
+---
+sidebar_position: 4
+---
+
+# direnv + nvm
+
+Automatically switch to the project's Node.js version when you `cd` into the repository. No manual `nvm use` required.
+
+## How it works
+
+Two files work together:
+
+| File | Purpose |
+| --- | --- |
+| `.nvmrc` | Declares the required Node.js major version (e.g. `20`) |
+| `.envrc` | Loaded by direnv on `cd`; sources nvm and activates the declared version |
+
+When you enter the project directory direnv runs `.envrc`, which installs the declared Node version (if missing) and activates it for your shell session. Leaving the directory restores the previous environment automatically.
+
+## Installation
+
+### macOS
+
+**Homebrew** (recommended):
+
+```bash
+brew install direnv nvm
+```
+
+Homebrew installs nvm to a prefix path rather than `$HOME/.nvm`. The `.envrc` handles this automatically by falling back to `$(brew --prefix nvm)/nvm.sh` when `$NVM_DIR/nvm.sh` is not found.
+
+Add to the **end** of `~/.zshrc` (or `~/.bashrc` for bash):
+
+```bash
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+# direnv
+eval "$(direnv hook zsh)"   # replace zsh with bash if needed
+```
+
+**Manual nvm install** (alternative):
+
+```bash
+# Install nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+
+# Install direnv
+brew install direnv
+```
+
+The install script appends the nvm bootstrap to your shell profile automatically.
+
+Then add the direnv hook to the **end** of `~/.zshrc`:
+
+```bash
+eval "$(direnv hook zsh)"
+```
+
+Restart your shell (or `source ~/.zshrc`) after editing the profile.
+
+---
+
+### Linux
+
+```bash
+# Install nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+```
+
+The script appends the following to your `~/.bashrc` (or `~/.zshrc`):
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+```
+
+Install direnv using your package manager:
+
+```bash
+# Debian / Ubuntu
+sudo apt install direnv
+
+# Arch
+sudo pacman -S direnv
+
+# Fedora
+sudo dnf install direnv
+
+# Or via the official install script:
+curl -sfL https://direnv.net/install.sh | bash
+```
+
+Add the direnv hook to the **end** of `~/.bashrc` (or `~/.zshrc`):
+
+```bash
+eval "$(direnv hook bash)"   # replace bash with zsh if needed
+```
+
+Restart your shell after editing the profile.
+
+---
+
+### Windows
+
+direnv and nvm are Unix tools. On Windows the recommended path is **WSL 2**. A Git Bash alternative is available for teams that cannot use WSL.
+
+#### Option A — WSL 2 (recommended)
+
+WSL 2 provides a full Linux environment. Follow the [Linux instructions](#linux) inside your WSL shell. Your editor (VS Code, JetBrains) should be configured to open projects inside WSL for the environment to be active.
+
+Install WSL 2 if you haven't already:
+
+```powershell
+# Run in PowerShell (Administrator)
+wsl --install
+```
+
+Then open a WSL terminal and follow the [Linux setup](#linux) above.
+
+#### Option B — Git Bash + nvm-windows
+
+If WSL is not available, direnv and [nvm-windows](https://github.com/coreybutler/nvm-windows) can be used together in Git Bash.
+
+**1. Install nvm-windows**
+
+Download and run the installer from the [nvm-windows releases page](https://github.com/coreybutler/nvm-windows/releases). This installs `nvm.exe` and adds it to `PATH`.
+
+nvm-windows exposes `nvm` as an executable in Git Bash — no `nvm.sh` sourcing is needed. The `.envrc` detects this automatically.
+
+**2. Install direnv**
+
+Download the latest Windows binary from the [direnv releases page](https://github.com/direnv/direnv/releases) (`direnv.windows-amd64.exe`), rename it to `direnv.exe`, and place it somewhere on your `PATH` (e.g. `C:\Program Files\direnv\`).
+
+**3. Hook direnv into Git Bash**
+
+Add to `~/.bashrc` inside Git Bash:
+
+```bash
+eval "$(direnv hook bash)"
+```
+
+Restart Git Bash after editing.
+
+:::note
+
+nvm-windows reads `.nvmrc` when a version is passed explicitly. The `.envrc` in this project uses `nvm install "$version"` and `nvm use "$version"` (reading from `.nvmrc`), which is compatible with both nvm and nvm-windows.
+
+:::
+
+---
+
+## After cloning
+
+After cloning a project that ships `.envrc`, run once:
+
+```bash
+direnv allow
+```
+
+direnv prompts for this on every new `.envrc` it has not seen before — this is a security feature that prevents untrusted scripts from running automatically. Re-run `direnv allow` whenever `.envrc` changes.
+
+---
+
+## Files
+
+### `.nvmrc`
+
+Contains just the Node.js major version:
+
+```text
+20
+```
+
+Update this when the project requires a new minimum Node version.
+
+### `.envrc`
+
+```bash
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+# Source the nvm shell function.
+# Handles: manual install ($HOME/.nvm), Homebrew on macOS, and WSL.
+# On Windows with nvm-windows, nvm is already an executable in PATH — no sourcing needed.
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+elif [ "$(uname -s 2>/dev/null)" = "Darwin" ] && command -v brew &>/dev/null; then
+  _nvm_sh="$(brew --prefix nvm 2>/dev/null)/nvm.sh"
+  [ -s "$_nvm_sh" ] && . "$_nvm_sh"
+  unset _nvm_sh
+fi
+
+if [ -f ".nvmrc" ]; then
+  _node_version="$(tr -d '[:space:]' < .nvmrc)"
+  nvm install "$_node_version"
+  nvm use "$_node_version"
+  unset _node_version
+fi
+
+# Ensure the pnpm shim declared in package.json#packageManager is active via Corepack.
+# `corepack enable` is idempotent — safe to run on every cd.
+if command -v corepack &>/dev/null; then
+  corepack enable pnpm
+fi
+```
+
+The script handles four environments:
+
+| Environment | How nvm is loaded |
+| --- | --- |
+| macOS — manual install | `$HOME/.nvm/nvm.sh` sourced directly |
+| macOS — Homebrew | `$(brew --prefix nvm)/nvm.sh` sourced as fallback |
+| Linux / WSL 2 | `$HOME/.nvm/nvm.sh` sourced directly |
+| Windows — Git Bash + nvm-windows | `nvm` is already in `PATH` as an executable; no sourcing needed |
+
+The version is read explicitly from `.nvmrc` (stripping whitespace) and passed to both `nvm install` and `nvm use`, making the script compatible with both nvm and nvm-windows.
+
+`corepack enable pnpm` installs a global shim so that running `pnpm` always delegates to the exact version declared in `package.json#packageManager` (e.g. `pnpm@9.15.0`). It is idempotent — safe to run on every `cd`. Corepack ships with Node.js 16.9+ so no separate install is required. If `corepack` is not in `PATH`, the block is skipped safely.
+
+:::caution[Avoid `corepack use pnpm`]
+
+`corepack use pnpm` (without an explicit version) writes the **latest** pnpm release into `package.json#packageManager`, silently upgrading the project. Never use it in `.envrc`.
+
+:::
+
+## `.gitignore`
+
+Add the direnv cache directory — it contains compiled environment snapshots and should never be committed:
+
+```text
+.direnv/
+```
+
+---
+
+## Troubleshooting
+
+**`direnv: command not found`** — direnv is not installed or not on `PATH`. Follow the installation steps for your platform above.
+
+**`nvm: command not found` inside `.envrc`** — The `.envrc` could not locate `nvm.sh`. Check:
+
+- Manual install: confirm `$HOME/.nvm/nvm.sh` exists.
+- Homebrew (macOS): confirm `brew list nvm` shows nvm is installed.
+- The `NVM_DIR` environment variable is not pointing somewhere unexpected.
+
+**`direnv` not activating on `cd`** — The shell hook is missing or in the wrong position. Make sure `eval "$(direnv hook zsh)"` (or bash) appears at the very **end** of your shell profile, after all other tool initialisations.
+
+**`nvm use` reports wrong version on Windows** — Ensure nvm-windows v1.1.10 or later is installed. Earlier versions do not reliably accept explicit version arguments.

@@ -1,0 +1,8 @@
+/**
+ * Global style overrides.
+ * The reference design runs the stock Infima palette, so nothing is overridden
+ * here yet. Drop brand colours in below when they're ready, e.g.
+ *
+ * :root { --ifm-color-primary: #3578e5; }
+ * [data-theme='dark'] { --ifm-color-primary: #72a1ed; }
+ */

@@ -1,0 +1,103 @@
+import js from "@eslint/js";
+import prettier from "eslint-config-prettier";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
+import { flatConfigs as importX } from "eslint-plugin-import-x";
+import unicorn from "eslint-plugin-unicorn";
+import globals from "globals";
+import { configs as typescript } from "typescript-eslint";
+
+export default [
+  { ignores: ["dist/", "build/", "coverage/"] },
+  js.configs.recommended,
+  importX.recommended,
+  importX.typescript,
+  unicorn.configs.recommended,
+  ...typescript.recommended,
+  {
+    languageOptions: { globals: { ...globals.node } },
+    settings: {
+      "import-x/resolver-next": [createTypeScriptImportResolver()],
+    },
+    rules: {
+      "max-depth": ["error", 3],
+      "max-lines": ["error", { max: 300, skipBlankLines: true, skipComments: true }],
+      "no-nested-ternary": "error",
+      "no-magic-numbers": [
+        "error",
+        {
+          ignore: [-1, 0, 1],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          enforceConst: true,
+        },
+      ],
+      "no-restricted-syntax": [
+        "error",
+        { selector: "ClassDeclaration", message: "Use functions, not classes." },
+        { selector: "ClassExpression", message: "Use functions, not classes." },
+        {
+          selector: "FunctionDeclaration[params.length>1]",
+          message: "Use a single object parameter when a function needs more than one value.",
+        },
+        {
+          selector:
+            "VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
+          message: "Use a single object parameter when a function needs more than one value.",
+        },
+      ],
+      "import-x/no-default-export": "error",
+      "unicorn/filename-case": ["error", { cases: { camelCase: true, pascalCase: true } }],
+      "unicorn/name-replacements": [
+        "error",
+        { replacements: { props: false, ref: false, params: false, utils: false } },
+      ],
+    },
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      "no-undef": "off",
+      "no-magic-numbers": "off",
+      "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          selector: ["typeAlias", "interface"],
+          format: ["PascalCase"],
+          custom: { regex: "(Props|Type)$", match: true },
+        },
+      ],
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-magic-numbers": [
+        "error",
+        {
+          ignore: [-1, 0, 1],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          enforceConst: true,
+          ignoreEnums: true,
+          ignoreNumericLiteralTypes: true,
+        },
+      ],
+      "@typescript-eslint/no-non-null-assertion": "error",
+    },
+  },
+  {
+    files: ["**/*.test.{ts,tsx}"],
+    rules: {
+      "max-lines": "off",
+      "no-magic-numbers": "off",
+      "@typescript-eslint/no-magic-numbers": "off",
+    },
+  },
+  {
+    files: ["**/*.config.{js,mjs,ts}", "**/*.stories.tsx"],
+    rules: { "import-x/no-default-export": "off" },
+  },
+  {
+    files: ["**/*.config.{js,mjs,ts}"],
+    rules: { "unicorn/no-top-level-side-effects": "off" },
+  },
+  prettier,
+];
