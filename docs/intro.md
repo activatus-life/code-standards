@@ -15,6 +15,7 @@ This site documents the shared code standards used across all Activatus projects
 | Readable Code | [Readability rules](/Standards/readable-code) | File length, naming, single-purpose functions and tests |
 | Documentation | [Docs standard](/Standards/documentation) | How project docs are written and shown at `/docs` |
 | ESLint | [`eslint.config.mjs`](/Standards/eslint) | Linting rules for JS/TS/React/Next.js |
+| Fixing Lint Errors | [Error guide](/Standards/lint-errors) | What each lint error means and how to fix it |
 | Prettier | [`prettier.config.js`](/Standards/prettier) | Code formatting |
 | Stylelint | [`stylelint.config.mjs`](/Standards/stylelint) | Linting rules for CSS/SCSS/CSS Modules |
 | EditorConfig | [`.editorconfig`](/Standards/editorconfig) | Editor-level whitespace rules |

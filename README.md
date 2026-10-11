@@ -27,16 +27,17 @@ You'll need **Node 20+** and **pnpm**.
 ```bash
 pnpm install
 pnpm start
+pnpm serve
 ```
 
 That fires up the site locally with hot reload. Easy as.
 
-| Command | What it does |
-| --- | --- |
-| `pnpm start` | 🔥 Dev server with hot reload |
-| `pnpm build` | 📦 Builds the static site into `build/` |
-| `pnpm serve` | 👀 Serves the built site so you can check it |
-| `pnpm typecheck` | 🔍 Runs TypeScript over the site config |
+| Command          | What it does                                 |
+| ---------------- | -------------------------------------------- |
+| `pnpm start`     | 🔥 Dev server with hot reload                |
+| `pnpm build`     | 📦 Builds the static site into `build/`      |
+| `pnpm serve`     | 👀 Serves the built site so you can check it |
+| `pnpm typecheck` | 🔍 Runs TypeScript over the site config      |
 
 > 🔎 **Search only works on the built site.** Run `pnpm build` then `pnpm serve` if you want to test it. It won't show up in `pnpm start`, so don't go thinking you've broken it.
 
@@ -46,13 +47,13 @@ That fires up the site locally with hot reload. Easy as.
 
 ## 📚 What's in the box
 
-| Section | What you'll find |
-| --- | --- |
-| 📋 **Templates** | Ready-to-copy `AGENTS.md`, ESLint, Prettier, Stylelint and friends |
-| 🧭 **Guides** | Setting up a new project, dragging an old one up to scratch, and how design becomes code |
-| 📏 **Standards** | Readable code, linting, formatting, styling, commits, the tech stack and AI agent rules |
-| 🏗️ **Structure** | Folders, components, naming, imports and API routes |
-| 🧩 **Component Reference** | Every standard component and its props, so each project builds them the same way |
+| Section                    | What you'll find                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------- |
+| 📋 **Templates**           | Ready-to-copy `AGENTS.md`, ESLint, Prettier, Stylelint and friends                       |
+| 🧭 **Guides**              | Setting up a new project, dragging an old one up to scratch, and how design becomes code |
+| 📏 **Standards**           | Readable code, linting, formatting, styling, commits, the tech stack and AI agent rules  |
+| 🏗️ **Structure**           | Folders, components, naming, imports and API routes                                      |
+| 🧩 **Component Reference** | Every standard component and its props, so each project builds them the same way         |
 
 ---
 
@@ -64,6 +65,9 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 
 - 📄 **No file over 300 lines.** If it's longer, it's doing two jobs. Split it. (Test files get a leave pass.)
 - 🗣️ **Names are real English words.** `button`, not `btn`. `error`, not `e`. We're not paying by the letter.
+- 🔒 **Always `const`.** Need `let`? Fine, but leave a comment saying why, or the linter knocks it back.
+- 🏹 **Arrow functions everywhere.** `const Button = () => {}`. The word `function` is clutter, so we don't use it.
+- 🔄 **No circular imports. Ever.** If two files import each other, pull the shared bit into a third file.
 - 🎯 **A function does one thing.** If you need the word "and" to describe it, it's two functions.
 - 🧪 **Every function and component gets a test file.** One test file, one thing tested. No test, not finished.
 - 🚫 **Functions, never classes.** Not even a little one.

@@ -168,6 +168,16 @@ Every project uses [Commitlint](https://commitlint.io) with a [Husky](https://ty
 
 After that, every commit runs the `commit-msg` hook.
 
+### Lint before every commit
+
+Add a second hook, [`.husky/pre-commit`](/templates#husky), so code that breaks the standards cannot be committed:
+
+```text title=".husky/pre-commit"
+pnpm lint
+```
+
+If `pnpm lint` reports an error, the commit is refused. See [Fixing Lint Errors](/Standards/lint-errors).
+
 ### Configuration
 
 The configuration is in `.commitlintrc.json`:

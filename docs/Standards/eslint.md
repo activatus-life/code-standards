@@ -20,6 +20,7 @@ Each config builds on the one above it — React adds to TypeScript, which adds 
 
 ```bash
 pnpm add -D eslint @eslint/js globals \
+  @eslint-community/eslint-plugin-eslint-comments \
   eslint-config-prettier \
   eslint-plugin-import-x \
   eslint-plugin-unicorn
@@ -57,6 +58,7 @@ Create `eslint.config.mjs` in your project root.
 
 ```js title="eslint.config.mjs"
 import js from "@eslint/js";
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
@@ -65,14 +67,20 @@ import globals from "globals";
 export default [
   { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
   js.configs.recommended,
+  comments.recommended,
   importX.recommended,
   unicorn.configs.recommended,
   {
     languageOptions: { globals: { ...globals.node } },
     rules: {
+      "@eslint-community/eslint-comments/require-description": "error",
+      "func-style": ["error", "expression"],
       "max-depth": ["error", 3],
       "max-lines": ["error", { max: 300, skipBlankLines: true, skipComments: true }],
       "no-nested-ternary": "error",
+      "no-var": "error",
+      "prefer-arrow-callback": "error",
+      "prefer-const": "error",
       "no-magic-numbers": [
         "error",
         {
@@ -86,6 +94,12 @@ export default [
         "error",
         { selector: "ClassDeclaration", message: "Use functions, not classes." },
         { selector: "ClassExpression", message: "Use functions, not classes." },
+        { selector: "VariableDeclarator > FunctionExpression", message: "Use an arrow function." },
+        {
+          selector: "VariableDeclaration[kind='let']",
+          message:
+            "Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+        },
         {
           selector: "FunctionDeclaration[params.length>1]",
           message: "Use a single object parameter when a function needs more than one value.",
@@ -96,7 +110,10 @@ export default [
           message: "Use a single object parameter when a function needs more than one value.",
         },
       ],
+      "import-x/no-cycle": "error",
       "import-x/no-default-export": "error",
+      "no-use-before-define": "error",
+      "unicorn/default-export-style": "off",
       "unicorn/filename-case": ["error", { cases: { camelCase: true, pascalCase: true } }],
       "unicorn/name-replacements": [
         "error",
@@ -120,6 +137,7 @@ export default [
 
 ```js title="eslint.config.mjs"
 import js from "@eslint/js";
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
@@ -130,6 +148,7 @@ import { configs as typescript } from "typescript-eslint";
 export default [
   { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
   js.configs.recommended,
+  comments.recommended,
   importX.recommended,
   importX.typescript,
   unicorn.configs.recommended,
@@ -140,9 +159,14 @@ export default [
       "import-x/resolver-next": [createTypeScriptImportResolver()],
     },
     rules: {
+      "@eslint-community/eslint-comments/require-description": "error",
+      "func-style": ["error", "expression"],
       "max-depth": ["error", 3],
       "max-lines": ["error", { max: 300, skipBlankLines: true, skipComments: true }],
       "no-nested-ternary": "error",
+      "no-var": "error",
+      "prefer-arrow-callback": "error",
+      "prefer-const": "error",
       "no-magic-numbers": [
         "error",
         {
@@ -156,6 +180,12 @@ export default [
         "error",
         { selector: "ClassDeclaration", message: "Use functions, not classes." },
         { selector: "ClassExpression", message: "Use functions, not classes." },
+        { selector: "VariableDeclarator > FunctionExpression", message: "Use an arrow function." },
+        {
+          selector: "VariableDeclaration[kind='let']",
+          message:
+            "Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+        },
         {
           selector: "FunctionDeclaration[params.length>1]",
           message: "Use a single object parameter when a function needs more than one value.",
@@ -166,7 +196,10 @@ export default [
           message: "Use a single object parameter when a function needs more than one value.",
         },
       ],
+      "import-x/no-cycle": "error",
       "import-x/no-default-export": "error",
+      "no-use-before-define": "error",
+      "unicorn/default-export-style": "off",
       "unicorn/filename-case": ["error", { cases: { camelCase: true, pascalCase: true } }],
       "unicorn/name-replacements": [
         "error",
@@ -179,6 +212,7 @@ export default [
     rules: {
       "no-undef": "off",
       "no-magic-numbers": "off",
+      "no-use-before-define": "off",
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/naming-convention": [
@@ -202,6 +236,7 @@ export default [
         },
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
+      "@typescript-eslint/no-use-before-define": "error",
     },
   },
   {
@@ -253,6 +288,10 @@ export default [
     rules: {
       // ...
       // 5. Add the React rules
+      "react/function-component-definition": [
+        "error",
+        { namedComponents: "arrow-function", unnamedComponents: "arrow-function" },
+      ],
       "react/jsx-no-bind": "error",
       "react/no-multi-comp": "error",
     },
@@ -272,6 +311,7 @@ Set `settings.react.version` to the project's React version rather than `"detect
 `eslint-config-next` already brings the React, React Hooks and TypeScript rules, so it replaces the `js` and `typescript-eslint` presets rather than adding to them. Default exports are allowed in the files where Next.js requires them (`page.tsx`, `layout.tsx` and so on):
 
 ```js title="eslint.config.mjs"
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import nextVitals from "eslint-config-next/core-web-vitals";
@@ -284,6 +324,7 @@ export default [
   { ignores: [".next/", "out/", "build/", "coverage/", "next-env.d.ts", "**/vendor/**"] },
   ...nextVitals,
   ...nextTypescript,
+  comments.recommended,
   importX.recommended,
   importX.typescript,
   unicorn.configs.recommended,
@@ -294,9 +335,14 @@ export default [
       "import-x/resolver-next": [createTypeScriptImportResolver()],
     },
     rules: {
+      "@eslint-community/eslint-comments/require-description": "error",
+      "func-style": ["error", "expression"],
       "max-depth": ["error", 3],
       "max-lines": ["error", { max: 300, skipBlankLines: true, skipComments: true }],
       "no-nested-ternary": "error",
+      "no-var": "error",
+      "prefer-arrow-callback": "error",
+      "prefer-const": "error",
       "no-magic-numbers": [
         "error",
         {
@@ -310,6 +356,12 @@ export default [
         "error",
         { selector: "ClassDeclaration", message: "Use functions, not classes." },
         { selector: "ClassExpression", message: "Use functions, not classes." },
+        { selector: "VariableDeclarator > FunctionExpression", message: "Use an arrow function." },
+        {
+          selector: "VariableDeclaration[kind='let']",
+          message:
+            "Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+        },
         {
           selector: "FunctionDeclaration[params.length>1]",
           message: "Use a single object parameter when a function needs more than one value.",
@@ -320,11 +372,18 @@ export default [
           message: "Use a single object parameter when a function needs more than one value.",
         },
       ],
+      "import-x/no-cycle": "error",
       "import-x/no-default-export": "error",
+      "no-use-before-define": "error",
+      "unicorn/default-export-style": "off",
       "unicorn/filename-case": ["error", { cases: { camelCase: true, pascalCase: true } }],
       "unicorn/name-replacements": [
         "error",
         { replacements: { props: false, ref: false, params: false, utils: false } },
+      ],
+      "react/function-component-definition": [
+        "error",
+        { namedComponents: "arrow-function", unnamedComponents: "arrow-function" },
       ],
       "react/jsx-no-bind": "error",
       "react/no-multi-comp": "error",
@@ -335,6 +394,7 @@ export default [
     rules: {
       "no-undef": "off",
       "no-magic-numbers": "off",
+      "no-use-before-define": "off",
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/naming-convention": [
@@ -358,6 +418,7 @@ export default [
         },
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
+      "@typescript-eslint/no-use-before-define": "error",
     },
   },
   {
@@ -427,6 +488,7 @@ Add scripts to `package.json`:
 | Plugin | Purpose |
 | --- | --- |
 | `@eslint/js` | ESLint core recommended rules |
+| `@eslint-community/eslint-plugin-eslint-comments` | Requires every `eslint-disable` comment to give a reason |
 | `eslint-plugin-import-x` | Import checks: unresolved paths, duplicates, no default exports |
 | `eslint-plugin-unicorn` | Opinionated JS best-practice rules |
 | `eslint-config-prettier` | Disables rules that conflict with Prettier |
@@ -468,7 +530,25 @@ If a vendored package lives somewhere else and cannot be moved, add its path to 
 
 ## Key rule decisions
 
-Most of these enforce the [Readable Code](/Standards/readable-code) rules.
+Most of these enforce the [Readable Code](/Standards/readable-code) rules. For what each error means and how to fix it, see [Fixing Lint Errors](/Standards/lint-errors).
+
+### `func-style`, `prefer-arrow-callback`: arrow functions everywhere
+
+Every function is an arrow function. See [Readable Code](/Standards/readable-code#arrow-functions-everywhere).
+
+- `func-style: expression` rejects `function name() {}` declarations.
+- `prefer-arrow-callback` rejects `function` callbacks.
+- `no-restricted-syntax` rejects `const name = function () {}`.
+- `react/function-component-definition` requires components to be arrow functions (React configs).
+- `unicorn/default-export-style` is switched off. It demands `export default function`, which contradicts this rule in the Next.js files that need a default export.
+
+### `no-restricted-syntax`, `prefer-const`, `no-var`: always `const`
+
+Variables are declared with `const`. `let` is an error unless the line carries a disable comment with a reason; `var` is never allowed. See [Readable Code](/Standards/readable-code#always-const).
+
+### `@eslint-community/eslint-comments/require-description`
+
+Every `eslint-disable` comment must say why, after ` -- `. A rule is never switched off silently. See [the only allowed exceptions](/Standards/lint-errors#the-only-allowed-exceptions).
 
 ### `max-lines: 300`
 
@@ -488,10 +568,18 @@ Numbers other than `-1`, `0` and `1` must be named constants. Test files are exe
 
 ### `no-restricted-syntax`: no classes, one parameter
 
-Two things are banned by syntax:
+These are banned by syntax, along with `function` expressions (above):
 
 - **Class declarations and class expressions.** See [Readable Code](/Standards/readable-code#functions-never-classes).
 - **Functions you define with more than one parameter.** Use a single object parameter. Inline callbacks whose signature is set by someone else — `array.reduce((total, item) => …)`, event handlers — are not affected. See [Readable Code](/Standards/readable-code#one-parameter-always-an-object-for-more).
+
+### `import-x/no-cycle`: no circular imports
+
+A file may never import a file that imports it back, directly or through a chain of other files. See [Import safety](/Structure/import-organization#import-safety).
+
+### `no-use-before-define`
+
+A function or variable is defined above the code that uses it. TypeScript files use `@typescript-eslint/no-use-before-define`. See [Import safety](/Structure/import-organization#import-safety).
 
 ### `import-x/no-default-export`
 
@@ -499,7 +587,7 @@ Named exports only. Default exports are allowed where a tool requires them: conf
 
 ### Import order is not linted
 
-There is deliberately no import-order rule. Follow the [Import Organization](/Structure/import-organization) pattern for consistency, but ESLint will not complain about it.
+There is deliberately no import-**order** rule (circular imports are a different matter — see above). Follow the [Import Organization](/Structure/import-organization) pattern for consistency, but ESLint will not complain about it.
 
 ### `unicorn/filename-case: camelCase or PascalCase`
 

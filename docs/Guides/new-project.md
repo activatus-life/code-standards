@@ -69,7 +69,7 @@ Write the [project scope](/Standards/documentation#-the-flow) before any code.
 
 ### 9. Add commit message checks
 
-Install Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
+Install Commitlint and the two Husky hooks: one checks the commit message, the other runs `pnpm lint` so code that breaks the standards cannot be committed. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
 
 ### 10. Add CI checks
 

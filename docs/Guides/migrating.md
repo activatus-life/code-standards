@@ -81,7 +81,7 @@ Move the project's existing documentation into the standard [`docs/` folders](/S
 
 ## Stage 7 — Commit message checks
 
-Add Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
+Add Commitlint and the two Husky hooks: one checks the commit message, the other runs `pnpm lint` before every commit. Add the lint hook **last**, once the project passes `pnpm lint`. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
 
 ## Tips
 

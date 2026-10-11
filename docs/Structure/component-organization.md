@@ -74,13 +74,13 @@ The main component implementation with JSX and logic.
 // Button.tsx
 import type { ButtonProps } from './types';
 
-export function Button({ children, variant, size, ...props }: ButtonProps) {
+export const Button = ({ children, variant, size, ...props }: ButtonProps) => {
   return (
     <button className={`btn btn-${variant}`} {...props}>
       {children}
     </button>
   );
-}
+};
 ```
 
 ### 🧪 `Component.test.tsx`
@@ -159,7 +159,7 @@ Every component file is laid out in the same order, so a reader always knows whe
 | # | Section | Rule |
 | --- | --- | --- |
 | 1 | Imports | Ordered per [Import Organization](/Structure/import-organization) |
-| 2 | Component | The component is the first thing in the file after the imports. Always a function — [never a class](/Standards/readable-code#functions-never-classes) |
+| 2 | Component | The component is the first thing in the file after the imports. Always an [arrow function](/Standards/readable-code#arrow-functions-everywhere) — [never a class](/Standards/readable-code#functions-never-classes) |
 | 3 | Variable declarations | Plain values worked out from props |
 | 4 | State declarations | `useState`, `useReducer`, `useRef` |
 | 5 | Calculated values | Wrapped in `useMemo` |
@@ -181,7 +181,7 @@ import { UserListItem } from "./userListItem";
 import { filterUsersByName } from "./utils";
 
 // 2. The component is the first thing in the file
-export function UserListClient({ users, onUserSelect }: UserListClientProps) {
+export const UserListClient = ({ users, onUserSelect }: UserListClientProps) => {
   // 3. Variable declarations
   const totalUserCount = users.length;
 
@@ -212,7 +212,7 @@ export function UserListClient({ users, onUserSelect }: UserListClientProps) {
       </ul>
     </section>
   );
-}
+};
 ```
 
 ### Keep the UI file clean
@@ -240,11 +240,11 @@ interface FilterUsersByNameProps {
   searchText: string;
 }
 
-export function filterUsersByName({ users, searchText }: FilterUsersByNameProps) {
+export const filterUsersByName = ({ users, searchText }: FilterUsersByNameProps) => {
   const lowerCaseSearchText = searchText.toLowerCase();
 
   return users.filter((user) => user.name.toLowerCase().includes(lowerCaseSearchText));
-}
+};
 ```
 
 Each function folder has an `index.ts`, and so does the `utils/` folder — both are one line:
@@ -287,7 +287,7 @@ interface UserListItemProps {
   onUserSelect?: (user: UserType) => void;
 }
 
-export function UserListItem({ user, onUserSelect }: UserListItemProps) {
+export const UserListItem = ({ user, onUserSelect }: UserListItemProps) => {
   const handleClick = useCallback(() => {
     onUserSelect?.(user);
   }, [onUserSelect, user]);
@@ -297,7 +297,7 @@ export function UserListItem({ user, onUserSelect }: UserListItemProps) {
       <button onClick={handleClick}>{user.name}</button>
     </li>
   );
-}
+};
 ```
 
 ### Use `useMemo` and `useCallback`
@@ -328,11 +328,11 @@ import { getUsers } from "@/services/userService";
 
 import { UserListClient } from "./UserListClient";
 
-export async function UserList() {
+export const UserList = async () => {
   const users = await getUsers();
 
   return <UserListClient users={users} />;
-}
+};
 ```
 
 ```tsx title="UserListClient.tsx"
@@ -342,10 +342,10 @@ import { useState } from "react";
 
 import type { UserListClientProps } from "./types";
 
-export function UserListClient({ users }: UserListClientProps) {
+export const UserListClient = ({ users }: UserListClientProps) => {
   const [searchText, setSearchText] = useState("");
   // ...
-}
+};
 ```
 
 ### Rules
@@ -437,14 +437,19 @@ export type { CardProps } from "./types";
 
 ### Within the Same Folder
 
+Inside a component's folder, import files directly. **Never import through the folder's own `index.ts`**, and never import the parent component from a sub-component — both create a [circular import](/Structure/import-organization#import-safety).
+
 ```typescript
-// CardBody.tsx
-import { Card } from "../card";
+// card/Card.tsx — the parent imports its sub-components
+import { CardBody } from "./cardBody";
+import { CardHeader } from "./cardHeader";
+import type { CardProps } from "./types";
+
+// card/cardBody/CardBody.tsx — a sub-component imports types by file
 import type { CardProps } from "../types";
 
-// Or import from main index:
-import { Card } from ".";
-import type { CardProps } from "./types";
+// ❌ Bad — a sub-component importing its parent through the index
+import { Card } from "..";
 ```
 
 ### From Other Components
@@ -456,8 +461,9 @@ import { Card, CardHeader, CardBody } from "@/components/ui/card";
 
 ### Best Practices
 
-- ✅ Use the `index.ts` export for cleaner imports
-- ✅ Import from the folder, not the file
+- ✅ From **outside** a folder, import through its `index.ts` — the folder, not the file
+- ✅ From **inside** a folder, import the file directly — never the folder's own `index.ts`
+- ❌ Never import a parent component from one of its sub-components
 - ✅ Use path aliases (`@/`) for consistency
 - ❌ Avoid deep relative imports (`../../../Button`)
 

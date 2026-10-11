@@ -29,14 +29,14 @@ sidebar-nav.tsx
 
 ```tsx
 ✅ Good
-function UserProfile() { }
+const UserProfile = () => { };
 const DataTable = () => { };
-function SubmitButton() { }
+const SubmitButton = () => { };
 
 ❌ Bad
-function userProfile() { }
+const userProfile = () => { };
 const dataTable = () => { }
-function submit_button() { }
+const submit_button = () => { };
 ```
 
 ### Utilities
@@ -222,20 +222,22 @@ const item_count = 10;
 
 ### Functions
 
+Every function is an [arrow function](/Standards/readable-code#arrow-functions-everywhere).
+
 **Use camelCase** with descriptive verbs:
 
 ```ts
 ✅ Good
-function getUserData() { }
-function validateEmail() { }
-function calculateTotal() { }
-function handleSubmit() { }
+const getUserData = () => { };
+const validateEmail = () => { };
+const calculateTotal = () => { };
+const handleSubmit = () => { };
 
 ❌ Bad
-function GetUserData() { }
-function validate_email() { }
-function total() { }
-function submit() { }
+const GetUserData = () => { };
+const validate_email = () => { };
+const total = () => { };
+const submit = () => { };
 ```
 
 ### Boolean Variables

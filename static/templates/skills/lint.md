@@ -11,7 +11,7 @@ Run every configured linter and report the issues. Do NOT modify any files.
 2. Run each one in check-only mode:
    - ESLint: `pnpm lint $ARGUMENTS`
    - Stylelint, only if the `lint:css` script exists: `pnpm lint:css`
-3. Report the findings grouped by file. For each issue give the line, the rule name and the message.
+3. Report the findings grouped by file. For each issue give the line, the rule name and the message, then explain in one plain-English sentence what is wrong and how to fix it. Write for someone who does not read code.
 4. Finish with a one-line total: the number of errors and warnings, and how many are auto-fixable.
 
 If `package.json` has no `lint` script, stop and say so. Do NOT fall back to running `eslint` directly.

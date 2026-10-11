@@ -39,6 +39,7 @@ import docDecision from '!!raw-loader!@site/static/templates/docs/decisions/deci
 import docGuide from '!!raw-loader!@site/static/templates/docs/guides/guide.md';
 import docCategory from '!!raw-loader!@site/static/templates/docs/scope/_category_.json';
 import huskyHook from '!!raw-loader!@site/static/templates/husky/commit-msg';
+import huskyPreCommit from '!!raw-loader!@site/static/templates/husky/pre-commit';
 
 # Templates
 
@@ -273,6 +274,14 @@ Runs the test suite; reports failures grouped by cause, tests that never ran, an
 Refuses a commit whose message does not follow [Conventional Commits](/Standards/conventional-commits#enforcing-commit-messages). Plain file: [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)
 
 <CodeBlock language="text" title=".husky/commit-msg">{huskyHook}</CodeBlock>
+
+### Lint before commit {#husky-pre-commit}
+
+**Copy to:** `.husky/pre-commit` in the project root
+
+Refuses a commit while `pnpm lint` reports errors. Plain file: [`/templates/husky/pre-commit`](pathname:///templates/husky/pre-commit)
+
+<CodeBlock language="text" title=".husky/pre-commit">{huskyPreCommit}</CodeBlock>
 
 ---
 

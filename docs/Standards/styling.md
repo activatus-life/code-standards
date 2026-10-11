@@ -14,13 +14,13 @@ Use Tailwind CSS utility classes for all component styling. Tailwind is compatib
 
 ```tsx
 // Button.tsx
-export function Button() {
+export const Button = () => {
   return (
     <button className="rounded-md bg-brand-primary px-8 py-4 text-white transition-colors hover:bg-brand-primary-hover">
       Click me
     </button>
   );
-}
+};
 ```
 
 ---
@@ -39,32 +39,32 @@ The parent arranges its children with flex. Each child is its own component with
 import { PageHeaderActions } from "./pageHeaderActions";
 import { PageHeaderTitle } from "./pageHeaderTitle";
 
-export function PageHeader() {
+export const PageHeader = () => {
   return (
     <header className="flex items-center justify-between gap-4">
       <PageHeaderTitle />
       <PageHeaderActions />
     </header>
   );
-}
+};
 ```
 
 ```tsx title="pageHeader/pageHeaderActions/PageHeaderActions.tsx"
-export function PageHeaderActions() {
+export const PageHeaderActions = () => {
   return (
     <div className="flex items-center gap-2">
       <button className="rounded-md bg-brand-primary px-4 py-2 text-white">Save</button>
       <button className="rounded-md px-4 py-2 text-text">Cancel</button>
     </div>
   );
-}
+};
 ```
 
 ### ❌ One component styling everything
 
 ```tsx
 // ❌ Bad — grid without being asked, and every piece styled in one place
-export function PageHeader() {
+export const PageHeader = () => {
   return (
     <header className="grid grid-cols-[1fr_auto] items-center gap-4">
       <div className="flex flex-col gap-1">
@@ -77,7 +77,7 @@ export function PageHeader() {
       </div>
     </header>
   );
-}
+};
 ```
 
 ### Rules

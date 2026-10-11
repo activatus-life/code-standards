@@ -12,6 +12,8 @@ Every file must be readable by a person who has never seen it before. Code is re
 | --- | --- |
 | [No file longer than 300 lines](#no-file-longer-than-300-lines) | ESLint `max-lines` (test files exempt) |
 | [Names are full English words](#names-are-full-english-words) | ESLint `unicorn/name-replacements` |
+| [Arrow functions everywhere](#arrow-functions-everywhere) | ESLint `func-style`, `prefer-arrow-callback` |
+| [Always `const`](#always-const) | ESLint `no-restricted-syntax`, `prefer-const`, `no-var` |
 | [A function does one thing](#a-function-does-one-thing) | Code review |
 | [Every function and component has a test file](#every-function-and-component-has-a-test-file) | Developers and AI agents — not linted |
 | [Functions, never classes](#functions-never-classes) | ESLint `no-restricted-syntax` |
@@ -27,7 +29,7 @@ Every file must be readable by a person who has never seen it before. Code is re
 | [Type names say what they are](#type-names-say-what-they-are) | ESLint `@typescript-eslint/naming-convention` |
 | [Error messages say what happened and what to do](#error-messages-say-what-happened-and-what-to-do) | Code review |
 
-See the [ESLint configuration](/Standards/eslint) for the rule setup.
+See the [ESLint configuration](/Standards/eslint) for the rule setup, and [Fixing Lint Errors](/Standards/lint-errors) for what each error means and how to fix it.
 
 ---
 
@@ -52,9 +54,9 @@ Every variable, function and parameter name describes what it holds or does, in 
 const userEmailAddress = user.email;
 const isSubmitButtonDisabled = !isFormValid;
 
-function calculateOrderTotal(orderItems: OrderItemType[]) {
+const calculateOrderTotal = (orderItems: OrderItemType[]) => {
   return orderItems.reduce((runningTotal, orderItem) => runningTotal + orderItem.price, 0);
-}
+};
 
 users.map((user) => user.name);
 ```
@@ -64,9 +66,9 @@ users.map((user) => user.name);
 const addr = user.email;
 const btnDis = !valid;
 
-function calc(arr: OrderItemType[]) {
+const calc = (arr: OrderItemType[]) => {
   return arr.reduce((acc, i) => acc + i.price, 0);
-}
+};
 
 users.map((u) => u.name);
 ```
@@ -77,34 +79,115 @@ See [Naming Conventions](/Structure/naming-conventions) for casing rules.
 
 ---
 
+## Arrow functions everywhere
+
+**Every function is an arrow function.** Components, utilities, services, callbacks — all of them. Never use the `function` keyword.
+
+One way of writing a function means nobody has to choose, and every file reads the same.
+
+```tsx
+// ✅ Good
+export const Button = ({ label }: ButtonProps) => {
+  return <button>{label}</button>;
+};
+
+export const formatCurrency = (amount: number) => {
+  return CURRENCY_FORMATTER.format(amount);
+};
+
+export const getUsers = async () => {
+  return database.users.findAll();
+};
+```
+
+```tsx
+// ❌ Bad
+export function Button({ label }: ButtonProps) {
+  return <button>{label}</button>;
+}
+
+export const formatCurrency = function (amount: number) {
+  return CURRENCY_FORMATTER.format(amount);
+};
+```
+
+Three things to know:
+
+- **Define before use.** An arrow function is written above the code that uses it. This is [enforced](/Structure/import-organization#3-define-before-use), and it means a mistake fails straight away instead of being hidden.
+- **Generic components need a trailing comma** in `.tsx` files, so the `<T>` is not read as JSX: `const List = <T,>({ items }: ListProps<T>) => { … }`.
+- **Next.js files that need a default export** take two lines:
+
+  ```tsx title="app/users/page.tsx"
+  const Page = () => {
+    return <UserList />;
+  };
+
+  export default Page;
+  ```
+
+---
+
+## Always `const`
+
+**Declare every variable with `const`.** A `const` cannot be reassigned, so a reader knows its value is the same everywhere below. Never use `var`.
+
+```ts
+// ✅ Good
+const orderTotal = orderItems.reduce((runningTotal, orderItem) => runningTotal + orderItem.price, 0);
+const activeUsers = users.filter((user) => user.isActive);
+```
+
+```ts
+// ❌ Bad
+let orderTotal = 0;
+for (const orderItem of orderItems) {
+  orderTotal += orderItem.price;
+}
+
+var activeUsers = [];
+```
+
+### When `let` is genuinely needed
+
+Sometimes a value really must change. Use `let`, and **add a comment that says so** — the same way a type cast needs one. Without the comment, ESLint rejects the `let`:
+
+```ts
+// eslint-disable-next-line no-restricted-syntax -- the retry count goes up on every failed attempt
+let retryAttemptCount = 0;
+```
+
+The comment is the point: it tells the reader "yes, this one changes, and here is why". Before using `let`, check whether `map`, `filter` or `reduce` with `const` does the job.
+
+---
+
 ## A function does one thing
 
 If you need the word "and" to describe what a function does, it is two functions.
 
 ```ts
 // ✅ Good — each function has one job
-function validateEmailAddress(emailAddress: string) {
+const validateEmailAddress = (emailAddress: string) => {
   return EMAIL_ADDRESS_PATTERN.test(emailAddress);
-}
+};
 
-function saveUser(user: UserType) {
+const saveUser = (user: UserType) => {
   return database.users.insert(user);
-}
+};
 
-function sendWelcomeEmail(user: UserType) {
+const sendWelcomeEmail = (user: UserType) => {
   return emailService.send({ to: user.emailAddress, template: WELCOME_EMAIL_TEMPLATE });
-}
+};
 ```
 
 ```ts
 // ❌ Bad — validates, saves and sends an email
-function handleUser(user: UserType) {
+const handleUser = (user: UserType) => {
   if (!EMAIL_ADDRESS_PATTERN.test(user.emailAddress)) {
     throw new Error("Invalid email address");
   }
   database.users.insert(user);
   emailService.send({ to: user.emailAddress, template: WELCOME_EMAIL_TEMPLATE });
-}
+};
 ```
 
 Small single-purpose functions are easy to name, easy to test and easy to reuse.
@@ -156,13 +239,13 @@ Write functions. Never use class definitions — not for components, not for ser
 
 ```ts
 // ✅ Good
-export function createUserService(database: DatabaseType) {
-  function findUserById(userId: string) {
+export const createUserService = (database: DatabaseType) => {
+  const findUserById = (userId: string) => {
     return database.users.find(userId);
-  }
+  };
 
   return { findUserById };
-}
+};
 ```
 
 ```ts
@@ -184,7 +267,7 @@ Deal with the error and empty cases first and return. The main logic then sits a
 
 ```ts
 // ✅ Good
-function getDiscountedPrice(order: OrderType) {
+const getDiscountedPrice = (order: OrderType) => {
   if (!order.customer) {
     return order.price;
   }
@@ -194,12 +277,12 @@ function getDiscountedPrice(order: OrderType) {
   }
 
   return order.price * MEMBER_DISCOUNT_MULTIPLIER;
-}
+};
 ```
 
 ```ts
 // ❌ Bad
-function getDiscountedPrice(order: OrderType) {
+const getDiscountedPrice = (order: OrderType) => {
   if (order.customer) {
     if (order.customer.isMember) {
       return order.price * MEMBER_DISCOUNT_MULTIPLIER;
@@ -209,7 +292,7 @@ function getDiscountedPrice(order: OrderType) {
   } else {
     return order.price;
   }
-}
+};
 ```
 
 ---
@@ -259,18 +342,18 @@ interface CreateUserProps {
   isAdministrator: boolean;
 }
 
-function createUser({ name, emailAddress, isAdministrator }: CreateUserProps) {
+const createUser = ({ name, emailAddress, isAdministrator }: CreateUserProps) => {
   // ...
-}
+};
 
 createUser({ name: "Sam Taylor", emailAddress: "sam@example.com", isAdministrator: false });
 ```
 
 ```ts
 // ❌ Bad — what is false?
-function createUser(name: string, emailAddress: string, isAdministrator: boolean) {
+const createUser = (name: string, emailAddress: string, isAdministrator: boolean) => {
   // ...
-}
+};
 
 createUser("Sam Taylor", "sam@example.com", false);
 ```
@@ -285,13 +368,13 @@ One ternary is fine. A ternary inside a ternary becomes an `if` or its own funct
 
 ```ts
 // ✅ Good
-function getStatusLabel(order: OrderType) {
+const getStatusLabel = (order: OrderType) => {
   if (order.isCancelled) {
     return "Cancelled";
   }
 
   return order.isShipped ? "Shipped" : "Processing";
-}
+};
 ```
 
 ```ts
@@ -353,20 +436,20 @@ All three switch the type checker off, so the reader can no longer trust the typ
 
 ```ts
 // ✅ Good
-function getUserName(user: UserType | undefined) {
+const getUserName = (user: UserType | undefined) => {
   if (!user) {
     return UNKNOWN_USER_NAME;
   }
 
   return user.name;
-}
+};
 ```
 
 ```ts
 // ❌ Bad
-function getUserName(user: any) {
+const getUserName = (user: any) => {
   return user!.name as string;
-}
+};
 ```
 
 `as const` is fine. See the [ESLint configuration](/Standards/eslint#typescript-eslintconsistent-type-assertions-never) for how to record the reason for a cast.
@@ -385,18 +468,20 @@ Export things by name. A named export has the same name everywhere it is importe
 
 ```ts
 // ✅ Good
-export function formatCurrency(amount: number) {
+export const formatCurrency = (amount: number) => {
   // ...
-}
+};
 
 import { formatCurrency } from "@/utils";
 ```
 
 ```ts
 // ❌ Bad — every importer can call it something different
-export default function formatCurrency(amount: number) {
+const formatCurrency = (amount: number) => {
   // ...
-}
+};
+
+export default formatCurrency;
 
 import format from "@/utils/formatCurrency";
 ```

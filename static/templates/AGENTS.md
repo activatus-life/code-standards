@@ -72,6 +72,10 @@ Follow these rules in every change:
 - **Every function and component has a test file**, created in the same change. One test file tests one function or one component.
 - **No file longer than 300 lines** (test files are exempt).
 - **Names are full English words.** No shorthand such as `btn`, `e` or `acc`.
+- **Always `const`.** Never `var`. Use `let` only when a value must be reassigned, with `// eslint-disable-next-line no-restricted-syntax -- <reason>` on the line above.
+- **Arrow functions everywhere.** Never use the `function` keyword: `export const Button = () => {}`, not `export function Button() {}`.
+- **No circular imports, ever.** A file never imports a file that imports it back. Inside a folder, import files directly — never through the folder's own `index.ts` — and never import a parent component from its sub-component.
+- **Define before use.** A function or variable is written above the code that uses it.
 - **A function does one thing.**
 - **Functions, never classes.**
 - **One parameter per function.** Use a single object when more than one value is needed.
@@ -97,7 +101,11 @@ Follow these rules in every change:
 
 **Look before you build a component.** Check the project's `components/ui/`, then the Component Reference in the code standards, then other Activatus projects, then shadcn. Build to the props listed in the Component Reference; never invent new prop names for a component that is already listed. A component in `components/ui/` takes everything through props and never imports from features, services, stores or `app/`.
 
-Run `pnpm lint` and `pnpm test` before finishing any task.
+**Lint must pass before you finish.** Run `pnpm lint` and `pnpm test` before finishing any task, and fix every error by changing the code.
+
+**Never switch a lint rule off to make an error go away.** Do not add `eslint-disable` comments, edit the ESLint config, or move files to hide them. The only exceptions are `let` and a type cast, each on a single line with a reason after ` -- `. If a rule seems impossible to satisfy, stop and ask.
+
+When you report a lint error to the person, explain it in plain English: what is wrong, why it matters, and what you did to fix it.
 
 ## Available skills
 

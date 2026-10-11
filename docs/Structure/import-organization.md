@@ -48,23 +48,6 @@ import "./UserProfile.css";
 import styles from "./styles.module.css";
 ```
 
-## Auto-Formatting
-
-This import order is **automatically enforced** by ESLint. When you save a file, imports will automatically sort to match this pattern.
-
-### Enable Auto-Fix on Save
-
-If imports aren't auto-sorting on save, add this to `.vscode/settings.json`:
-
-```json
-{
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  }
-}
-```
-
 ## Why This Order?
 
 1. **React first** - Most important dependency, immediately visible
@@ -81,6 +64,95 @@ If imports aren't auto-sorting on save, add this to `.vscode/settings.json`:
 - ✅ **Blank lines** between groups
 - ✅ **No duplicates** - Import each module once
 
-## Not Enforced by ESLint
+## Import Safety
 
-Import order is a **convention, not a lint rule**. Follow the same pattern in every file so imports are easy to read, but ESLint will not report an error if the order differs.
+These four rules **are** enforced, and they are not about tidiness. They stop a whole class of bug: code that runs before the thing it needs exists.
+
+### 1. No circular imports
+
+**A file never imports a file that imports it back** — directly, or through a chain of other files.
+
+```ts
+// ❌ Bad — userService imports orderService, which imports userService
+// services/userService.ts
+import { getOrdersForUser } from "./orderService";
+
+// services/orderService.ts
+import { getUserById } from "./userService";
+```
+
+When two files import each other, one of them has to load first, and it sees the other half-finished. The code may work today and break when an unrelated import changes the loading order.
+
+**The fix is to move the shared part into a third file** that both import, so the dependency runs one way:
+
+```ts
+// ✅ Good — both services import from a third file; neither imports the other
+// services/userService.ts
+import { findUserRecord } from "./userRecords";
+
+// services/orderService.ts
+import { findUserRecord } from "./userRecords";
+```
+
+Enforced by ESLint `import-x/no-cycle`.
+
+### 2. Inside a folder, import files directly
+
+**A folder's `index.ts` is for code outside the folder.** Code inside the folder imports its neighbours by file, never through the folder's own `index.ts`. Importing through your own index is the most common way a circular import is created by accident.
+
+```ts
+// card/cardHeader/CardHeader.tsx
+
+// ✅ Good — import the file directly
+import type { CardProps } from "../types";
+
+// ❌ Bad — the card index imports CardHeader, so this is a circle
+import { Card } from "..";
+```
+
+| Importing from | Import through |
+| --- | --- |
+| **Outside** the folder | The folder's `index.ts`: `import { Card } from "@/components/ui/card"` |
+| **Inside** the folder | The file itself: `import type { CardProps } from "../types"` |
+
+A parent component imports its sub-components. **A sub-component never imports its parent.** If a child needs something from the parent, the parent passes it as a prop.
+
+### 3. Define before use
+
+**A function or variable is written above the code that uses it.** Read top to bottom, a file never refers to something that has not been defined yet.
+
+```ts
+// ✅ Good
+const formatReport = () => "report";
+
+export const sendReport = () => formatReport();
+```
+
+```ts
+// ❌ Bad — formatReport is used above where it is defined
+export const sendReport = () => formatReport();
+
+const formatReport = () => "report";
+```
+
+Enforced by ESLint `no-use-before-define`.
+
+### 4. Files define things; they do not run things
+
+**A file declares its functions and exports them. It does not call them as it loads.** The calling happens later, inside a component or another function.
+
+```ts
+// ✅ Good — nothing runs when this file is imported
+export const connectToDatabase = () => createConnection(DATABASE_URL);
+
+// ❌ Bad — importing this file opens a database connection
+export const database = createConnection(DATABASE_URL);
+```
+
+Code that runs on import makes the order files load in matter. Code that only defines things does not.
+
+Enforced by ESLint `unicorn/no-top-level-side-effects`.
+
+## Import Order Is Not Enforced
+
+The **order of the import lines** is a convention, not a lint rule. Follow the same pattern in every file so imports are easy to read, but ESLint will not report an error if the order differs.
