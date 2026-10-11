@@ -168,7 +168,7 @@ form-components.module.css
 
 ### CSS Variables
 
-**Use kebab-case** for CSS variables (custom properties and design tokens). This is the one place we do not use camelCase: it is the CSS convention, it is what Tailwind requires, and Stylelint enforces it.
+**Use kebab-case** for CSS variables (custom properties and design tokens): it is the CSS convention, it is what Tailwind requires, and Stylelint enforces it.
 
 ```css
 /* ✅ Good */
@@ -184,18 +184,18 @@ See [CSS Styling](/Standards/styling#css-variables).
 
 ### Documentation
 
-**Use camelCase** for documentation files:
+**Use kebab-case** for documentation files. The [docs site](/Standards/documentation) turns each file name into the page's URL, so a doc file is named the way a URL is written:
 
 ```tsx
 ✅ Good
-projectScope.md
-folderStructure.md
-namingConventions.md
+project-scope.md          → /docs/scope/project-scope
+system-design.md
+running-locally.md
 
 ❌ Bad
-project-scope.md
-folder_structure.md
-NamingConventions.md
+projectScope.md           → /docs/scope/projectScope
+system_design.md
+RunningLocally.md
 ```
 
 ---
@@ -204,7 +204,7 @@ NamingConventions.md
 
 ### Variables
 
-**Use camelCase**, and [full English words](/Standards/readableCode#names-are-full-english-words) — no shorthand:
+**Use camelCase**, and [full English words](/Standards/readable-code#names-are-full-english-words) — no shorthand:
 
 ```ts
 ✅ Good
@@ -276,7 +276,22 @@ interface api_response { }
 interface UserCardData { }
 ```
 
-See [Readable Code](/Standards/readableCode#type-names-say-what-they-are).
+See [Readable Code](/Standards/readable-code#type-names-say-what-they-are).
+
+---
+
+## When to Use kebab-case
+
+Code files are camelCase or PascalCase. A short list of things are kebab-case instead:
+
+| Thing | Example | Why |
+| --- | --- | --- |
+| **Route folders** | `app/account-settings/` | The folder name becomes the URL |
+| **Documentation files** | `docs/scope/project-scope.md` | The file name becomes the URL |
+| **CSS variables** | `--color-brand-primary` | The CSS convention; required by Tailwind |
+| **Branch names** | `feat/invoice-export` | The Git convention |
+
+**The rule of thumb: if the name becomes a URL, it is kebab-case.**
 
 ---
 
@@ -294,7 +309,7 @@ See [Readable Code](/Standards/readableCode#type-names-say-what-they-are).
 | **CSS modules** | camelCase + `.module.css` | `userProfile.module.css` |
 | **CSS variables** | kebab-case | `--color-brand-primary` |
 | **Branches** | `type/kebab-case` | `feat/invoice-export` |
-| **Documentation files** | camelCase | `projectScope.md` |
+| **Documentation files** | kebab-case | `project-scope.md` |
 | **Variables** | camelCase | `userName` |
 | **Functions** | camelCase | `getUserData` |
 | **Components** | PascalCase | `UserProfile` |

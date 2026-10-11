@@ -28,13 +28,13 @@ project-root/
 ├── docs/                        # The docs: plain Markdown
 │   ├── index.md                 # Overview — the front page at /docs
 │   ├── scope/                   # What is being built, and what is not
-│   │   └── projectScope.md
+│   │   └── project-scope.md
 │   ├── design/                  # How it is built
-│   │   └── systemDesign.md
+│   │   └── system-design.md
 │   ├── decisions/               # Why it is built that way — one file per decision
-│   │   └── useTailwindForStyling.md
+│   │   └── use-tailwind-for-styling.md
 │   ├── guides/                  # How to run it, deploy it and fix it
-│   │   └── runningLocally.md
+│   │   └── running-locally.md
 │   └── standards/               # Local copy of the code standards (optional)
 └── docsSite/                    # The viewer: Docusaurus config only, no content
     ├── docusaurus.config.ts
@@ -174,10 +174,10 @@ Routing and the sidebar come from the folder structure. There is no menu file to
 | File | URL | Sidebar |
 | --- | --- | --- |
 | `docs/index.md` | `/docs` | Overview |
-| `docs/scope/projectScope.md` | `/docs/scope/projectScope` | Scope → Project Scope |
-| `docs/decisions/useTailwindForStyling.md` | `/docs/decisions/useTailwindForStyling` | Decisions → Use Tailwind for Styling |
+| `docs/scope/project-scope.md` | `/docs/scope/project-scope` | Scope → Project Scope |
+| `docs/decisions/use-tailwind-for-styling.md` | `/docs/decisions/use-tailwind-for-styling` | Decisions → Use Tailwind for Styling |
 
-- **The URL is the file path.** Move the file and the URL moves with it.
+- **The URL is the file path.** Move the file and the URL moves with it. This is why doc files are named in kebab-case.
 - **The sidebar label is the page's `# Heading`.**
 - **Each folder has a `_category_.json`** that sets its sidebar label and order. They come with the templates.
 - **The layout is the stock Docusaurus theme**, the same as this site. Do not restyle it per project — `docsSite/src/css/custom.css` stays empty.
@@ -193,19 +193,19 @@ Every type of doc has a template with the same headings. Copy it — do not inve
 | Doc | Template | Copy to |
 | --- | --- | --- |
 | Overview | [`index.md`](/templates#doc-index) | `docs/index.md` |
-| Project scope | [`projectScope.md`](/templates#doc-scope) | `docs/scope/` |
-| System design | [`systemDesign.md`](/templates#doc-design) | `docs/design/` |
-| Decision record | [`decisionRecord.md`](/templates#doc-decision) | `docs/decisions/`, renamed after the decision |
+| Project scope | [`project-scope.md`](/templates#doc-scope) | `docs/scope/` |
+| System design | [`system-design.md`](/templates#doc-design) | `docs/design/` |
+| Decision record | [`decision-record.md`](/templates#doc-decision) | `docs/decisions/`, renamed after the decision |
 | Guide | [`guide.md`](/templates#doc-guide) | `docs/guides/`, renamed after the task |
 
 ### Rules
 
-- **File names are camelCase**: `projectScope.md`, not `project-scope.md`.
+- **File names are kebab-case**: `project-scope.md`, not `projectScope.md`. The file name becomes the page's URL, and URLs are lower-case words joined by hyphens.
 - **One topic per file.** A decision record covers one decision. A guide covers one task.
 - **Plain Markdown (`.md`).** No JSX or imports, so every file reads the same for an agent as it does on the page.
 - **One `# Heading` per file**, at the top. It becomes the page title and the sidebar label.
 - **Draw diagrams with Mermaid** in a ` ```mermaid ` code block, so the diagram is text and stays in the file.
-- **Link to other docs with a relative path** — `[scope](../scope/projectScope.md)` — so the link works in the file and on the site.
+- **Link to other docs with a relative path** — `[scope](../scope/project-scope.md)` — so the link works in the file and on the site.
 - **Write for someone who has never seen the project.** Full sentences, full English words, no shorthand.
 
 ### Status
@@ -243,7 +243,7 @@ Docs are written at set points in the work, not at the end.
 
 ### Not finished until the docs are updated
 
-**A change is not finished until the docs match it.** If a change makes a doc wrong, the doc is fixed in the same change — the same rule as [test files](/Standards/readableCode#every-function-and-component-has-a-test-file).
+**A change is not finished until the docs match it.** If a change makes a doc wrong, the doc is fixed in the same change — the same rule as [test files](/Standards/readable-code#every-function-and-component-has-a-test-file).
 
 This applies to everyone writing code, **including AI agents**. An agent that changes how something works updates the doc that describes it, and creates a decision record when it makes a significant choice.
 
@@ -254,5 +254,5 @@ This applies to everyone writing code, **including AI agents**. An agent that ch
 - **Read `docs/` before starting work.** Start with `docs/index.md`, then the scope and design docs for the area being changed.
 - **Read the files directly.** Do not start the docs site to read them.
 - **Update the docs in the same change** as the code. Set `lastReviewed` to today's date on any doc you change.
-- **Use the templates** for new docs, and name files in camelCase.
+- **Use the templates** for new docs, and name files in kebab-case (`project-scope.md`).
 - **Do not edit anything in `docsSite/`** unless the task is about the docs viewer itself.

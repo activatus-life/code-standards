@@ -20,8 +20,8 @@ docs/update-readme
 
 ## Rules
 
-- **Start with a type**, followed by a slash. The types are the same as [Conventional Commits](/Standards/conventionalCommits#type-reference).
-- **Describe the work in two to five words**, in lower-case kebab-case. Branch names are the one place besides CSS variables and route folders where we use kebab-case — it is the Git convention, and it is safe on every operating system.
+- **Start with a type**, followed by a slash. The types are the same as [Conventional Commits](/Standards/conventional-commits#type-reference).
+- **Describe the work in two to five words**, in lower-case kebab-case. Branch names are kebab-case, like route folders, documentation files and CSS variables — it is the Git convention, and it is safe on every operating system.
 - **Use full English words**, the same as in code: `fix/button-alignment`, not `fix/btn-align`.
 - **One piece of work per branch.** If the description needs the word "and", it is two branches.
 - **Never work directly on `main`.**
@@ -63,4 +63,4 @@ feat/ACT-142-invoice-export
 
 ## AI agents
 
-AI agents **never commit code**, so they do not create branches to commit to either. A person creates the branch, reviews the agent's changes, and commits them. See [AGENTS.md](/Standards/agentSpecs#agents-never-commit-code).
+AI agents **never commit code**, so they do not create branches to commit to either. A person creates the branch, reviews the agent's changes, and commits them. See [AGENTS.md](/Standards/agent-specs#agents-never-commit-code).

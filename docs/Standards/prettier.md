@@ -10,7 +10,7 @@ A single shared Prettier config keeps formatting consistent and eliminates "styl
 ## Installation
 
 ```bash
-pnpm add -D prettier
+pnpm add -D prettier prettier-plugin-tailwindcss
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ pnpm add -D prettier
 Create `prettier.config.js` in your project root:
 
 ```js title="prettier.config.js"
-/** @type {import("prettier").Config} */
+/** @type {import("prettier").Config & import("prettier-plugin-tailwindcss").PluginOptions} */
 const config = {
   printWidth: 100,
   tabWidth: 2,
@@ -30,6 +30,8 @@ const config = {
   arrowParens: "always",
   semi: true,
   endOfLine: "lf",
+  plugins: ["prettier-plugin-tailwindcss"],
+  tailwindStylesheet: "./app/globals.css",
 };
 
 export default config;
@@ -45,6 +47,22 @@ Add scripts to `package.json`:
   }
 }
 ```
+
+## Tailwind class sorting
+
+The config includes [`prettier-plugin-tailwindcss`](https://github.com/tailwindlabs/prettier-plugin-tailwindcss), the official Tailwind plugin. It sorts the classes in every `className` into one standard order when the file is formatted, so the same classes are always written the same way:
+
+```tsx
+// Before formatting
+<button className="text-white px-8 hover:bg-brand-primary-hover rounded-md bg-brand-primary py-4 flex">
+
+// After formatting
+<button className="flex rounded-md bg-brand-primary px-8 py-4 text-white hover:bg-brand-primary-hover">
+```
+
+- **It is part of the standard**, not a project extra. Every project that uses Tailwind has it.
+- **`tailwindStylesheet` points at the project's global stylesheet**, so the plugin knows the project's own colours. Change the path if `globals.css` lives somewhere else.
+- **A project with no Tailwind** (a plain Node.js service) removes the `plugins` and `tailwindStylesheet` lines.
 
 ## Settings reference
 

@@ -158,8 +158,8 @@ Every component file is laid out in the same order, so a reader always knows whe
 
 | # | Section | Rule |
 | --- | --- | --- |
-| 1 | Imports | Ordered per [Import Organization](/Structure/importOrganization) |
-| 2 | Component | The component is the first thing in the file after the imports. Always a function — [never a class](/Standards/readableCode#functions-never-classes) |
+| 1 | Imports | Ordered per [Import Organization](/Structure/import-organization) |
+| 2 | Component | The component is the first thing in the file after the imports. Always a function — [never a class](/Standards/readable-code#functions-never-classes) |
 | 3 | Variable declarations | Plain values worked out from props |
 | 4 | State declarations | `useState`, `useReducer`, `useRef` |
 | 5 | Calculated values | Wrapped in `useMemo` |
@@ -217,7 +217,7 @@ export function UserListClient({ users, onUserSelect }: UserListClientProps) {
 
 ### Keep the UI file clean
 
-**If a function can be written in another file, move it out of the UI file.** A function that does not need the component's state or props is not a nested function — it belongs in a [utils folder](/Structure/folderStructure#-utils).
+**If a function can be written in another file, move it out of the UI file.** A function that does not need the component's state or props is not a nested function — it belongs in a [utils folder](/Structure/folder-structure#-utils).
 
 `filterUsersByName` above only needs its arguments, so it lives in the component's `utils/` folder, in its own folder beside its test file:
 
@@ -358,6 +358,18 @@ export function UserListClient({ users }: UserListClientProps) {
 
 ---
 
+## Reusable by design
+
+Every component in `components/ui/` is built so it can be copied into another project unchanged: everything comes in through props, and it imports nothing from the project's features, services, stores or `app/` folder. Before building one, [look before you build](/Guides/component-library-workflow#1-look-before-you-build), and build it to the props in the [Component Reference](/template-components). See [Future-proofing](/Guides/component-library-workflow#future-proofing).
+
+---
+
+## Components from shadcn
+
+A component added with the shadcn CLI is **our code** and follows everything on this page. Convert it when it is added: its own camelCase folder, one component per file, `types.ts`, `index.ts` and a test file. See [Adding a shadcn component](/Guides/component-library-workflow#adding-a-shadcn-component).
+
+---
+
 ## Folder Naming
 
 **Component folders use camelCase** to match the component name:
@@ -476,7 +488,7 @@ app/
         └── page.tsx
 ```
 
-See [Folder Structure](/Structure/folderStructure) for route-specific component patterns.
+See [Folder Structure](/Structure/folder-structure) for route-specific component patterns.
 
 ---
 

@@ -52,7 +52,7 @@ That fires up the site locally with hot reload. Easy as.
 | 🧭 **Guides** | Setting up a new project, dragging an old one up to scratch, and how design becomes code |
 | 📏 **Standards** | Readable code, linting, formatting, styling, commits, the tech stack and AI agent rules |
 | 🏗️ **Structure** | Folders, components, naming, imports and API routes |
-| 🧩 **Template Components** | The standard component library, listed out |
+| 🧩 **Component Reference** | Every standard component and its props, so each project builds them the same way |
 
 ---
 
@@ -97,7 +97,8 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 
 ### 🗂️ Structure
 
-- 🐫 **Files are camelCase.** Components are PascalCase (`Button.tsx`) inside a camelCase folder (`button/`). CSS variables are the one exception: kebab-case.
+- 🐫 **Code files are camelCase.** Components are PascalCase (`Button.tsx`) inside a camelCase folder (`button/`).
+- 🔗 **If it becomes a URL, it's kebab-case.** Route folders and doc files (`project-scope.md`). CSS variables and branch names too.
 - 🧰 **Reusable functions live in `utils/`.** Global, feature or component level, one folder per function, with an `index.ts` so imports stay tidy.
 - 🧱 **Components follow the same order every time.** Imports, component, variables, state, effects, render. No inline functions in the render.
 - 🔀 **Server and client code live in separate files.** The server one wraps the client one.
@@ -152,7 +153,7 @@ Built with [Docusaurus](https://docusaurus.io). The sidebar generates itself fro
 Reckon a rule's wrong, or there's one missing? Good. Standards that never change are standards nobody reads.
 
 1. 🌿 **Branch off `main`**, named `type/short-description` (`docs/add-branch-naming`).
-2. 📝 **Edit or add a Markdown file in `docs/`.** Name it in camelCase (`namingConventions.md`, not `naming-conventions.md`). Yes, we follow our own rules here.
+2. 📝 **Edit or add a Markdown file in `docs/`.** Name it in kebab-case (`naming-conventions.md`, not `namingConventions.md`), because the file name becomes the page's URL. Yes, we follow our own rules here.
 3. 📋 **Changing a config?** Edit the file in `static/templates/` and the matching page in `docs/Standards/` so the two don't drift apart.
 4. 🔨 **Run `pnpm build`.** It fails on broken links, so you'll know quick smart if you've stuffed one.
 5. 🚀 **Open a pull request** and say why the change makes life better.

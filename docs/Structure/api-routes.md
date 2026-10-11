@@ -113,6 +113,6 @@ app/api/
 
 ## 📚 Related Documentation
 
-- [Folder Structure](/Structure/folderStructure) - Overall project structure
-- [Naming Conventions](/Structure/namingConventions) - File and folder naming
-- [TypeScript](/Standards/techStack) - Type safety standards
+- [Folder Structure](/Structure/folder-structure) - Overall project structure
+- [Naming Conventions](/Structure/naming-conventions) - File and folder naming
+- [TypeScript](/Standards/tech-stack) - Type safety standards

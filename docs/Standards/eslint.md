@@ -451,50 +451,63 @@ Third-party code that is copied into the repository lives in a `vendor/` folder,
 - **Do not rename or restructure it** to match our naming or folder rules.
 - **Do not add `eslint-disable` comments to it.** Put it in `vendor/` instead.
 
+### Copied-in code we maintain is ours
+
+`vendor/` is only for third-party code we **do not change** — code that is replaced wholesale when the package updates.
+
+Code that is copied into the project and then **owned and edited by us** is our code, and every standard applies to it. The main case is **shadcn/ui**: the CLI copies component source into the project, and from then on it is ours. It is converted to our standards and lives in `components/ui/`, never in `vendor/`. See [Adding a shadcn component](/Guides/component-library-workflow#adding-a-shadcn-component).
+
+| Code | Ours? | Follows the standards? |
+| --- | --- | --- |
+| A package installed with `pnpm add` | No | No |
+| Third-party code copied in and left untouched (`vendor/`) | No | No |
+| shadcn components added with the CLI | **Yes** | **Yes — convert them when they are added** |
+| Code generated once and then edited by us | **Yes** | **Yes** |
+
 If a vendored package lives somewhere else and cannot be moved, add its path to the `ignores` list at the top of the config.
 
 ## Key rule decisions
 
-Most of these enforce the [Readable Code](/Standards/readableCode) rules.
+Most of these enforce the [Readable Code](/Standards/readable-code) rules.
 
 ### `max-lines: 300`
 
-No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt. See [Readable Code](/Standards/readableCode#no-file-longer-than-300-lines).
+No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt. See [Readable Code](/Standards/readable-code#no-file-longer-than-300-lines).
 
 ### `max-depth: 3`
 
-Blocks nest at most three levels deep. Return early instead. See [Readable Code](/Standards/readableCode#return-early-nest-shallow).
+Blocks nest at most three levels deep. Return early instead. See [Readable Code](/Standards/readable-code#return-early-nest-shallow).
 
 ### `no-nested-ternary`
 
-A ternary inside a ternary is an error. See [Readable Code](/Standards/readableCode#no-nested-ternaries).
+A ternary inside a ternary is an error. See [Readable Code](/Standards/readable-code#no-nested-ternaries).
 
 ### `no-magic-numbers`
 
-Numbers other than `-1`, `0` and `1` must be named constants. Test files are exempt. TypeScript files use `@typescript-eslint/no-magic-numbers`, which understands enums and numeric literal types. See [Readable Code](/Standards/readableCode#no-magic-numbers-or-strings).
+Numbers other than `-1`, `0` and `1` must be named constants. Test files are exempt. TypeScript files use `@typescript-eslint/no-magic-numbers`, which understands enums and numeric literal types. See [Readable Code](/Standards/readable-code#no-magic-numbers-or-strings).
 
 ### `no-restricted-syntax`: no classes, one parameter
 
 Two things are banned by syntax:
 
-- **Class declarations and class expressions.** See [Readable Code](/Standards/readableCode#functions-never-classes).
-- **Functions you define with more than one parameter.** Use a single object parameter. Inline callbacks whose signature is set by someone else — `array.reduce((total, item) => …)`, event handlers — are not affected. See [Readable Code](/Standards/readableCode#one-parameter-always-an-object-for-more).
+- **Class declarations and class expressions.** See [Readable Code](/Standards/readable-code#functions-never-classes).
+- **Functions you define with more than one parameter.** Use a single object parameter. Inline callbacks whose signature is set by someone else — `array.reduce((total, item) => …)`, event handlers — are not affected. See [Readable Code](/Standards/readable-code#one-parameter-always-an-object-for-more).
 
 ### `import-x/no-default-export`
 
-Named exports only. Default exports are allowed where a tool requires them: config files, Storybook stories and Next.js route files. See [Readable Code](/Standards/readableCode#named-exports-only).
+Named exports only. Default exports are allowed where a tool requires them: config files, Storybook stories and Next.js route files. See [Readable Code](/Standards/readable-code#named-exports-only).
 
 ### Import order is not linted
 
-There is deliberately no import-order rule. Follow the [Import Organization](/Structure/importOrganization) pattern for consistency, but ESLint will not complain about it.
+There is deliberately no import-order rule. Follow the [Import Organization](/Structure/import-organization) pattern for consistency, but ESLint will not complain about it.
 
 ### `unicorn/filename-case: camelCase or PascalCase`
 
-The plugin's default is kebab-case, which contradicts our [naming conventions](/Structure/namingConventions). Files are camelCase (`dateHelpers.ts`), and component files are PascalCase (`UserProfile.tsx`).
+The plugin's default is kebab-case, which contradicts our [naming conventions](/Structure/naming-conventions). Files are camelCase (`dateHelpers.ts`), and component files are PascalCase (`UserProfile.tsx`).
 
 ### `unicorn/name-replacements: error`
 
-Names are full English words: `btn` must be `button`, `e` must be `error` or `event`, `acc` must be `accumulator`. Four names are exempt — `props`, `ref` and `params` because they are React and Next.js idiom, and `utils` because it is our [standard folder name](/Structure/folderStructure#-utils). See [Readable Code](/Standards/readableCode#names-are-full-english-words). (Before `eslint-plugin-unicorn` 77 this rule was called `unicorn/prevent-abbreviations`.)
+Names are full English words: `btn` must be `button`, `e` must be `error` or `event`, `acc` must be `accumulator`. Four names are exempt — `props`, `ref` and `params` because they are React and Next.js idiom, and `utils` because it is our [standard folder name](/Structure/folder-structure#-utils). See [Readable Code](/Standards/readable-code#names-are-full-english-words). (Before `eslint-plugin-unicorn` 77 this rule was called `unicorn/prevent-abbreviations`.)
 
 ### `@typescript-eslint/no-explicit-any: error`
 
@@ -506,7 +519,7 @@ The `!` operator tells the compiler a value exists without checking. Check it in
 
 ### `@typescript-eslint/consistent-type-assertions: never`
 
-`as` casts are errors (`as const` is still allowed). When a cast is genuinely needed, disable the rule on that line **with the reason** — which is exactly the comment the [standard](/Standards/readableCode#no-any-no--no-unexplained-as) requires:
+`as` casts are errors (`as const` is still allowed). When a cast is genuinely needed, disable the rule on that line **with the reason** — which is exactly the comment the [standard](/Standards/readable-code#no-any-no--no-unexplained-as) requires:
 
 ```ts
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- the API returns untyped JSON; validated by parseUser below
@@ -515,7 +528,7 @@ const user = response.data as UserType;
 
 ### `@typescript-eslint/naming-convention`: `Props` or `Type` suffix
 
-Every interface and type alias ends in `Props` or `Type`. See [Naming Conventions](/Structure/namingConventions#types--interfaces).
+Every interface and type alias ends in `Props` or `Type`. See [Naming Conventions](/Structure/naming-conventions#types--interfaces).
 
 ### `@typescript-eslint/consistent-type-imports: error`
 
@@ -523,8 +536,8 @@ Type-only imports use `import type { Foo }` or inline `import { type Foo }`. Thi
 
 ### `react/jsx-no-bind: error`
 
-No inline functions in render. A function passed as a JSX prop must be wrapped in `useCallback`, so it is not recreated on every render. See [Writing a component](/Structure/componentOrganization#-writing-a-component).
+No inline functions in render. A function passed as a JSX prop must be wrapped in `useCallback`, so it is not recreated on every render. See [Writing a component](/Structure/component-organization#-writing-a-component).
 
 ### `react/no-multi-comp: error`
 
-One component per file. See [Readable Code](/Standards/readableCode#one-component-per-file).
+One component per file. See [Readable Code](/Standards/readable-code#one-component-per-file).

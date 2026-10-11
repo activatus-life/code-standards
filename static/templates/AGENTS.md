@@ -84,7 +84,7 @@ Follow these rules in every change:
 - **One component per file.** Server and client components live in separate files.
 - **Component file order**: imports, component, variables, state, `useMemo` values, `useCallback` functions, effects, render. No inline functions in render.
 - **Reusable functions live in a `utils/` folder** — global, feature or component level — one folder per function, with an `index.ts`.
-- **File names are camelCase**; component files are PascalCase; CSS variables are kebab-case.
+- **Code file names are camelCase**; component files are PascalCase. **Anything that becomes a URL is kebab-case**: route folders and documentation files (`docs/scope/project-scope.md`). CSS variables are kebab-case too.
 - **Lay out with flexbox first**, and split layouts into child components. Only use CSS grid when specifically asked.
 - **Style with Tailwind.** Colours come from the global colour palette only — never a hard-coded or arbitrary colour.
 - **Update the docs in the same change.** If a change makes a doc in `docs/` wrong, fix the doc. Record significant choices as a decision record in `docs/decisions/`.
@@ -92,6 +92,10 @@ Follow these rules in every change:
 - **Error messages say what happened and what to do.**
 
 **Third-party code is exempt.** Code in `node_modules/` and `vendor/` belongs to someone else: do not lint it, do not reformat it, do not edit it to meet these rules.
+
+**shadcn components are not third-party.** Code the shadcn CLI copies into the project is ours. Convert it to these standards in the same change that adds it — its own camelCase folder, one component per file, `types.ts`, `index.ts` and a test — keep only the parts that are used, and never put it in `vendor/`. **Do not change a component's props or behaviour** — only its styling. Components work identically in every Activatus project.
+
+**Look before you build a component.** Check the project's `components/ui/`, then the Component Reference in the code standards, then other Activatus projects, then shadcn. Build to the props listed in the Component Reference; never invent new prop names for a component that is already listed. A component in `components/ui/` takes everything through props and never imports from features, services, stores or `app/`.
 
 Run `pnpm lint` and `pnpm test` before finishing any task.
 

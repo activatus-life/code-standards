@@ -13,13 +13,14 @@ The standards apply to **code we write**, not to packages we pull in. Do not lin
 - `node_modules/` is ignored automatically.
 - Third-party code copied into the repo belongs in a `vendor/` folder, which the configs ignore.
 - Add `vendor/` to `.prettierignore` too.
+- **shadcn components are not third-party.** They are our code: convert them to the standards rather than moving them to `vendor/`. See [Adding a shadcn component](/Guides/component-library-workflow#adding-a-shadcn-component).
 
 ## Stage 1 — Prettier (formatting only)
 
 Formatting changes are safe to land in one big PR because they don't change behaviour.
 
 ```bash
-pnpm add -D prettier
+pnpm add -D prettier prettier-plugin-tailwindcss
 ```
 
 Add `prettier.config.js` — see the [Prettier page](/Standards/prettier) for the full file contents.
@@ -80,7 +81,7 @@ Move the project's existing documentation into the standard [`docs/` folders](/S
 
 ## Stage 7 — Commit message checks
 
-Add Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventionalCommits#enforcing-commit-messages).
+Add Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
 
 ## Tips
 

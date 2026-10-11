@@ -1,10 +1,22 @@
 ---
 sidebar_position: 8
+sidebar_label: "Component Reference"
 ---
 
-# Template Components
+# Component Reference
 
-This page documents the standard component library available across Activatus projects. Components are organized by category and include variants, key props, and usage notes.
+**This page is the contract for how every Activatus component works.** It lists each standard component with its variants and key props.
+
+We do not share component code between projects yet, so this page is what keeps them the same. Every project builds its components to the props listed here. See [Future-proofing](/Guides/component-library-workflow#future-proofing) for why.
+
+## How to use this page
+
+- **Before building a component, look it up here.** If it is listed, build it with these variants and props — the same names, the same meaning. Do not invent your own.
+- **Do not rename, remove or repurpose a listed prop.** Projects differ in how a component looks, never in [how it works](/Guides/component-library-workflow#same-component-different-paint).
+- **Building a component that is not listed?** Add it to this page in the same piece of work, so the next project builds it the same way.
+- **A project needs something a listed component does not do?** Add the prop or variant here first, then build it. The reference changes before the code does.
+
+This applies to everyone building components, **including AI agents**.
 
 ## Global / Navigation
 

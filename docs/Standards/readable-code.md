@@ -35,8 +35,8 @@ See the [ESLint configuration](/Standards/eslint) for the rule setup.
 
 A file over 300 lines is doing more than one job. Split it before it gets there:
 
-- Move helper functions into a [utils folder](/Structure/folderStructure#-utils)
-- Move sub-components into [their own folders](/Structure/componentOrganization#nested-components)
+- Move helper functions into a [utils folder](/Structure/folder-structure#-utils)
+- Move sub-components into [their own folders](/Structure/component-organization#nested-components)
 - Move types into `types.ts`
 
 Blank lines and comments do not count towards the limit. **Test files are exempt** — a thorough test file can run long.
@@ -73,7 +73,7 @@ users.map((u) => u.name);
 
 Three framework names are allowed because they are the idiom every React developer already reads: `props`, `ref` and `params`.
 
-See [Naming Conventions](/Structure/namingConventions) for casing rules.
+See [Naming Conventions](/Structure/naming-conventions) for casing rules.
 
 ---
 
@@ -128,7 +128,7 @@ utils/
 └── index.ts
 ```
 
-See [Utils](/Structure/folderStructure#-utils) for the folder layout and the `index.ts` files.
+See [Utils](/Structure/folder-structure#-utils) for the folder layout and the `index.ts` files.
 
 ```ts title="utils/formatCurrency/formatCurrency.test.ts"
 import { describe, expect, it } from "vitest";
@@ -146,7 +146,7 @@ describe("formatCurrency", () => {
 });
 ```
 
-Components keep their test beside the component file (`button/Button.tsx` and `button/Button.test.tsx`) — see [Component Organization](/Structure/componentOrganization).
+Components keep their test beside the component file (`button/Button.tsx` and `button/Button.test.tsx`) — see [Component Organization](/Structure/component-organization).
 
 ---
 
@@ -243,7 +243,7 @@ if (order.status === "shipped") {
 }
 ```
 
-`-1`, `0` and `1` are allowed. See [Naming Conventions](/Structure/namingConventions#constants) for how to name constants.
+`-1`, `0` and `1` are allowed. See [Naming Conventions](/Structure/naming-conventions#constants) for how to name constants.
 
 ---
 
@@ -375,7 +375,7 @@ function getUserName(user: any) {
 
 ## One component per file
 
-A file holds one component. A second component — however small — gets [its own folder](/Structure/componentOrganization#nested-components).
+A file holds one component. A second component — however small — gets [its own folder](/Structure/component-organization#nested-components).
 
 ---
 

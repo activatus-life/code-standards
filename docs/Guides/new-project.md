@@ -25,7 +25,7 @@ Add scripts to `package.json`:
 ### 2. Configure Prettier
 
 ```bash
-pnpm add -D prettier
+pnpm add -D prettier prettier-plugin-tailwindcss
 ```
 
 Create `prettier.config.js` in the project root. See the [Prettier page](/Standards/prettier) for the full file contents.
@@ -69,7 +69,7 @@ Write the [project scope](/Standards/documentation#-the-flow) before any code.
 
 ### 9. Add commit message checks
 
-Install Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventionalCommits#enforcing-commit-messages).
+Install Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
 
 ### 10. Add CI checks
 

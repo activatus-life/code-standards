@@ -33,9 +33,9 @@ import docsSiteCss from '!!raw-loader!@site/static/templates/docsSite/src/css/cu
 import docsSiteGitignore from '!!raw-loader!@site/static/templates/docsSite/gitignore.txt';
 import nextConfig from '!!raw-loader!@site/static/templates/next.config.mjs';
 import docIndex from '!!raw-loader!@site/static/templates/docs/index.md';
-import docScope from '!!raw-loader!@site/static/templates/docs/scope/projectScope.md';
-import docDesign from '!!raw-loader!@site/static/templates/docs/design/systemDesign.md';
-import docDecision from '!!raw-loader!@site/static/templates/docs/decisions/decisionRecord.md';
+import docScope from '!!raw-loader!@site/static/templates/docs/scope/project-scope.md';
+import docDesign from '!!raw-loader!@site/static/templates/docs/design/system-design.md';
+import docDecision from '!!raw-loader!@site/static/templates/docs/decisions/decision-record.md';
 import docGuide from '!!raw-loader!@site/static/templates/docs/guides/guide.md';
 import docCategory from '!!raw-loader!@site/static/templates/docs/scope/_category_.json';
 import huskyHook from '!!raw-loader!@site/static/templates/husky/commit-msg';
@@ -73,7 +73,7 @@ Each file is also served as a plain file, so a person or an AI agent can fetch i
 
 **Copy to:** `AGENTS.md` in the project root
 
-Replace every `[placeholder]`. See [AGENTS.md Specifications](/Standards/agentSpecs).
+Replace every `[placeholder]`. See [AGENTS.md Specifications](/Standards/agent-specs).
 
 <CodeBlock language="markdown" title="AGENTS.md">{agents}</CodeBlock>
 
@@ -193,7 +193,7 @@ Run `direnv allow` after adding it. See [direnv + nvm](/Standards/direnv).
 
 **Copy to:** `.commitlintrc.json` in the project root
 
-See [Conventional Commits](/Standards/conventionalCommits).
+See [Conventional Commits](/Standards/conventional-commits).
 
 <CodeBlock language="json" title=".commitlintrc.json">{commitlint}</CodeBlock>
 
@@ -203,7 +203,7 @@ See [Conventional Commits](/Standards/conventionalCommits).
 
 **Copy to:** `.agents/skills/` in the project root, and again to `.claude/commands/` so Claude Code picks them up as slash commands.
 
-The eight standard skills. Copy all of them into every project. See [Agent Skills](/Standards/agentSkills) for how they are written.
+The eight standard skills. Copy all of them into every project. See [Agent Skills](/Standards/agent-skills) for how they are written.
 
 | Skill | Invocation | Plain file |
 | --- | --- | --- |
@@ -270,7 +270,7 @@ Runs the test suite; reports failures grouped by cause, tests that never ran, an
 
 **Copy to:** `.husky/commit-msg` in the project root
 
-Refuses a commit whose message does not follow [Conventional Commits](/Standards/conventionalCommits#enforcing-commit-messages). Plain file: [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)
+Refuses a commit whose message does not follow [Conventional Commits](/Standards/conventional-commits#enforcing-commit-messages). Plain file: [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)
 
 <CodeBlock language="text" title=".husky/commit-msg">{huskyHook}</CodeBlock>
 
@@ -328,9 +328,9 @@ One template per type of doc. Replace every `[placeholder]`. See [Writing a doc]
 | Template | Copy to | Plain file |
 | --- | --- | --- |
 | [Overview](#doc-index) | `docs/index.md` | [`/templates/docs/index.md`](pathname:///templates/docs/index.md) |
-| [Project scope](#doc-scope) | `docs/scope/projectScope.md` | [`/templates/docs/scope/projectScope.md`](pathname:///templates/docs/scope/projectScope.md) |
-| [System design](#doc-design) | `docs/design/systemDesign.md` | [`/templates/docs/design/systemDesign.md`](pathname:///templates/docs/design/systemDesign.md) |
-| [Decision record](#doc-decision) | `docs/decisions/`, renamed after the decision | [`/templates/docs/decisions/decisionRecord.md`](pathname:///templates/docs/decisions/decisionRecord.md) |
+| [Project scope](#doc-scope) | `docs/scope/project-scope.md` | [`/templates/docs/scope/project-scope.md`](pathname:///templates/docs/scope/project-scope.md) |
+| [System design](#doc-design) | `docs/design/system-design.md` | [`/templates/docs/design/system-design.md`](pathname:///templates/docs/design/system-design.md) |
+| [Decision record](#doc-decision) | `docs/decisions/`, renamed after the decision | [`/templates/docs/decisions/decision-record.md`](pathname:///templates/docs/decisions/decision-record.md) |
 | [Guide](#doc-guide) | `docs/guides/`, renamed after the task | [`/templates/docs/guides/guide.md`](pathname:///templates/docs/guides/guide.md) |
 | [Folder label](#doc-category) | `_category_.json` in each folder | One per folder under [`/templates/docs/`](pathname:///templates/docs/scope/_category_.json) |
 
@@ -340,15 +340,15 @@ One template per type of doc. Replace every `[placeholder]`. See [Writing a doc]
 
 ### Project scope {#doc-scope}
 
-<CodeBlock language="markdown" title="projectScope.md">{docScope}</CodeBlock>
+<CodeBlock language="markdown" title="project-scope.md">{docScope}</CodeBlock>
 
 ### System design {#doc-design}
 
-<CodeBlock language="markdown" title="systemDesign.md">{docDesign}</CodeBlock>
+<CodeBlock language="markdown" title="system-design.md">{docDesign}</CodeBlock>
 
 ### Decision record {#doc-decision}
 
-<CodeBlock language="markdown" title="decisionRecord.md">{docDecision}</CodeBlock>
+<CodeBlock language="markdown" title="decision-record.md">{docDecision}</CodeBlock>
 
 ### Guide {#doc-guide}
 

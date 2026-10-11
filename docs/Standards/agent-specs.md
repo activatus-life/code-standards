@@ -29,7 +29,7 @@ Every `AGENTS.md` must include these sections. Monorepos (`pnpm-workspace.yaml`,
 | Repository layout | Directory tree at depth 2 |
 | Tech stack | Language, runtime, framework, database, infra (with versions) |
 | Essential commands | Install, dev, build, test, lint, type-check |
-| Development workflow | [Branch naming](/Standards/branchNaming), commit format, PR requirements, merge strategy |
+| Development workflow | [Branch naming](/Standards/branch-naming), commit format, PR requirements, merge strategy |
 | Environment variables | All required and optional env vars with descriptions |
 | Documentation | Where the project's docs are, and the instruction to read them before starting work |
 | Code standards | Link to these standards and the rules agents must follow in every change |
@@ -38,7 +38,7 @@ Every `AGENTS.md` must include these sections. Monorepos (`pnpm-workspace.yaml`,
 
 ## Standard skills
 
-Every project provides these eight skills. **The files are ready to copy from the [Templates page](/templates#skills)** — copy them into `.agents/skills/`, and again into `.claude/commands/` for Claude Code. They are written to the [agent skills standard](/Standards/agentSkills).
+Every project provides these eight skills. **The files are ready to copy from the [Templates page](/templates#skills)** — copy them into `.agents/skills/`, and again into `.claude/commands/` for Claude Code. They are written to the [agent skills standard](/Standards/agent-skills).
 
 | Skill | Invocation | What it does |
 | --- | --- | --- |
@@ -51,7 +51,7 @@ Every project provides these eight skills. **The files are ready to copy from th
 | TypeScript | `/typescript [path]` | Tightens loose types and removes `any`, `!` and unexplained `as` |
 | Test | `/test [path]` | Runs the test suite; reports failures grouped by cause, tests that never ran, and files missing a test |
 
-Skill files are named in camelCase like every other file (`lintFix.md`), so the invocation is camelCase too (`/lintFix`).
+Skill files are named in camelCase (`lintFix.md`), so the invocation is camelCase too (`/lintFix`). They are not documentation pages and have no URL, so the kebab-case rule for docs does not apply.
 
 No skill commits code — see [Agents never commit code](#agents-never-commit-code).
 

@@ -4,7 +4,7 @@ sidebar_position: 8
 
 # Agent Skills
 
-A skill is a reusable instruction file an agent runs when you type `/lint`, `/format`, `/codeReview`. Every Activatus repository provides the same [standard set](/Standards/agentSpecs#standard-skills), copied from the [Templates page](/templates#skills). This page is the standard they are written to.
+A skill is a reusable instruction file an agent runs when you type `/lint`, `/format`, `/codeReview`. Every Activatus repository provides the same [standard set](/Standards/agent-specs#standard-skills), copied from the [Templates page](/templates#skills). This page is the standard they are written to.
 
 Skills are shared, versioned, and executed with real tool access. A vague one wastes a run; a wrong one edits files it was never meant to touch. They get the same review as any other code.
 
@@ -71,7 +71,7 @@ Three rules follow from this:
 
 1. **Every command the body tells the agent to run must be allowlisted.** A body that says `eslint $ARGUMENTS` under an allowlist of only `Bash(pnpm exec eslint:*)` blocks itself halfway through. List each form the body actually uses.
 2. **Grant the narrowest set that still works.** `Bash(pnpm lint:*), Bash(eslint:*)` over a bare `Bash`.
-3. **Never grant `git commit` or `git push`.** [Agents never commit code](/Standards/agentSpecs#agents-never-commit-code), so no skill is allowed to.
+3. **Never grant `git commit` or `git push`.** [Agents never commit code](/Standards/agent-specs#agents-never-commit-code), so no skill is allowed to.
 
 Be honest about the limit: patterns gate the command, not its flags. `Bash(eslint:*)` still permits `eslint --fix`. The allowlist reliably prevents a skill from reaching for a whole *category* of tool; keep the prose instruction as well for anything finer.
 

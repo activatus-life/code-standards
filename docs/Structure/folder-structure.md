@@ -269,9 +269,9 @@ Add the export to `utils/index.ts` whenever you add a function.
 
 - **Start local, promote when shared.** A function begins in the component's `utils/`. When a second component in the feature needs it, move its folder to the feature's `utils/`. When a second feature needs it, move it to the global `utils/`.
 - **One function per folder**, with the folder and file named after the function (`formatCurrency/formatCurrency.ts`), plus its test file and an `index.ts`.
-- **Every function has a test file** in the same folder. See [Readable Code](/Standards/readableCode#every-function-and-component-has-a-test-file).
+- **Every function has a test file** in the same folder. See [Readable Code](/Standards/readable-code#every-function-and-component-has-a-test-file).
 - **Import from the `utils` folder**, never from the files inside it.
-- **Keep UI files clean.** If a function could be written in another file, it does not belong in the component file. See [Writing a component](/Structure/componentOrganization#-writing-a-component).
+- **Keep UI files clean.** If a function could be written in another file, it does not belong in the component file. See [Writing a component](/Structure/component-organization#-writing-a-component).
 
 ---
 
@@ -326,7 +326,7 @@ project-root/
 | `docs/standards/` | Local copy of the code standards. Only add this when the project should keep its standards locally instead of reading them from this repo |
 | `docsSite/` | The Docusaurus site that shows `docs/` at the `/docs` route. Holds config only |
 
-Name documentation files in **camelCase** (`projectScope.md`), not kebab-case (`project-scope.md`).
+Name documentation files in **kebab-case** (`project-scope.md`), not camelCase (`projectScope.md`). The file name becomes the page's URL on the docs site.
 
 See [Documentation](/Standards/documentation) for how docs are written, displayed and kept up to date.
 
@@ -361,7 +361,7 @@ Avoid these anti-patterns:
 
 ## 📚 Naming Conventions
 
-See [Naming Conventions](/Structure/namingConventions) for detailed file and folder naming rules.
+See [Naming Conventions](/Structure/naming-conventions) for detailed file and folder naming rules.
 
 **Quick reference:**
 
@@ -371,7 +371,7 @@ See [Naming Conventions](/Structure/namingConventions) for detailed file and fol
 - **Service files**: camelCase with `Service` suffix (`apiService.ts`)
 - **Route Folder names**: kebab-case (`user-management/`, `api-routes/`)
 - **Component Folder names**: camelCase (`header/`, `model/`)
-- **Documentation files**: camelCase (`projectScope.md`)
+- **Documentation files**: kebab-case (`project-scope.md`)
 
 ---
 

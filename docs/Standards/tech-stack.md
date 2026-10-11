@@ -68,7 +68,7 @@ already contributes `_uid`, `component` and `_editable`, and a hand-written copy
 the moment the library changes.
 
 Read every library generic this way. An unparameterised one with a permissive default is
-usually a silent `any`, not a sensible fallback. The [`/typescript` skill](/Standards/agentSkills)
+usually a silent `any`, not a sensible fallback. The [`/typescript` skill](/Standards/agent-skills)
 applies this as a rule.
 
 ---

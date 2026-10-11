@@ -130,9 +130,9 @@ Over a single `feat(auth): implement magic-link` that touches everything at once
 
 ## People commit, not AI agents
 
-Commits are made by people. [AI agents never commit code](/Standards/agentSpecs#agents-never-commit-code) — an agent leaves its changes uncommitted, and a person reviews them and writes the commit.
+Commits are made by people. [AI agents never commit code](/Standards/agent-specs#agents-never-commit-code) — an agent leaves its changes uncommitted, and a person reviews them and writes the commit.
 
-Branches follow the [Branch Naming](/Standards/branchNaming) standard.
+Branches follow the [Branch Naming](/Standards/branch-naming) standard.
 
 ## Enforcing commit messages
 
