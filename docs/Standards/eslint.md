@@ -63,7 +63,7 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
 export default [
-  { ignores: ["dist/", "build/", "coverage/"] },
+  { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
   js.configs.recommended,
   importX.recommended,
   unicorn.configs.recommended,
@@ -128,7 +128,7 @@ import globals from "globals";
 import { configs as typescript } from "typescript-eslint";
 
 export default [
-  { ignores: ["dist/", "build/", "coverage/"] },
+  { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
   js.configs.recommended,
   importX.recommended,
   importX.typescript,
@@ -281,7 +281,7 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
 export default [
-  { ignores: [".next/", "out/", "build/", "coverage/", "next-env.d.ts"] },
+  { ignores: [".next/", "out/", "build/", "coverage/", "next-env.d.ts", "**/vendor/**"] },
   ...nextVitals,
   ...nextTypescript,
   importX.recommended,
@@ -433,6 +433,25 @@ Add scripts to `package.json`:
 | `typescript-eslint` | TypeScript-specific rules (TypeScript configs only) |
 | `eslint-plugin-react` | React-specific rules (React configs only) |
 | `eslint-plugin-react-hooks` | Hooks rules (React configs only) |
+
+## Third-party code is exempt
+
+**The standards apply to code we write. They do not apply to packages we pull in.**
+
+| Code | Linted? |
+| --- | --- |
+| Our own code | ✅ Yes — every rule applies |
+| `node_modules/` | ❌ No — ESLint ignores it by default |
+| `vendor/` (third-party code copied into the repo) | ❌ No — ignored by the config |
+| Build output (`dist/`, `build/`, `.next/`) | ❌ No — ignored by the config |
+
+Third-party code that is copied into the repository lives in a `vendor/` folder, at any level. The configs ignore `**/vendor/**`, so it is never linted.
+
+- **Do not fix lint errors in third-party code.** It is not ours, and the fix would be lost on the next update.
+- **Do not rename or restructure it** to match our naming or folder rules.
+- **Do not add `eslint-disable` comments to it.** Put it in `vendor/` instead.
+
+If a vendored package lives somewhere else and cannot be moved, add its path to the `ignores` list at the top of the config.
 
 ## Key rule decisions
 

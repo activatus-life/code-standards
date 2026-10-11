@@ -7,7 +7,7 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
 export default [
-  { ignores: [".next/", "out/", "build/", "coverage/", "next-env.d.ts"] },
+  { ignores: [".next/", "out/", "build/", "coverage/", "next-env.d.ts", "**/vendor/**"] },
   ...nextVitals,
   ...nextTypescript,
   importX.recommended,

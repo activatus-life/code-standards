@@ -57,11 +57,21 @@ Add `.nvmrc` and `.envrc` so the right Node version is selected on `cd`. See the
 
 Copy the [AGENTS.md template](/templates#agents) to the project root and replace every `[placeholder]`.
 
-### 7. Add the docs folder
+### 7. Add the agent skills
 
-Create the root-level `docs/` folder with `scope/` and `design/`, and `standards/` if the project keeps its standards locally. See [Project Documentation](/Structure/folderStructure#-project-documentation).
+Copy the eight [standard skill files](/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
 
-### 8. Add CI checks
+### 8. Set up the docs
+
+Copy the [`docs/` templates](/templates#document-templates) and the [`docsSite/` viewer](/templates#docs-site) into the project root, add the `/docs` route, and set `DOCS_URL` in `.env.local`. Follow [Setting it up](/Standards/documentation#-setting-it-up) on the Documentation page.
+
+Write the [project scope](/Standards/documentation#-the-flow) before any code.
+
+### 9. Add commit message checks
+
+Install Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventionalCommits#enforcing-commit-messages).
+
+### 10. Add CI checks
 
 ```yaml
 - name: Lint

@@ -128,29 +128,47 @@ docs(auth): document magic-link API in AGENTS.md
 
 Over a single `feat(auth): implement magic-link` that touches everything at once. Granular commits make `git bisect` and revert effective.
 
-## The `/commit` skill
+## People commit, not AI agents
 
-The `/commit` agent skill (documented in [AGENTS.md specs](/Standards/agentSpecs)) automates this workflow:
+Commits are made by people. [AI agents never commit code](/Standards/agentSpecs#agents-never-commit-code) — an agent leaves its changes uncommitted, and a person reviews them and writes the commit.
 
-1. Inspects the staged diff
-2. Infers the correct type, scope, and description
-3. Proposes a commit message for your review
-4. Commits only after you confirm
-
-```text
-/commit
-/commit auth module
-```
-
-The skill will never push or amend — it only creates a new local commit.
+Branches follow the [Branch Naming](/Standards/branchNaming) standard.
 
 ## Enforcing commit messages
 
-Projects use [Commitlint](https://commitlint.io) with [Husky](https://typicode.github.io/husky/) to enforce the format locally. After `pnpm install`, every commit runs the `commit-msg` hook:
+Every project uses [Commitlint](https://commitlint.io) with a [Husky](https://typicode.github.io/husky/) git hook, so a commit with a badly formatted message is refused. **Set up both — the config file on its own enforces nothing.**
 
-```text
-pnpm exec commitlint --edit "$1"
-```
+### Setup
+
+1. Install the packages:
+
+   ```bash
+   pnpm add -D @commitlint/cli @commitlint/config-conventional husky
+   ```
+
+2. Add the `prepare` script to `package.json`, so the hooks are installed whenever someone runs `pnpm install`:
+
+   ```json
+   {
+     "scripts": {
+       "prepare": "husky"
+     }
+   }
+   ```
+
+3. Add [`.commitlintrc.json`](/templates#commitlint) to the project root.
+
+4. Add the hook file [`.husky/commit-msg`](/templates#husky):
+
+   ```text title=".husky/commit-msg"
+   pnpm exec commitlint --edit "$1"
+   ```
+
+5. Run `pnpm install` once to activate the hook.
+
+After that, every commit runs the `commit-msg` hook.
+
+### Configuration
 
 The configuration is in `.commitlintrc.json`:
 

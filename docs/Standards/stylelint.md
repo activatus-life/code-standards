@@ -33,6 +33,7 @@ Create `stylelint.config.mjs` in your project root:
 ```js title="stylelint.config.mjs"
 /** @type {import("stylelint").Config} */
 export default {
+  ignoreFiles: ["**/vendor/**"],
   extends: ["stylelint-config-standard", "stylelint-config-recess-order"],
   rules: {
     "selector-max-id": 0,
@@ -65,6 +66,7 @@ export default {
 ```js title="stylelint.config.mjs"
 /** @type {import("stylelint").Config} */
 export default {
+  ignoreFiles: ["**/vendor/**"],
   extends: ["stylelint-config-standard-scss", "stylelint-config-recess-order"],
   rules: {
     "selector-max-id": 0,
@@ -131,6 +133,10 @@ Vendor prefixes should be added by **Autoprefixer** in the build pipeline, not w
 ### `color-function-notation: "modern"`
 
 Enforces `rgb(255 0 0 / 50%)` instead of `rgba(255, 0, 0, 0.5)`. The modern syntax is part of CSS Color Level 4 and is supported in all modern browsers.
+
+### `ignoreFiles`: third-party code is exempt
+
+CSS in a `vendor/` folder is not ours, so it is not linted. See [Third-party code is exempt](/Standards/eslint#third-party-code-is-exempt).
 
 ### Tailwind: `import-notation: "string"` and `at-rule-no-unknown`
 

@@ -1,5 +1,7 @@
 # [Project Name]
 
+> **NEVER COMMIT CODE.** Do not run `git commit`, `git push`, `git merge`, `git rebase` or `git stash`, and do not create, switch or delete branches. Make the changes, leave them uncommitted in the working tree, and tell the person what you changed. A person reviews and commits every change.
+
 ## Project overview
 
 [One paragraph: what this project does, who uses it, and why it exists.]
@@ -31,11 +33,12 @@
 | Lint | `pnpm lint` |
 | Format | `pnpm format` |
 | Type-check | `pnpm typecheck` |
+| Docs site | `pnpm docs:dev` (then open `/docs`) |
 
 ## Development workflow
 
-- **Branches**: [branch naming pattern, e.g. `feature/short-description`]
-- **Commits**: Conventional Commits (`feat: add invoice export`)
+- **Branches**: `<type>/<short-description>` in kebab-case, e.g. `feat/invoice-export`, `fix/login-redirect-loop`. Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`. Never work directly on `main`.
+- **Commits**: Conventional Commits (`feat: add invoice export`). **People commit — AI agents never do.**
 - **Pull requests**: [review and CI requirements]
 - **Merging**: [merge strategy, e.g. squash and merge]
 
@@ -44,6 +47,19 @@
 | Variable | Required | Description |
 | --- | --- | --- |
 | `[VARIABLE_NAME]` | [Yes / No] | [What it is for] |
+
+## Documentation
+
+The project's docs are plain Markdown in `docs/`. **Read them before starting work** — `docs/index.md` first, then the scope and design docs for the area being changed. Read the files directly; do not start the docs site to read them.
+
+| Folder | Holds |
+| --- | --- |
+| `docs/scope/` | What is being built, and what is not |
+| `docs/design/` | How it is built |
+| `docs/decisions/` | Why it is built that way — one file per decision |
+| `docs/guides/` | How to run it, deploy it and fix it |
+
+Do not edit `docsSite/` unless the task is about the docs viewer itself.
 
 ## Code standards
 
@@ -71,21 +87,34 @@ Follow these rules in every change:
 - **File names are camelCase**; component files are PascalCase; CSS variables are kebab-case.
 - **Lay out with flexbox first**, and split layouts into child components. Only use CSS grid when specifically asked.
 - **Style with Tailwind.** Colours come from the global colour palette only — never a hard-coded or arbitrary colour.
+- **Update the docs in the same change.** If a change makes a doc in `docs/` wrong, fix the doc. Record significant choices as a decision record in `docs/decisions/`.
 - **Comments explain why, not what.** Never leave commented-out code.
 - **Error messages say what happened and what to do.**
+
+**Third-party code is exempt.** Code in `node_modules/` and `vendor/` belongs to someone else: do not lint it, do not reformat it, do not edit it to meet these rules.
 
 Run `pnpm lint` and `pnpm test` before finishing any task.
 
 ## Available skills
 
+Skill files live in `.agents/skills/`, mirrored to `.claude/commands/`.
+
 | Skill | Invocation | What it does |
 | --- | --- | --- |
-| [Skill name] | `/[name]` | [What it does] |
+| Lint | `/lint [path]` | Runs the linters in check-only mode and reports issues |
+| Lint & fix | `/lintFix [path]` | Auto-fixes lint and formatting issues, then reports |
+| Format | `/format [path]` | Formats files with Prettier |
+| Code review | `/codeReview [branch, commit or path]` | Reviews changes for bugs and standards compliance |
+| Update layout | `/updateLayout` | Regenerates the "Repository layout" section of this file |
+| Security audit | `/securityAudit [path]` | Audits the code for common security problems |
+| TypeScript | `/typescript [path]` | Tightens loose types and removes unsafe assertions |
+| Test | `/test [path]` | Runs the tests and reports failures and missing tests |
 
 ## Out of scope for AI agents
 
-- Do not push to `main` or force-push any branch.
-- Do not commit secrets, tokens or `.env` files.
+- **Never commit code.** No `git commit`, `git push`, `git merge`, `git rebase` or `git stash`. Leave every change uncommitted for a person to review.
+- Do not create, switch or delete branches.
+- Do not write secrets, tokens or `.env` values into any file.
 - Do not change dependencies or lockfiles unless the task requires it.
-- Do not edit generated files.
+- Do not edit generated files, or third-party code in `node_modules/` or `vendor/`.
 - [Add any other forbidden actions.]

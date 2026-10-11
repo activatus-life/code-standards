@@ -7,7 +7,7 @@ import globals from "globals";
 import { configs as typescript } from "typescript-eslint";
 
 export default [
-  { ignores: ["dist/", "build/", "coverage/"] },
+  { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
   js.configs.recommended,
   importX.recommended,
   importX.typescript,

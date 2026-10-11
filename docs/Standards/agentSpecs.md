@@ -7,6 +7,14 @@ sidebar_label: "AGENTS.md"
 
 Every Activatus repository must have an `AGENTS.md` in its root. This file gives AI coding agents (Claude Code, Copilot, Cursor, etc.) the context they need to work effectively without repeated explanation.
 
+## Agents never commit code
+
+**An AI agent never commits.** It does not run `git commit`, `git push`, `git merge`, `git rebase` or `git stash`, and it does not create, switch or delete branches.
+
+The agent makes the changes, leaves them uncommitted in the working tree, and says what it changed. A person reviews the changes and commits them.
+
+Every `AGENTS.md` states this at the very top and again under "Out of scope for AI agents". The [template](/templates#agents) already does.
+
 ## Template
 
 Start from the [AGENTS.md template](/templates#agents) and replace every `[placeholder]`.
@@ -21,27 +29,31 @@ Every `AGENTS.md` must include these sections. Monorepos (`pnpm-workspace.yaml`,
 | Repository layout | Directory tree at depth 2 |
 | Tech stack | Language, runtime, framework, database, infra (with versions) |
 | Essential commands | Install, dev, build, test, lint, type-check |
-| Development workflow | Branch naming, commit format, PR requirements, merge strategy |
+| Development workflow | [Branch naming](/Standards/branchNaming), commit format, PR requirements, merge strategy |
 | Environment variables | All required and optional env vars with descriptions |
+| Documentation | Where the project's docs are, and the instruction to read them before starting work |
 | Code standards | Link to these standards and the rules agents must follow in every change |
 | Available skills | Table of the agent skills the project provides |
-| Out of scope for AI agents | Explicit list of forbidden agent actions |
+| Out of scope for AI agents | Explicit list of forbidden agent actions — always including "never commit code" |
 
 ## Standard skills
 
-These are the standard skills a project provides. Each is a file in `.agents/skills/` (mirrored to `.claude/commands/` for Claude Code), written to the [agent skills standard](/Standards/agentSkills):
+Every project provides these eight skills. **The files are ready to copy from the [Templates page](/templates#skills)** — copy them into `.agents/skills/`, and again into `.claude/commands/` for Claude Code. They are written to the [agent skills standard](/Standards/agentSkills).
 
 | Skill | Invocation | What it does |
 | --- | --- | --- |
 | Lint | `/lint [path]` | Runs ESLint (and Stylelint if configured) in check-only mode; reports all issues grouped by file |
-| Lint & fix | `/lint-fix [path]` | Runs ESLint + Stylelint `--fix`, then Prettier; reports what changed |
+| Lint & fix | `/lintFix [path]` | Runs ESLint and Stylelint in fix mode, then Prettier; reports what changed and what is left |
 | Format | `/format [path]` | Runs Prettier in write mode; reports reformatted files |
-| Code review | `/code-review [ref]` | Reviews branch diff for correctness, security, types, and standards compliance. Accepts a PR URL, commit SHA, or file path |
-| Update layout | `/update-layout` | Regenerates the "Repository layout" section (and "Workspace packages" in monorepos) from the current state of the repo |
-| Commit | `/commit [hint]` | Inspects the staged diff, infers a [Conventional Commits](/Standards/conventionalCommits) message, and commits after your approval |
-| Security audit | `/security-audit [target]` | Audits the repository, the code, and a deployed URL against the OWASP Top 10:2025 and CWE Top 25. Accepts a path, URL, or base ref |
-| TypeScript | `/typescript [path]` | Tightens loose types and removes the assertions they force. Accepts a file path |
-| Test | `/test [path]` | Runs the test suite and reports failures grouped by cause, and a failing test from one that never ran |
+| Code review | `/codeReview [branch, commit or path]` | Reviews changes for correctness, security, types, tests and standards compliance. Report only |
+| Update layout | `/updateLayout` | Regenerates the "Repository layout" section of `AGENTS.md` (and "Workspace packages" in monorepos) |
+| Security audit | `/securityAudit [path]` | Audits dependencies and code for secrets, missing access control, unvalidated input and injection. Report only |
+| TypeScript | `/typescript [path]` | Tightens loose types and removes `any`, `!` and unexplained `as` |
+| Test | `/test [path]` | Runs the test suite; reports failures grouped by cause, tests that never ran, and files missing a test |
+
+Skill files are named in camelCase like every other file (`lintFix.md`), so the invocation is camelCase too (`/lintFix`).
+
+No skill commits code — see [Agents never commit code](#agents-never-commit-code).
 
 ### Skill locations
 
@@ -60,4 +72,4 @@ Skills are stored in two locations so they work with different tooling:
 | State constraints explicitly ("do not push to `main`") | Assume the agent knows your branching policy |
 | Include version numbers in the tech stack | Leave versions ambiguous |
 | Keep it under ~300 lines | Write a novel — agents have context limits |
-| Run `/update-layout` after structural changes | Let the directory tree go stale |
+| Run `/updateLayout` after structural changes | Let the directory tree go stale |

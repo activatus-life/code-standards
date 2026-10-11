@@ -5,7 +5,7 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
 export default [
-  { ignores: ["dist/", "build/", "coverage/"] },
+  { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
   js.configs.recommended,
   importX.recommended,
   unicorn.configs.recommended,

@@ -16,6 +16,29 @@ import editorconfig from '!!raw-loader!@site/static/templates/.editorconfig';
 import nvmrc from '!!raw-loader!@site/static/templates/.nvmrc';
 import envrc from '!!raw-loader!@site/static/templates/.envrc';
 import commitlint from '!!raw-loader!@site/static/templates/.commitlintrc.json';
+import skillLint from '!!raw-loader!@site/static/templates/skills/lint.md';
+import skillLintFix from '!!raw-loader!@site/static/templates/skills/lintFix.md';
+import skillFormat from '!!raw-loader!@site/static/templates/skills/format.md';
+import skillCodeReview from '!!raw-loader!@site/static/templates/skills/codeReview.md';
+import skillUpdateLayout from '!!raw-loader!@site/static/templates/skills/updateLayout.md';
+import skillSecurityAudit from '!!raw-loader!@site/static/templates/skills/securityAudit.md';
+import skillTypescript from '!!raw-loader!@site/static/templates/skills/typescript.md';
+import skillTest from '!!raw-loader!@site/static/templates/skills/test.md';
+import docsSitePackage from '!!raw-loader!@site/static/templates/docsSite/package.json';
+import docsSiteConfig from '!!raw-loader!@site/static/templates/docsSite/docusaurus.config.ts';
+import docsSiteSidebars from '!!raw-loader!@site/static/templates/docsSite/sidebars.ts';
+import docsSiteTsconfig from '!!raw-loader!@site/static/templates/docsSite/tsconfig.json';
+import docsSiteWorkspace from '!!raw-loader!@site/static/templates/docsSite/pnpm-workspace.yaml';
+import docsSiteCss from '!!raw-loader!@site/static/templates/docsSite/src/css/custom.css';
+import docsSiteGitignore from '!!raw-loader!@site/static/templates/docsSite/gitignore.txt';
+import nextConfig from '!!raw-loader!@site/static/templates/next.config.mjs';
+import docIndex from '!!raw-loader!@site/static/templates/docs/index.md';
+import docScope from '!!raw-loader!@site/static/templates/docs/scope/projectScope.md';
+import docDesign from '!!raw-loader!@site/static/templates/docs/design/systemDesign.md';
+import docDecision from '!!raw-loader!@site/static/templates/docs/decisions/decisionRecord.md';
+import docGuide from '!!raw-loader!@site/static/templates/docs/guides/guide.md';
+import docCategory from '!!raw-loader!@site/static/templates/docs/scope/_category_.json';
+import huskyHook from '!!raw-loader!@site/static/templates/husky/commit-msg';
 
 # Templates
 
@@ -38,6 +61,11 @@ Each file is also served as a plain file, so a person or an AI agent can fetch i
 | [Node version](#nvmrc) | `.nvmrc` in the project root | [`/templates/.nvmrc`](pathname:///templates/.nvmrc) |
 | [direnv](#envrc) | `.envrc` in the project root | [`/templates/.envrc`](pathname:///templates/.envrc) |
 | [Commitlint](#commitlint) | `.commitlintrc.json` in the project root | [`/templates/.commitlintrc.json`](pathname:///templates/.commitlintrc.json) |
+| [Agent skills](#skills) | `.agents/skills/` and `.claude/commands/` | Eight files — see [below](#skills) |
+| [Husky commit hook](#husky) | `.husky/commit-msg` | [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg) |
+| [Docs site](#docs-site) | `docsSite/` in the project root | Several files — see [below](#docs-site) |
+| [`/docs` route](#docs-route) | `next.config.mjs` | [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs) |
+| [Document templates](#document-templates) | `docs/` in the project root | Several files — see [below](#document-templates) |
 
 ---
 
@@ -168,3 +196,166 @@ Run `direnv allow` after adding it. See [direnv + nvm](/Standards/direnv).
 See [Conventional Commits](/Standards/conventionalCommits).
 
 <CodeBlock language="json" title=".commitlintrc.json">{commitlint}</CodeBlock>
+
+---
+
+## Agent skills {#skills}
+
+**Copy to:** `.agents/skills/` in the project root, and again to `.claude/commands/` so Claude Code picks them up as slash commands.
+
+The eight standard skills. Copy all of them into every project. See [Agent Skills](/Standards/agentSkills) for how they are written.
+
+| Skill | Invocation | Plain file |
+| --- | --- | --- |
+| [Lint](#skill-lint) | `/lint [path]` | [`/templates/skills/lint.md`](pathname:///templates/skills/lint.md) |
+| [Lint & fix](#skill-lintfix) | `/lintFix [path]` | [`/templates/skills/lintFix.md`](pathname:///templates/skills/lintFix.md) |
+| [Format](#skill-format) | `/format [path]` | [`/templates/skills/format.md`](pathname:///templates/skills/format.md) |
+| [Code review](#skill-codereview) | `/codeReview [branch, commit or path]` | [`/templates/skills/codeReview.md`](pathname:///templates/skills/codeReview.md) |
+| [Update layout](#skill-updatelayout) | `/updateLayout` | [`/templates/skills/updateLayout.md`](pathname:///templates/skills/updateLayout.md) |
+| [Security audit](#skill-securityaudit) | `/securityAudit [path]` | [`/templates/skills/securityAudit.md`](pathname:///templates/skills/securityAudit.md) |
+| [TypeScript](#skill-typescript) | `/typescript [path]` | [`/templates/skills/typescript.md`](pathname:///templates/skills/typescript.md) |
+| [Test](#skill-test) | `/test [path]` | [`/templates/skills/test.md`](pathname:///templates/skills/test.md) |
+
+### Lint {#skill-lint}
+
+Runs ESLint (and Stylelint if configured) in check-only mode; reports all issues grouped by file.
+
+<CodeBlock language="markdown" title="lint.md">{skillLint}</CodeBlock>
+
+### Lint & fix {#skill-lintfix}
+
+Runs ESLint and Stylelint in fix mode, then Prettier; reports what changed and what is left.
+
+<CodeBlock language="markdown" title="lintFix.md">{skillLintFix}</CodeBlock>
+
+### Format {#skill-format}
+
+Runs Prettier in write mode; reports reformatted files.
+
+<CodeBlock language="markdown" title="format.md">{skillFormat}</CodeBlock>
+
+### Code review {#skill-codereview}
+
+Reviews changes for correctness, security, types, tests and standards compliance. Report only.
+
+<CodeBlock language="markdown" title="codeReview.md">{skillCodeReview}</CodeBlock>
+
+### Update layout {#skill-updatelayout}
+
+Regenerates the "Repository layout" section of `AGENTS.md` (and "Workspace packages" in monorepos).
+
+<CodeBlock language="markdown" title="updateLayout.md">{skillUpdateLayout}</CodeBlock>
+
+### Security audit {#skill-securityaudit}
+
+Audits dependencies and code for secrets, missing access control, unvalidated input and injection. Report only.
+
+<CodeBlock language="markdown" title="securityAudit.md">{skillSecurityAudit}</CodeBlock>
+
+### TypeScript {#skill-typescript}
+
+Tightens loose types and removes `any`, `!` and unexplained `as`.
+
+<CodeBlock language="markdown" title="typescript.md">{skillTypescript}</CodeBlock>
+
+### Test {#skill-test}
+
+Runs the test suite; reports failures grouped by cause, tests that never ran, and files missing a test.
+
+<CodeBlock language="markdown" title="test.md">{skillTest}</CodeBlock>
+
+---
+
+## Husky commit hook {#husky}
+
+**Copy to:** `.husky/commit-msg` in the project root
+
+Refuses a commit whose message does not follow [Conventional Commits](/Standards/conventionalCommits#enforcing-commit-messages). Plain file: [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)
+
+<CodeBlock language="text" title=".husky/commit-msg">{huskyHook}</CodeBlock>
+
+---
+
+## Docs site {#docs-site}
+
+**Copy to:** a `docsSite/` folder in the project root
+
+The Docusaurus viewer that shows the project's `docs/` folder at `/docs`. Copy every file, keeping the folder layout. See [Documentation](/Standards/documentation#-setting-it-up).
+
+| File | Plain file |
+| --- | --- |
+| `package.json` | [`/templates/docsSite/package.json`](pathname:///templates/docsSite/package.json) |
+| `docusaurus.config.ts` | [`/templates/docsSite/docusaurus.config.ts`](pathname:///templates/docsSite/docusaurus.config.ts) |
+| `sidebars.ts` | [`/templates/docsSite/sidebars.ts`](pathname:///templates/docsSite/sidebars.ts) |
+| `tsconfig.json` | [`/templates/docsSite/tsconfig.json`](pathname:///templates/docsSite/tsconfig.json) |
+| `pnpm-workspace.yaml` | [`/templates/docsSite/pnpm-workspace.yaml`](pathname:///templates/docsSite/pnpm-workspace.yaml) |
+| `src/css/custom.css` | [`/templates/docsSite/src/css/custom.css`](pathname:///templates/docsSite/src/css/custom.css) |
+| `.gitignore` | [`/templates/docsSite/gitignore.txt`](pathname:///templates/docsSite/gitignore.txt) — rename to `.gitignore` |
+| `static/img/logo.svg` | [`/templates/docsSite/static/img/logo.svg`](pathname:///templates/docsSite/static/img/logo.svg) — replace with the project logo |
+
+Set `PROJECT_NAME` at the top of the config:
+
+<CodeBlock language="ts" title="docusaurus.config.ts">{docsSiteConfig}</CodeBlock>
+
+<CodeBlock language="json" title="package.json">{docsSitePackage}</CodeBlock>
+
+<CodeBlock language="ts" title="sidebars.ts">{docsSiteSidebars}</CodeBlock>
+
+<CodeBlock language="json" title="tsconfig.json">{docsSiteTsconfig}</CodeBlock>
+
+<CodeBlock language="yaml" title="pnpm-workspace.yaml">{docsSiteWorkspace}</CodeBlock>
+
+<CodeBlock language="css" title="src/css/custom.css">{docsSiteCss}</CodeBlock>
+
+<CodeBlock language="text" title=".gitignore">{docsSiteGitignore}</CodeBlock>
+
+### The `/docs` route {#docs-route}
+
+**Copy to:** `next.config.mjs` in the project root. If the project already has a Next.js config, add the `rewrites` function to it.
+
+Plain file: [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs)
+
+<CodeBlock language="js" title="next.config.mjs">{nextConfig}</CodeBlock>
+
+---
+
+## Document templates {#document-templates}
+
+**Copy to:** the `docs/` folder in the project root, keeping the folder layout
+
+One template per type of doc. Replace every `[placeholder]`. See [Writing a doc](/Standards/documentation#️-writing-a-doc).
+
+| Template | Copy to | Plain file |
+| --- | --- | --- |
+| [Overview](#doc-index) | `docs/index.md` | [`/templates/docs/index.md`](pathname:///templates/docs/index.md) |
+| [Project scope](#doc-scope) | `docs/scope/projectScope.md` | [`/templates/docs/scope/projectScope.md`](pathname:///templates/docs/scope/projectScope.md) |
+| [System design](#doc-design) | `docs/design/systemDesign.md` | [`/templates/docs/design/systemDesign.md`](pathname:///templates/docs/design/systemDesign.md) |
+| [Decision record](#doc-decision) | `docs/decisions/`, renamed after the decision | [`/templates/docs/decisions/decisionRecord.md`](pathname:///templates/docs/decisions/decisionRecord.md) |
+| [Guide](#doc-guide) | `docs/guides/`, renamed after the task | [`/templates/docs/guides/guide.md`](pathname:///templates/docs/guides/guide.md) |
+| [Folder label](#doc-category) | `_category_.json` in each folder | One per folder under [`/templates/docs/`](pathname:///templates/docs/scope/_category_.json) |
+
+### Overview {#doc-index}
+
+<CodeBlock language="markdown" title="index.md">{docIndex}</CodeBlock>
+
+### Project scope {#doc-scope}
+
+<CodeBlock language="markdown" title="projectScope.md">{docScope}</CodeBlock>
+
+### System design {#doc-design}
+
+<CodeBlock language="markdown" title="systemDesign.md">{docDesign}</CodeBlock>
+
+### Decision record {#doc-decision}
+
+<CodeBlock language="markdown" title="decisionRecord.md">{docDecision}</CodeBlock>
+
+### Guide {#doc-guide}
+
+<CodeBlock language="markdown" title="guide.md">{docGuide}</CodeBlock>
+
+### Folder label {#doc-category}
+
+Each folder under `docs/` has a `_category_.json` that sets its sidebar label and order: Scope `2`, Design `3`, Decisions `4`, Guides `5`.
+
+<CodeBlock language="json" title="_category_.json">{docCategory}</CodeBlock>

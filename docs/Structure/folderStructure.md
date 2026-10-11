@@ -88,9 +88,12 @@ project-root/
 ├── public/                                          # Static assets
 ├── tests/                                           # Test files
 ├── docs/                                            # Project documentation
-│   ├── scope/                                       # What is being built and why
-│   ├── design/                                      # Design references and decisions
+│   ├── scope/                                       # What is being built, and what is not
+│   ├── design/                                      # How it is built
+│   ├── decisions/                                   # Why it is built that way
+│   ├── guides/                                      # How to run, deploy and fix it
 │   └── standards/                                   # Local standards (optional)
+├── docsSite/                                        # Docusaurus viewer for docs/ (config only)
 ├── package.json
 ├── next.config.mjs
 ├── tsconfig.json
@@ -110,7 +113,8 @@ project-root/
 ├── lib/                    # Core libraries & integrations
 ├── utils/                  # Reusable functions
 ├── public/                 # Static assets
-├── docs/                   # Project documentation
+├── docs/                   # Project documentation (Markdown)
+├── docsSite/               # Docusaurus viewer for docs/
 ├── package.json
 ├── next.config.mjs
 └── tsconfig.json
@@ -299,22 +303,32 @@ utils/
 
 ## 📝 Project Documentation
 
-**Keep project documentation in a root-level `docs/` folder**, split by purpose:
+**Keep project documentation in a root-level `docs/` folder**, split by purpose. The Docusaurus viewer that displays it at `/docs` lives beside it in `docsSite/`:
 
 ```text
-docs/
-├── scope/                   # What is being built and why
-├── design/                  # Design references and decisions
-└── standards/               # Local standards (optional)
+project-root/
+├── docs/                    # The docs: plain Markdown only
+│   ├── index.md             # Overview
+│   ├── scope/               # What is being built, and what is not
+│   ├── design/              # How it is built
+│   ├── decisions/           # Why it is built that way — one file per decision
+│   ├── guides/              # How to run it, deploy it and fix it
+│   └── standards/           # Local standards (optional)
+└── docsSite/                # The viewer: Docusaurus config, no content
 ```
 
 | Folder | Contents |
 | --- | --- |
-| `docs/scope/` | Project scope: requirements, features, and what is in and out of scope |
-| `docs/design/` | Design documentation: references, specifications, and design decisions |
+| `docs/scope/` | Project scope: goals, requirements, and what is in and out of scope |
+| `docs/design/` | How the system works: the parts, the data and the key flows |
+| `docs/decisions/` | One page per significant decision: what was chosen, why, and what was rejected |
+| `docs/guides/` | Step-by-step instructions: run locally, deploy, fix common problems |
 | `docs/standards/` | Local copy of the code standards. Only add this when the project should keep its standards locally instead of reading them from this repo |
+| `docsSite/` | The Docusaurus site that shows `docs/` at the `/docs` route. Holds config only |
 
 Name documentation files in **camelCase** (`projectScope.md`), not kebab-case (`project-scope.md`).
+
+See [Documentation](/Standards/documentation) for how docs are written, displayed and kept up to date.
 
 ---
 

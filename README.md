@@ -79,6 +79,22 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 - 📐 **Flexbox first.** Split layouts into child components. Only use CSS grid if someone specifically asks for it.
 - 🎨 **Colours come from the global palette. Full stop.** No hard-coded hex, no one-off values. If the colour's not in the palette, it's not in the build.
 
+### 📖 Docs
+
+- 📝 **Docs are plain Markdown in `docs/`**: scope, design, decisions and guides. Agents read the files; humans browse them at `/docs`.
+- 🔒 **`/docs` only exists when `DOCS_URL` is set.** It's never set in production, so the docs never leak onto a live site.
+- ✅ **Not finished until the docs are updated.** Change how something works, fix the doc in the same change.
+
+### 🤖 AI agents
+
+- 🛑 **Agents never commit code.** No commits, no pushes, no branches. They make the change, leave it sitting there, and a human reviews and commits it. Every time.
+
+- 📦 **Third-party code is exempt.** Anything in `node_modules/` or `vendor/` isn't ours. Don't lint it, don't tidy it, leave it be.
+
+### 🌿 Branches
+
+- 🏷️ **`type/short-description`**, in kebab-case: `feat/invoice-export`, `fix/login-redirect-loop`. Never work straight on `main`.
+
 ### 🗂️ Structure
 
 - 🐫 **Files are camelCase.** Components are PascalCase (`Button.tsx`) inside a camelCase folder (`button/`). CSS variables are the one exception: kebab-case.
@@ -95,6 +111,9 @@ Fair enough. Head to the **Templates** page on the site, or grab them straight f
 ```text
 static/templates/
 ├── AGENTS.md               # 🤖 Context file for AI agents
+├── skills/                 # 🛠️ Eight ready-made agent skills
+├── docs/                   # 📖 Document templates: scope, design, decision, guide
+├── docsSite/               # 🌐 Docusaurus viewer that shows docs/ at /docs
 ├── eslint/                 # 🚨 Four flavours: base, typescript, react, nextjs
 ├── stylelint/              # 💅 CSS and SCSS
 ├── prettier.config.js      # ✨ Formatting
@@ -132,7 +151,7 @@ Built with [Docusaurus](https://docusaurus.io). The sidebar generates itself fro
 
 Reckon a rule's wrong, or there's one missing? Good. Standards that never change are standards nobody reads.
 
-1. 🌿 **Branch off `main`.**
+1. 🌿 **Branch off `main`**, named `type/short-description` (`docs/add-branch-naming`).
 2. 📝 **Edit or add a Markdown file in `docs/`.** Name it in camelCase (`namingConventions.md`, not `naming-conventions.md`). Yes, we follow our own rules here.
 3. 📋 **Changing a config?** Edit the file in `static/templates/` and the matching page in `docs/Standards/` so the two don't drift apart.
 4. 🔨 **Run `pnpm build`.** It fails on broken links, so you'll know quick smart if you've stuffed one.

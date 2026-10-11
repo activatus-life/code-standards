@@ -293,6 +293,7 @@ See [Readable Code](/Standards/readableCode#type-names-say-what-they-are).
 | **Constant files** | camelCase / SCREAMING_SNAKE_CASE | `userRole.ts` / `API_URL.ts` |
 | **CSS modules** | camelCase + `.module.css` | `userProfile.module.css` |
 | **CSS variables** | kebab-case | `--color-brand-primary` |
+| **Branches** | `type/kebab-case` | `feat/invoice-export` |
 | **Documentation files** | camelCase | `projectScope.md` |
 | **Variables** | camelCase | `userName` |
 | **Functions** | camelCase | `getUserData` |

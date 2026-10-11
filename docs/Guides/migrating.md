@@ -6,6 +6,14 @@ sidebar_position: 3
 
 Migrating an established codebase to the shared standards is best done in stages to keep PRs reviewable.
 
+## Before you start: third-party code is exempt
+
+The standards apply to **code we write**, not to packages we pull in. Do not lint, reformat, rename or restructure third-party code — see [Third-party code is exempt](/Standards/eslint#third-party-code-is-exempt).
+
+- `node_modules/` is ignored automatically.
+- Third-party code copied into the repo belongs in a `vendor/` folder, which the configs ignore.
+- Add `vendor/` to `.prettierignore` too.
+
 ## Stage 1 — Prettier (formatting only)
 
 Formatting changes are safe to land in one big PR because they don't change behaviour.
@@ -30,6 +38,7 @@ Add a `.prettierignore` if you have generated files you don't want touched:
 dist/
 build/
 coverage/
+vendor/
 *.generated.ts
 ```
 
@@ -60,6 +69,18 @@ Run `pnpm lint` and triage the output. Fix issues in thematic PRs (e.g. all `any
 ## Stage 4 — AGENTS.md
 
 Copy the [AGENTS.md template](/templates#agents) to the project root and replace every `[placeholder]`.
+
+## Stage 5 — Agent skills
+
+Copy the eight [standard skill files](/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
+
+## Stage 6 — Docs
+
+Move the project's existing documentation into the standard [`docs/` folders](/Standards/documentation#-where-docs-live), then add the [`docsSite/` viewer](/Standards/documentation#-setting-it-up) so it shows at `/docs`.
+
+## Stage 7 — Commit message checks
+
+Add Commitlint and the Husky hook. See [Enforcing commit messages](/Standards/conventionalCommits#enforcing-commit-messages).
 
 ## Tips
 
