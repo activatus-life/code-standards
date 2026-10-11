@@ -75,6 +75,27 @@ They are switched on by one environment variable:
 
 The docs site also sets `noIndex`, so search engines are told not to index it wherever it is running.
 
+### What goes in Git
+
+**The docs are committed. They are not published.** Committing a file to the repository and serving it on the live site are two different things.
+
+| Item | In Git? | Why |
+| --- | --- | --- |
+| `docs/` | ✅ Committed | It is the team's shared record. Developers and AI agents on every machine need it, and it changes in the same pull request as the code |
+| `docsSite/` config files | ✅ Committed | So everyone gets the same viewer |
+| `docsSite/node_modules/`, `docsSite/build/`, `docsSite/.docusaurus/` | ❌ Ignored | Installed and generated files. The `docsSite/.gitignore` from the template covers them |
+| `.env.local` (holds `DOCS_URL`) | ❌ Ignored | Local settings are never committed |
+
+**Never add `docs/` to `.gitignore`.** Ignored docs exist on one machine only: the rest of the team, and every agent working from a fresh copy of the repo, would have none.
+
+Nothing in `docs/` is shipped with the app. The build only includes files the app imports, and the app never imports from `docs/`.
+
+:::caution[Public repositories]
+
+Anyone who can read the repository can read its docs. Keep internal projects in a **private** repository.
+
+:::
+
 ### How the route is wired
 
 The project's `next.config.mjs` forwards `/docs` to the docs site, but only when `DOCS_URL` is set:
