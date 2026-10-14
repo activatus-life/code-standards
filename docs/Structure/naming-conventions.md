@@ -6,6 +6,8 @@ sidebar_position: 5
 
 Consistent naming conventions make codebases easier to navigate, understand, and maintain.
 
+This page covers **how** a name is written. **Which words** to use comes from the [Ontology](/ontology): a Draft Ticket is `draftTicket` in code and `draft_ticket` in the database, never `ticketDraft` or `pendingTicket`.
+
 ## File Naming
 
 ### Components
@@ -188,14 +190,14 @@ See [CSS Styling](/Standards/styling#css-variables).
 
 ```tsx
 ✅ Good
-project-scope.md          → /docs/scope/project-scope
-system-design.md
-running-locally.md
+background-jobs.md        → /docs/architecture/background-jobs
+design-system.md
+product-market-fit.md
 
 ❌ Bad
-projectScope.md           → /docs/scope/projectScope
-system_design.md
-RunningLocally.md
+backgroundJobs.md         → /docs/architecture/backgroundJobs
+design_system.md
+ProductMarketFit.md
 ```
 
 ---
@@ -289,7 +291,7 @@ Code files are camelCase or PascalCase. A short list of things are kebab-case in
 | Thing | Example | Why |
 | --- | --- | --- |
 | **Route folders** | `app/account-settings/` | The folder name becomes the URL |
-| **Documentation files** | `docs/scope/project-scope.md` | The file name becomes the URL |
+| **Documentation files** | `docs/architecture/background-jobs.md` | The file name becomes the URL |
 | **CSS variables** | `--color-brand-primary` | The CSS convention; required by Tailwind |
 | **Branch names** | `feat/invoice-export` | The Git convention |
 
@@ -311,7 +313,7 @@ Code files are camelCase or PascalCase. A short list of things are kebab-case in
 | **CSS modules** | camelCase + `.module.css` | `userProfile.module.css` |
 | **CSS variables** | kebab-case | `--color-brand-primary` |
 | **Branches** | `type/kebab-case` | `feat/invoice-export` |
-| **Documentation files** | kebab-case | `project-scope.md` |
+| **Documentation files** | kebab-case | `background-jobs.md` |
 | **Variables** | camelCase | `userName` |
 | **Functions** | camelCase | `getUserData` |
 | **Components** | PascalCase | `UserProfile` |

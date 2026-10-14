@@ -87,12 +87,11 @@ project-root/
 ├── styles/                                          # Global styles
 ├── public/                                          # Static assets
 ├── tests/                                           # Test files
-├── docs/                                            # Project documentation
-│   ├── scope/                                       # What is being built, and what is not
-│   ├── design/                                      # How it is built
-│   ├── decisions/                                   # Why it is built that way
-│   ├── guides/                                      # How to run, deploy and fix it
-│   └── standards/                                   # Local standards (optional)
+├── docs/                                            # Project documentation — every file is a Decision Doc
+│   ├── overview/                                    # What the project is and how it works
+│   ├── architecture/                                # How the system is built
+│   ├── scope/                                       # What is in, out and later
+│   └── ...                                          # The other standard folders
 ├── docsSite/                                        # Docusaurus viewer for docs/ (config only)
 ├── package.json
 ├── next.config.mjs
@@ -303,32 +302,23 @@ utils/
 
 ## 📝 Project Documentation
 
-**Keep project documentation in a root-level `docs/` folder**, split by purpose. The Docusaurus viewer that displays it at `/docs` lives beside it in `docsSite/`:
+**Keep project documentation in a root-level `docs/` folder.** Every file in it is a Decision Doc, and every project uses the same folders. The Docusaurus viewer that displays it at `/docs` lives beside it in `docsSite/`:
 
 ```text
 project-root/
-├── docs/                    # The docs: plain Markdown only
-│   ├── index.md             # Overview
-│   ├── scope/               # What is being built, and what is not
-│   ├── design/              # How it is built
-│   ├── decisions/           # Why it is built that way — one file per decision
-│   ├── guides/              # How to run it, deploy it and fix it
-│   └── standards/           # Local standards (optional)
+├── docs/                    # The docs: plain Markdown only. Every file is a Decision Doc
+│   ├── overview/            # What the project is, how it works, how to write docs
+│   ├── architecture/        # How the system is built
+│   ├── design/              # How it looks and behaves
+│   ├── scope/               # What is in, out and later
+│   ├── ...                  # The other standard folders
+│   └── product/             # Decisions specific to this product
 └── docsSite/                # The viewer: Docusaurus config, no content
 ```
 
-| Folder | Contents |
-| --- | --- |
-| `docs/scope/` | Project scope: goals, requirements, and what is in and out of scope |
-| `docs/design/` | How the system works: the parts, the data and the key flows |
-| `docs/decisions/` | One page per significant decision: what was chosen, why, and what was rejected |
-| `docs/guides/` | Step-by-step instructions: run locally, deploy, fix common problems |
-| `docs/standards/` | Local copy of the code standards. Only add this when the project should keep its standards locally instead of reading them from this repo |
-| `docsSite/` | The Docusaurus site that shows `docs/` at the `/docs` route. Holds config only |
+See [Documentation](/Standards/documentation) for the full list of folders, the doc format, and how docs are displayed and kept up to date.
 
-Name documentation files in **kebab-case** (`project-scope.md`), not camelCase (`projectScope.md`). The file name becomes the page's URL on the docs site.
-
-See [Documentation](/Standards/documentation) for how docs are written, displayed and kept up to date.
+Name documentation folders and files in **kebab-case** (`background-jobs.md`), not camelCase (`backgroundJobs.md`). The name becomes the page's URL on the docs site.
 
 ---
 
@@ -371,7 +361,7 @@ See [Naming Conventions](/Structure/naming-conventions) for detailed file and fo
 - **Service files**: camelCase with `Service` suffix (`apiService.ts`)
 - **Route Folder names**: kebab-case (`user-management/`, `api-routes/`)
 - **Component Folder names**: camelCase (`header/`, `model/`)
-- **Documentation files**: kebab-case (`project-scope.md`)
+- **Documentation files**: kebab-case (`background-jobs.md`)
 
 ---
 

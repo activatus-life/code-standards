@@ -2,6 +2,52 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+const TITLE_SEPARATOR = ' — ';
+const FIRST_GROUP = 'overview';
+
+// Each doc is titled "# Group — Menu item". The folder is the menu group and the
+// part after the dash is the menu item. Overview comes first; everything else is alphabetical.
+const generateSidebarItems = async ({defaultSidebarItemsGenerator, docs, ...rest}) => {
+  const items = await defaultSidebarItemsGenerator({docs, ...rest});
+  const titleById = new Map(docs.map((doc) => [doc.id, doc.title]));
+
+  const labelled = items.map((item) => {
+    if (item.type !== 'category') {
+      return item;
+    }
+
+    const children = item.items
+      .map((child) => {
+        if (child.type !== 'doc') {
+          return child;
+        }
+        const title = titleById.get(child.id) ?? child.id;
+        const label = title.includes(TITLE_SEPARATOR) ? title.split(TITLE_SEPARATOR)[1] : title;
+        return {...child, label};
+      })
+      .sort((first, second) => first.label.localeCompare(second.label));
+
+    const firstDoc = item.items.find((child) => child.type === 'doc');
+    const firstTitle = firstDoc ? (titleById.get(firstDoc.id) ?? '') : '';
+    const label = firstTitle.includes(TITLE_SEPARATOR) ? firstTitle.split(TITLE_SEPARATOR)[0] : item.label;
+    const folder = firstDoc ? firstDoc.id.split('/')[0] : item.label;
+
+    return {...item, label, items: children, customProps: {folder}};
+  });
+
+  return labelled.sort((first, second) => {
+    const firstFolder = first.customProps?.folder ?? '';
+    const secondFolder = second.customProps?.folder ?? '';
+    if (firstFolder === FIRST_GROUP) {
+      return -1;
+    }
+    if (secondFolder === FIRST_GROUP) {
+      return 1;
+    }
+    return String(first.label).localeCompare(String(second.label));
+  });
+};
+
 // TODO: set the project name
 const PROJECT_NAME = 'Project Name';
 
@@ -33,9 +79,9 @@ const config: Config = {
           path: '../docs',
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
+          sidebarItemsGenerator: generateSidebarItems,
         },
         blog: false,
-        pages: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -61,11 +107,6 @@ const config: Config = {
         src: 'img/logo.svg',
       },
       items: [],
-    },
-    footer: {
-      style: 'dark',
-      links: [],
-      copyright: `Internal documentation. Not for public release.`,
     },
     prism: {
       theme: prismThemes.oneLight,

@@ -41,37 +41,41 @@ Add scripts to `package.json`:
 }
 ```
 
-### 3. Configure Stylelint
+### 3. Add the global stylesheet
+
+Copy the [global stylesheet](/templates#globalscss) to `app/globals.css` and replace the example colours with the project's palette. See [CSS Styling](/Standards/styling#-colours-always-come-from-global-variables).
+
+### 4. Configure Stylelint
 
 For projects with hand-written CSS or SCSS, install Stylelint and create `stylelint.config.mjs`. See the [Stylelint page](/Standards/stylelint) for the full file contents.
 
-### 4. Add EditorConfig
+### 5. Add EditorConfig
 
 Copy the standard `.editorconfig` to your project root. See the [EditorConfig page](/Standards/editorconfig) for the full file contents.
 
-### 5. Set the Node version
+### 6. Set the Node version
 
 Add `.nvmrc` and `.envrc` so the right Node version is selected on `cd`. See the [direnv + nvm page](/Standards/direnv).
 
-### 6. Create AGENTS.md
+### 7. Create AGENTS.md
 
 Copy the [AGENTS.md template](/templates#agents) to the project root and replace every `[placeholder]`.
 
-### 7. Add the agent skills
+### 8. Add the agent skills
 
 Copy the eight [standard skill files](/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
 
-### 8. Set up the docs
+### 9. Set up the docs
 
 Copy the [`docs/` templates](/templates#document-templates) and the [`docsSite/` viewer](/templates#docs-site) into the project root, add the `/docs` route, and set `DOCS_URL` in `.env.local`. Follow [Setting it up](/Standards/documentation#-setting-it-up) on the Documentation page.
 
-Write the [project scope](/Standards/documentation#-the-flow) before any code.
+Every doc starts as `Not started`. Fill in the `pitch/` and `scope/` docs before any code.
 
-### 9. Add commit message checks
+### 10. Add commit message checks
 
 Install Commitlint and the two Husky hooks: one checks the commit message, the other runs `pnpm lint` so code that breaks the standards cannot be committed. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
 
-### 10. Add CI checks
+### 11. Add CI checks
 
 ```yaml
 - name: Lint

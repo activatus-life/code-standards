@@ -77,7 +77,7 @@ Copy the eight [standard skill files](/templates#skills) into `.agents/skills/`,
 
 ## Stage 6 — Docs
 
-Move the project's existing documentation into the standard [`docs/` folders](/Standards/documentation#-where-docs-live), then add the [`docsSite/` viewer](/Standards/documentation#-setting-it-up) so it shows at `/docs`.
+Move the project's existing documentation into the standard [`docs/` folders](/Standards/documentation#-the-folders), rewriting each as a [Decision Doc](/Standards/documentation#-the-doc-format), then add the [`docsSite/` viewer](/Standards/documentation#-setting-it-up) so it shows at `/docs`.
 
 ## Stage 7 — Commit message checks
 

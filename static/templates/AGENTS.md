@@ -48,24 +48,30 @@
 | --- | --- | --- |
 | `[VARIABLE_NAME]` | [Yes / No] | [What it is for] |
 
+## Ontology
+
+Activatus uses a fixed vocabulary, the ontology: [ontology page URL]
+
+- **Read the ontology before starting work.** It defines what the people on this project mean by words like Draft Ticket, Ticket Change, Workflow and UAT.
+- **Use its terms** in code, docs, database names and messages — never a synonym. It is a `user_flow`, not a `user_journey`.
+- **Never use a removed term.**
+- If a person uses a word loosely, work out which ontology term they mean and use that term. **If you are not sure what a term means, ask.** Do not guess and do not invent a new term.
+
 ## Documentation
 
-The project's docs are plain Markdown in `docs/`. **Read them before starting work** — `docs/index.md` first, then the scope and design docs for the area being changed. Read the files directly; do not start the docs site to read them.
+The project's docs are plain Markdown in `docs/`. **Every file is a Decision Doc**: it states one decision and why it was made.
 
-| Folder | Holds |
-| --- | --- |
-| `docs/scope/` | What is being built, and what is not |
-| `docs/design/` | How it is built |
-| `docs/decisions/` | Why it is built that way — one file per decision |
-| `docs/guides/` | How to run it, deploy it and fix it |
-
-Do not edit `docsSite/` unless the task is about the docs viewer itself.
+- **Read them before starting work** — the three docs in `docs/overview/` first, then the docs for the area being changed. Read the files directly; do not start the docs site to read them.
+- **Check each doc's Status.** `Decided` is settled. `Current plan` may change. `Under evaluation` and `Not started` are **not decisions** — do not treat them as one and do not invent one. Ask.
+- **Never invent a product decision to unblock yourself.** If the docs do not answer it, stop and ask.
+- **Update the docs in the same change.** If a change makes a doc wrong, fix the doc and change its Updated date.
+- Do not edit `docsSite/` unless the task is about the docs viewer itself.
 
 ## Code standards
 
 This project follows the Activatus Code Standards: [code standards site URL]
 
-[If the project keeps a local copy, add: "A local copy is in `docs/standards/`."]
+Anything this project does differently is listed in `docs/development/coding-standards.md`.
 
 Follow these rules in every change:
 
@@ -88,10 +94,9 @@ Follow these rules in every change:
 - **One component per file.** Server and client components live in separate files.
 - **Component file order**: imports, component, variables, state, `useMemo` values, `useCallback` functions, effects, render. No inline functions in render.
 - **Reusable functions live in a `utils/` folder** — global, feature or component level — one folder per function, with an `index.ts`.
-- **Code file names are camelCase**; component files are PascalCase. **Anything that becomes a URL is kebab-case**: route folders and documentation files (`docs/scope/project-scope.md`). CSS variables are kebab-case too.
+- **Code file names are camelCase**; component files are PascalCase. **Anything that becomes a URL is kebab-case**: route folders and documentation folders and files (`docs/architecture/background-jobs.md`). CSS variables are kebab-case too.
 - **Lay out with flexbox first**, and split layouts into child components. Only use CSS grid when specifically asked.
-- **Style with Tailwind.** Colours come from the global colour palette only — never a hard-coded or arbitrary colour.
-- **Update the docs in the same change.** If a change makes a doc in `docs/` wrong, fix the doc. Record significant choices as a decision record in `docs/decisions/`.
+- **Style with Tailwind.** Colours come from the global colour palette in `app/globals.css` only — never a hard-coded or arbitrary colour. The design decisions are in `docs/design/design-system.md`.
 - **Comments explain why, not what.** Never leave commented-out code.
 - **Error messages say what happened and what to do.**
 

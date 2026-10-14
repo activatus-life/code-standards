@@ -50,6 +50,7 @@ That fires up the site locally with hot reload. Easy as.
 | Section                    | What you'll find                                                                         |
 | -------------------------- | ---------------------------------------------------------------------------------------- |
 | 📋 **Templates**           | Ready-to-copy `AGENTS.md`, ESLint, Prettier, Stylelint and friends                       |
+| 📖 **Ontology**            | The words we use, what they mean, and the words we don't use    |
 | 🧭 **Guides**              | Setting up a new project, dragging an old one up to scratch, and how design becomes code |
 | 📏 **Standards**           | Readable code, linting, formatting, styling, commits, the tech stack and AI agent rules  |
 | 🏗️ **Structure**           | Folders, components, naming, imports and API routes                                      |
@@ -85,7 +86,7 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 
 ### 📖 Docs
 
-- 📝 **Docs are plain Markdown in `docs/`**: scope, design, decisions and guides. Agents read the files; humans browse them at `/docs`.
+- 📝 **Docs are plain Markdown in `docs/`, and every file is a Decision Doc.** Same folders in every project. Agents read the files; humans browse them at `/docs`.
 - 🔒 **`/docs` only exists when `DOCS_URL` is set.** It's never set in production, so the docs never leak onto a live site.
 - ✅ **Not finished until the docs are updated.** Change how something works, fix the doc in the same change.
 
@@ -102,7 +103,7 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 ### 🗂️ Structure
 
 - 🐫 **Code files are camelCase.** Components are PascalCase (`Button.tsx`) inside a camelCase folder (`button/`).
-- 🔗 **If it becomes a URL, it's kebab-case.** Route folders and doc files (`project-scope.md`). CSS variables and branch names too.
+- 🔗 **If it becomes a URL, it's kebab-case.** Route folders and doc files (`background-jobs.md`). CSS variables and branch names too.
 - 🧰 **Reusable functions live in `utils/`.** Global, feature or component level, one folder per function, with an `index.ts` so imports stay tidy.
 - 🧱 **Components follow the same order every time.** Imports, component, variables, state, effects, render. No inline functions in the render.
 - 🔀 **Server and client code live in separate files.** The server one wraps the client one.
@@ -117,7 +118,7 @@ Fair enough. Head to the **Templates** page on the site, or grab them straight f
 static/templates/
 ├── AGENTS.md               # 🤖 Context file for AI agents
 ├── skills/                 # 🛠️ Eight ready-made agent skills
-├── docs/                   # 📖 Document templates: scope, design, decision, guide
+├── docs/                   # 📖 The full set of Decision Doc templates, one per standard folder
 ├── docsSite/               # 🌐 Docusaurus viewer that shows docs/ at /docs
 ├── eslint/                 # 🚨 Four flavours: base, typescript, react, nextjs
 ├── stylelint/              # 💅 CSS and SCSS

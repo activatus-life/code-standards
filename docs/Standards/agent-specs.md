@@ -31,6 +31,7 @@ Every `AGENTS.md` must include these sections. Monorepos (`pnpm-workspace.yaml`,
 | Essential commands | Install, dev, build, test, lint, type-check |
 | Development workflow | [Branch naming](/Standards/branch-naming), commit format, PR requirements, merge strategy |
 | Environment variables | All required and optional env vars with descriptions |
+| Ontology | Link to the [ontology](/ontology), and the instruction to read it and use its terms |
 | Documentation | Where the project's docs are, and the instruction to read them before starting work |
 | Code standards | Link to these standards and the rules agents must follow in every change |
 | Available skills | Table of the agent skills the project provides |

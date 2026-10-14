@@ -72,11 +72,6 @@ const config: Config = {
       },
       items: [],
     },
-    footer: {
-      style: 'dark',
-      links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} Activatus. Built with Docusaurus.`,
-    },
     prism: {
       theme: prismThemes.oneLight,
       darkTheme: prismThemes.oneDark,

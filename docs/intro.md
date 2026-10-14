@@ -28,6 +28,10 @@ This site documents the shared code standards used across all Activatus projects
 
 Project layout is covered under **Structure**: [folder structure](/Structure/folder-structure), [component organization](/Structure/component-organization), [naming conventions](/Structure/naming-conventions), [import organization](/Structure/import-organization) and [API routes](/Structure/api-routes).
 
+## Ontology
+
+The [Ontology](/ontology) is the shared vocabulary every Activatus project uses: what each term means, and the terms we do not use. Read it first.
+
 ## Quick start
 
 Every config file is ready to copy from the [Templates](/templates) page.

@@ -115,6 +115,8 @@ A colour that is in neither is not used. If a design calls for a new colour, add
 
 ### ✅ Define the colours
 
+Each project defines its colours once, in its global stylesheet:
+
 ```css
 /* app/globals.css */
 @import "tailwindcss";
@@ -136,6 +138,8 @@ A colour that is in neither is not used. If a design calls for a new colour, add
 ```
 
 Tailwind turns every `--color-*` variable in `@theme` into utility classes: `--color-brand-primary` becomes `bg-brand-primary`, `text-brand-primary`, `border-brand-primary` and so on.
+
+The project's design decisions — what each colour is for, the fonts, the spacing — are recorded in its `docs/design/design-system.md` [Decision Doc](/Standards/documentation).
 
 ### ✅ Use the colours
 
