@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Activatus Code Standards',
   tagline: 'Shared code standards for every Activatus project.',
-  favicon: 'img/favicon.svg',
+  favicon: 'images/favicon.svg',
 
   // TODO: set to the production URL once the site has a home
   url: 'https://code-standards.example.com',
@@ -31,6 +31,7 @@ const config: Config = {
       'classic',
       {
         docs: {
+          path: 'documentation',
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
         },
@@ -68,7 +69,7 @@ const config: Config = {
       title: 'Activatus Code Standards',
       logo: {
         alt: 'Activatus Logo',
-        src: 'img/logo.svg',
+        src: 'images/logo.svg',
       },
       items: [],
     },

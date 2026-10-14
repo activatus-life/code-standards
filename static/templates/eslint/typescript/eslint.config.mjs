@@ -65,7 +65,7 @@ export default [
       "unicorn/filename-case": ["error", { cases: { camelCase: true, pascalCase: true } }],
       "unicorn/name-replacements": [
         "error",
-        { replacements: { props: false, ref: false, params: false, utils: false } },
+        { allowList: { ref: true, params: true, searchParams: true } },
       ],
     },
   },
@@ -82,7 +82,7 @@ export default [
         {
           selector: ["typeAlias", "interface"],
           format: ["PascalCase"],
-          custom: { regex: "(Props|Type)$", match: true },
+          custom: { regex: "(Properties|Type)$", match: true },
         },
       ],
       "@typescript-eslint/no-explicit-any": "error",

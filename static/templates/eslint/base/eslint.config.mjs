@@ -58,7 +58,7 @@ export default [
       "unicorn/filename-case": ["error", { cases: { camelCase: true, pascalCase: true } }],
       "unicorn/name-replacements": [
         "error",
-        { replacements: { props: false, ref: false, params: false, utils: false } },
+        { allowList: { ref: true, params: true, searchParams: true } },
       ],
     },
   },
