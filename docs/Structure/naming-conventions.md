@@ -6,6 +6,8 @@ sidebar_position: 5
 
 Consistent naming conventions make codebases easier to navigate, understand, and maintain.
 
+**Every name must be human-readable** — folders, files, props, form fields, types, database columns, everything. See [Names are full English words](/Standards/readable-code#names-are-full-english-words) for the full list.
+
 This page covers **how** a name is written. **Which words** to use comes from the [Ontology](/ontology): a Draft Ticket is `draftTicket` in code and `draft_ticket` in the database, never `ticketDraft` or `pendingTicket`.
 
 ## File Naming

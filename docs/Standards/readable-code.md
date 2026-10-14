@@ -11,7 +11,7 @@ Every file must be readable by a person who has never seen it before. Code is re
 | Rule | Enforced by |
 | --- | --- |
 | [No file longer than 300 lines](#no-file-longer-than-300-lines) | ESLint `max-lines` (test files exempt) |
-| [Names are full English words](#names-are-full-english-words) | ESLint `unicorn/name-replacements` |
+| [Names are full English words](#names-are-full-english-words) — everywhere, including form fields | ESLint for code names; code review and AI agents for the rest |
 | [Arrow functions everywhere](#arrow-functions-everywhere) | ESLint `func-style`, `prefer-arrow-callback` |
 | [Always `const`](#always-const) | ESLint `no-restricted-syntax`, `prefer-const`, `no-var` |
 | [A function does one thing](#a-function-does-one-thing) | Code review |
@@ -47,7 +47,84 @@ Blank lines and comments do not count towards the limit. **Test files are exempt
 
 ## Names are full English words
 
-Every variable, function and parameter name describes what it holds or does, in plain English. No shorthand.
+**Every name in the project is human-readable.** Not just variables — every single word we put into the code: folders, files, components, props, form fields, types, database columns, environment variables, test names. A person who has never seen the project should read any name and know what it is.
+
+**No shorthand, no abbreviations, no numbered names, no single letters.**
+
+### Where this applies
+
+Everything that has a name:
+
+| Thing | ✅ Human-readable | ❌ Not |
+| --- | --- | --- |
+| **Folders** | `accountSettings/`, `invoiceTable/` | `acctSet/`, `misc/`, `stuff/`, `new/` |
+| **Files** | `formatCurrency.ts`, `InvoiceTable.tsx` | `fmtCur.ts`, `utils2.ts`, `helpers.ts`, `temp.ts` |
+| **Components** | `InvoiceTable`, `SubmitButton` | `Tbl`, `Comp1`, `MyComponent`, `Wrapper2` |
+| **Props** | `isDisabled`, `onUserSelect`, `invoiceTotal` | `dis`, `cb`, `val`, `data` |
+| **Variables** | `userEmailAddress`, `activeUsers` | `addr`, `x`, `temp`, `data`, `res`, `obj` |
+| **Functions** | `calculateOrderTotal`, `sendWelcomeEmail` | `calc`, `doIt`, `process`, `handle` |
+| **Event handlers** | `handleSearchTextChange` | `onChg`, `handler`, `fn` |
+| **Booleans** | `isLoading`, `hasPermission`, `canDelete` | `loading`, `flag`, `ok`, `chk` |
+| **Constants** | `MAX_RETRY_ATTEMPTS`, `RETRY_DELAY_MILLISECONDS` | `MAX`, `N`, `DELAY` |
+| **Types** | `UserType`, `InvoiceStatusType`, `ButtonProps` | `U`, `Data`, `IProps`, `Obj` |
+| **Generic type parameters** | `<ItemType>`, `<ResponseType>` | `<T>`, `<K, V>` |
+| **Union and enum values** | `"processing" \| "shipped" \| "cancelled"` | `"p" \| "s"`, `1 \| 2 \| 3` |
+| **Form fields** | `name="emailAddress"`, `name="companyName"` | `name="email1"`, `name="fld3"`, `name="q"` |
+| **CSS Module classes** | `.primaryButton`, `.invoiceRow` | `.pb`, `.btn2`, `.wrapper3` |
+| **CSS variables** | `--color-brand-primary` | `--c1`, `--blue2` |
+| **Database tables and columns** | `draft_ticket`, `created_at`, `invoice_total` | `dt`, `col1`, `amt`, `flag` |
+| **API routes** | `/api/calendar-events` | `/api/ce`, `/api/data`, `/api/v2x` |
+| **Environment variables** | `STRIPE_SECRET_KEY`, `DOCS_URL` | `SK`, `KEY2`, `URL_1` |
+| **Test names** | `it("adds a thousands separator")` | `it("works")`, `it("test 1")` |
+| **Branches** | `feat/invoice-export` | `fix/stuff`, `toms-branch` |
+| **Doc files** | `architecture/background-jobs.md` | `arch/bg.md`, `notes2.md` |
+| **Error messages** | `"Enter an email address"` | `"Invalid input"`, `"Error 42"` |
+
+The words come from the [Ontology](/ontology) wherever it has a term: a Draft Ticket is `draftTicket`, never `pendingTicket`. The casing comes from [Naming Conventions](/Structure/naming-conventions).
+
+### Form fields
+
+Form fields are where names slip most, and where they matter most: a field's name travels through the whole system.
+
+**One field, one name, everywhere it goes.** The same words name the input, the form's data, the API request, the type and the database column:
+
+| Where | Name |
+| --- | --- |
+| Input `name` and `id` | `emailAddress` |
+| Form data and validation schema | `emailAddress` |
+| API request body | `emailAddress` |
+| Type property | `emailAddress: string` |
+| Database column | `email_address` |
+
+```tsx
+// ✅ Good
+<label htmlFor="emailAddress">Email address</label>
+<input id="emailAddress" name="emailAddress" type="email" />
+
+<label htmlFor="billingFrequency">Billing frequency</label>
+<select id="billingFrequency" name="billingFrequency">
+  <option value="monthly">Monthly</option>
+  <option value="yearly">Yearly</option>
+</select>
+```
+
+```tsx
+// ❌ Bad
+<input id="f3" name="email1" placeholder="Email" />
+
+<select name="freq">
+  <option value="1">Monthly</option>
+  <option value="2">Yearly</option>
+</select>
+```
+
+- **`name` and `id` are full words**, and match each other.
+- **Every field has a visible `<label>`** in plain English. A placeholder is never the label.
+- **Option values are words**, not numbers: `value="monthly"`, not `value="1"`.
+- **Buttons with only an icon get an `aria-label`** that says what they do: `aria-label="Delete invoice"`.
+- **Validation messages name the field and say what to do**: "Enter an email address", not "Required".
+
+### Examples in code
 
 ```ts
 // ✅ Good
@@ -73,9 +150,22 @@ const calc = (arr: OrderItemType[]) => {
 users.map((u) => u.name);
 ```
 
-Three framework names are allowed because they are the idiom every React developer already reads: `props`, `ref` and `params`.
+### The only exceptions
 
-See [Naming Conventions](/Structure/naming-conventions) for casing rules.
+- **Three framework names** every React developer already reads: `props`, `ref` and `params`.
+- **`utils`**, our [standard folder name](/Structure/folder-structure#-utils).
+- **Abbreviations that are the everyday word**: `id`, `url`, `api`, `pdf`, `html`. Nobody says "uniform resource locator".
+
+Nothing else.
+
+### How it is checked
+
+| Names | Checked by |
+| --- | --- |
+| Variables, functions, parameters and file names | ESLint `unicorn/name-replacements` and `unicorn/filename-case` |
+| Type names | ESLint `@typescript-eslint/naming-convention` |
+| CSS variables and CSS Module classes | Stylelint |
+| **Everything else** — folders, props, form fields, union values, database columns, routes, environment variables, test names | **Code review and AI agents.** The linter cannot read these, so every agent and reviewer checks them |
 
 ---
 
@@ -114,7 +204,7 @@ export const formatCurrency = function (amount: number) {
 Three things to know:
 
 - **Define before use.** An arrow function is written above the code that uses it. This is [enforced](/Structure/import-organization#3-define-before-use), and it means a mistake fails straight away instead of being hidden.
-- **Generic components need a trailing comma** in `.tsx` files, so the `<T>` is not read as JSX: `const List = <T,>({ items }: ListProps<T>) => { … }`.
+- **Generic components need a trailing comma** in `.tsx` files, so the type parameter is not read as JSX: `const List = <ItemType,>({ items }: ListProps<ItemType>) => { … }`.
 - **Next.js files that need a default export** take two lines:
 
   ```tsx title="app/users/page.tsx"

@@ -77,7 +77,9 @@ Follow these rules in every change:
 
 - **Every function and component has a test file**, created in the same change. One test file tests one function or one component.
 - **No file longer than 300 lines** (test files are exempt).
-- **Names are full English words.** No shorthand such as `btn`, `e` or `acc`.
+- **Every name is human-readable — no exceptions.** Not just variables: folders, files, components, props, form fields, types, generic type parameters, union values, CSS classes, database tables and columns, API routes, environment variables, test names and branches. Full English words a newcomer would understand. No shorthand (`btn`, `e`, `acc`), no single letters (`x`, `T`), no numbered names (`email1`, `utils2`), no vague names (`data`, `temp`, `handle`). Only `props`, `ref`, `params`, `utils` and everyday abbreviations like `id` and `url` are allowed.
+- **Form fields especially.** A field has one name everywhere it goes: the input's `name` and `id`, the form schema, the API request, the type and the database column (`emailAddress` / `email_address`). Every field has a visible `<label>` in plain English — never a placeholder instead. Option values are words (`"monthly"`), not numbers. Validation messages name the field and say what to do.
+- **The linter only checks some names.** Folders, props, form fields, database columns, routes and environment variables are not linted — check every one of them yourself.
 - **Always `const`.** Never `var`. Use `let` only when a value must be reassigned, with `// eslint-disable-next-line no-restricted-syntax -- <reason>` on the line above.
 - **Arrow functions everywhere.** Never use the `function` keyword: `export const Button = () => {}`, not `export function Button() {}`.
 - **No circular imports, ever.** A file never imports a file that imports it back. Inside a folder, import files directly — never through the folder's own `index.ts` — and never import a parent component from its sub-component.
