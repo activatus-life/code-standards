@@ -58,7 +58,12 @@ export default [
       "unicorn/filename-case": ["error", { cases: { camelCase: true, pascalCase: true } }],
       "unicorn/name-replacements": [
         "error",
-        { allowList: { ref: true, params: true, searchParams: true } },
+        {
+          // Dictionary words: see "Dictionary" in the Human-Readable Names standard.
+          replacements: { docs: false, props: false, utils: false },
+          // Third-party names, allowed only exactly as they are.
+          allowList: { ref: true, params: true, searchParams: true },
+        },
       ],
     },
   },

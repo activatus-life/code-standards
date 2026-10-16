@@ -1,16 +1,16 @@
-const DOCUMENTATION_URL = process.env.DOCUMENTATION_URL;
+const DOCS_URL = process.env.DOCS_URL;
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   async rewrites() {
-    // The docs are only served when DOCUMENTATION_URL is set. It is never set in production.
-    if (!DOCUMENTATION_URL) {
+    // The docs are only served when DOCS_URL is set. It is never set in production.
+    if (!DOCS_URL) {
       return [];
     }
 
     return [
-      { source: "/documentation", destination: `${DOCUMENTATION_URL}/documentation/` },
-      { source: "/documentation/:path*", destination: `${DOCUMENTATION_URL}/documentation/:path*` },
+      { source: "/docs", destination: `${DOCS_URL}/docs/` },
+      { source: "/docs/:path*", destination: `${DOCS_URL}/docs/:path*` },
     ];
   },
 };

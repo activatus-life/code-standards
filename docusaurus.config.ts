@@ -7,8 +7,7 @@ const config: Config = {
   tagline: 'Shared code standards for every Activatus project.',
   favicon: 'images/favicon.svg',
 
-  // TODO: set to the production URL once the site has a home
-  url: 'https://code-standards.example.com',
+  url: 'https://activatus-code-standards.vercel.app',
   baseUrl: '/',
 
   onBrokenLinks: 'throw',
@@ -31,7 +30,7 @@ const config: Config = {
       'classic',
       {
         docs: {
-          path: 'documentation',
+          path: 'docs',
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
         },

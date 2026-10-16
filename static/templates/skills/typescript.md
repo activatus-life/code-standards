@@ -16,7 +16,7 @@ Replace loose types with precise ones in the given files.
    - Replace `any` with the real type, or with `unknown` narrowed by a check
    - Replace `value!` with a check that the value exists
    - Replace a cast with validation or a properly typed source
-4. Follow the naming rule for every type you add or rename: the name ends in `Properties` (the object parameter of a component or function) or `Type` (everything else).
+4. Follow the naming rule for every type you add or rename: the name ends in `Props` (the object parameter of a component or function) or `Type` (everything else).
 5. Run `pnpm typecheck`, then `pnpm lint`. Fix any errors your changes caused.
 6. Report each change: the file, what the type was, and what it is now. List anything you could not tighten, and why.
 

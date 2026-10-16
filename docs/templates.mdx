@@ -1,0 +1,419 @@
+---
+sidebar_position: 2
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import agents from "!!raw-loader!@site/static/templates/AGENTS.md";
+import eslintTypescript from "!!raw-loader!@site/static/templates/eslint/typescript/eslint.config.mjs";
+import eslintReact from "!!raw-loader!@site/static/templates/eslint/react/eslint.config.mjs";
+import eslintNextjs from "!!raw-loader!@site/static/templates/eslint/nextjs/eslint.config.mjs";
+import eslintBase from "!!raw-loader!@site/static/templates/eslint/base/eslint.config.mjs";
+import prettier from "!!raw-loader!@site/static/templates/prettier.config.js";
+import stylelintCss from "!!raw-loader!@site/static/templates/stylelint/css/stylelint.config.mjs";
+import stylelintScss from "!!raw-loader!@site/static/templates/stylelint/scss/stylelint.config.mjs";
+import globalsCss from "!!raw-loader!@site/static/templates/globals.css";
+import editorconfig from "!!raw-loader!@site/static/templates/.editorconfig";
+import nvmrc from "!!raw-loader!@site/static/templates/.nvmrc";
+import envrc from "!!raw-loader!@site/static/templates/.envrc";
+import commitlint from "!!raw-loader!@site/static/templates/.commitlintrc.json";
+import skillLint from "!!raw-loader!@site/static/templates/skills/lint.md";
+import skillLintFix from "!!raw-loader!@site/static/templates/skills/lintFix.md";
+import skillFormat from "!!raw-loader!@site/static/templates/skills/format.md";
+import skillCodeReview from "!!raw-loader!@site/static/templates/skills/codeReview.md";
+import skillUpdateLayout from "!!raw-loader!@site/static/templates/skills/updateLayout.md";
+import skillSecurityAudit from "!!raw-loader!@site/static/templates/skills/securityAudit.md";
+import skillTypescript from "!!raw-loader!@site/static/templates/skills/typescript.md";
+import skillTest from "!!raw-loader!@site/static/templates/skills/test.md";
+import docsSitePackage from "!!raw-loader!@site/static/templates/docsSite/package.json.txt";
+import docsSiteConfig from "!!raw-loader!@site/static/templates/docsSite/docusaurus.config.ts";
+import docsSiteSidebars from "!!raw-loader!@site/static/templates/docsSite/sidebars.ts";
+import docsSiteTsconfig from "!!raw-loader!@site/static/templates/docsSite/tsconfig.json";
+import docsSiteWorkspace from "!!raw-loader!@site/static/templates/docsSite/pnpm-workspace.yaml";
+import docsSiteCss from "!!raw-loader!@site/static/templates/docsSite/src/css/custom.css";
+import docsSiteGitignore from "!!raw-loader!@site/static/templates/docsSite/gitignore.txt";
+import decisionDoc from "!!raw-loader!@site/static/templates/decision-doc.md";
+import docsSiteHome from "!!raw-loader!@site/static/templates/docsSite/src/pages/index.tsx";
+import nextConfig from "!!raw-loader!@site/static/templates/next.config.mjs";
+import huskyHook from "!!raw-loader!@site/static/templates/husky/commit-msg";
+import huskyPreCommit from "!!raw-loader!@site/static/templates/husky/pre-commit";
+
+# Templates
+
+Ready-made files to copy into a project. Every config on this page is the exact file described in the standards — copy it, do not retype it.
+
+Each file is also served as a plain file, so a person or an AI agent can fetch it directly instead of copying from this page.
+
+| File                                             | Copy to                                    | Plain file                                                                                                    |
+| ------------------------------------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| [AGENTS.md](#agents)                             | `AGENTS.md` in the project root            | [`/templates/AGENTS.md`](pathname:///templates/AGENTS.md)                                                     |
+| [ESLint — TypeScript](#eslinttypescript)         | `eslint.config.mjs` in the project root    | [`/templates/eslint/typescript/eslint.config.mjs`](pathname:///templates/eslint/typescript/eslint.config.mjs) |
+| [ESLint — React + TypeScript](#eslintreact)      | `eslint.config.mjs` in the project root    | [`/templates/eslint/react/eslint.config.mjs`](pathname:///templates/eslint/react/eslint.config.mjs)           |
+| [ESLint — Next.js](#eslintnextjs)                | `eslint.config.mjs` in the project root    | [`/templates/eslint/nextjs/eslint.config.mjs`](pathname:///templates/eslint/nextjs/eslint.config.mjs)         |
+| [ESLint — JavaScript / Node.js](#eslintbase)     | `eslint.config.mjs` in the project root    | [`/templates/eslint/base/eslint.config.mjs`](pathname:///templates/eslint/base/eslint.config.mjs)             |
+| [Prettier](#prettier)                            | `prettier.config.js` in the project root   | [`/templates/prettier.config.js`](pathname:///templates/prettier.config.js)                                   |
+| [Stylelint — CSS and CSS Modules](#stylelintcss) | `stylelint.config.mjs` in the project root | [`/templates/stylelint/css/stylelint.config.mjs`](pathname:///templates/stylelint/css/stylelint.config.mjs)   |
+| [Stylelint — SCSS](#stylelintscss)               | `stylelint.config.mjs` in the project root | [`/templates/stylelint/scss/stylelint.config.mjs`](pathname:///templates/stylelint/scss/stylelint.config.mjs) |
+| [Global styles and colour palette](#globalscss)  | `app/globals.css`                          | [`/templates/globals.css`](pathname:///templates/globals.css)                                                 |
+| [EditorConfig](#editorconfig)                    | `.editorconfig` in the project root        | [`/templates/.editorconfig`](pathname:///templates/.editorconfig)                                             |
+| [Node version](#nvmrc)                           | `.nvmrc` in the project root               | [`/templates/.nvmrc`](pathname:///templates/.nvmrc)                                                           |
+| [direnv](#envrc)                                 | `.envrc` in the project root               | [`/templates/.envrc`](pathname:///templates/.envrc)                                                           |
+| [Commitlint](#commitlint)                        | `.commitlintrc.json` in the project root   | [`/templates/.commitlintrc.json`](pathname:///templates/.commitlintrc.json)                                   |
+| [Agent skills](#skills)                          | `.agents/skills/` and `.claude/commands/`  | Eight files — see [below](#skills)                                                                            |
+| [Husky commit hook](#husky)                      | `.husky/commit-msg`                        | [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)                                       |
+| [Docs site](#docs-site)                          | `docsSite/` in the project root            | Several files — see [below](#docs-site)                                                                       |
+| [`/docs` route](#docs-route)                     | `next.config.mjs`                          | [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs)                                         |
+| [Document templates](#document-templates)        | `docs/` in the project root                | Several files — see [below](#document-templates)                                                              |
+
+---
+
+## AGENTS.md {#agents}
+
+**Copy to:** `AGENTS.md` in the project root
+
+Replace every `[placeholder]`. See [AGENTS.md Specifications](/Standards/agent-specs).
+
+<CodeBlock language="markdown" title="AGENTS.md">
+  {agents}
+</CodeBlock>
+
+---
+
+## ESLint — TypeScript {#eslinttypescript}
+
+**Copy to:** `eslint.config.mjs` in the project root
+
+For TypeScript projects. Install commands are on the [ESLint page](/Standards/eslint#installation).
+
+<CodeBlock language="js" title="eslint.config.mjs">
+  {eslintTypescript}
+</CodeBlock>
+
+---
+
+## ESLint — React + TypeScript {#eslintreact}
+
+**Copy to:** `eslint.config.mjs` in the project root
+
+For React projects. Set `settings.react.version` to the project's React version.
+
+<CodeBlock language="js" title="eslint.config.mjs">
+  {eslintReact}
+</CodeBlock>
+
+---
+
+## ESLint — Next.js {#eslintnextjs}
+
+**Copy to:** `eslint.config.mjs` in the project root
+
+For Next.js projects. Set `settings.react.version` to the project's React version.
+
+<CodeBlock language="js" title="eslint.config.mjs">
+  {eslintNextjs}
+</CodeBlock>
+
+---
+
+## ESLint — JavaScript / Node.js {#eslintbase}
+
+**Copy to:** `eslint.config.mjs` in the project root
+
+For plain JavaScript and Node.js projects.
+
+<CodeBlock language="js" title="eslint.config.mjs">
+  {eslintBase}
+</CodeBlock>
+
+---
+
+## Prettier {#prettier}
+
+**Copy to:** `prettier.config.js` in the project root
+
+See the [Prettier page](/Standards/prettier).
+
+<CodeBlock language="js" title="prettier.config.js">
+  {prettier}
+</CodeBlock>
+
+---
+
+## Stylelint — CSS and CSS Modules {#stylelintcss}
+
+**Copy to:** `stylelint.config.mjs` in the project root
+
+See the [Stylelint page](/Standards/stylelint).
+
+<CodeBlock language="js" title="stylelint.config.mjs">
+  {stylelintCss}
+</CodeBlock>
+
+---
+
+## Stylelint — SCSS {#stylelintscss}
+
+**Copy to:** `stylelint.config.mjs` in the project root
+
+For projects that use SCSS.
+
+<CodeBlock language="js" title="stylelint.config.mjs">
+  {stylelintScss}
+</CodeBlock>
+
+---
+
+## Global styles and colour palette {#globalscss}
+
+**Copy to:** `app/globals.css`
+
+Replace the example colours with the project's palette. See [CSS Styling](/Standards/styling).
+
+<CodeBlock language="css" title="globals.css">
+  {globalsCss}
+</CodeBlock>
+
+---
+
+## EditorConfig {#editorconfig}
+
+**Copy to:** `.editorconfig` in the project root
+
+See the [EditorConfig page](/Standards/editorconfig).
+
+<CodeBlock language="ini" title=".editorconfig">
+  {editorconfig}
+</CodeBlock>
+
+---
+
+## Node version {#nvmrc}
+
+**Copy to:** `.nvmrc` in the project root
+
+Set it to the project's Node major version. See [direnv + nvm](/Standards/direnv).
+
+<CodeBlock language="text" title=".nvmrc">
+  {nvmrc}
+</CodeBlock>
+
+---
+
+## direnv {#envrc}
+
+**Copy to:** `.envrc` in the project root
+
+Run `direnv allow` after adding it. See [direnv + nvm](/Standards/direnv).
+
+<CodeBlock language="bash" title=".envrc">
+  {envrc}
+</CodeBlock>
+
+---
+
+## Commitlint {#commitlint}
+
+**Copy to:** `.commitlintrc.json` in the project root
+
+See [Conventional Commits](/Standards/conventional-commits).
+
+<CodeBlock language="json" title=".commitlintrc.json">
+  {commitlint}
+</CodeBlock>
+
+---
+
+## Agent skills {#skills}
+
+**Copy to:** `.agents/skills/` in the project root, and again to `.claude/commands/` so Claude Code picks them up as slash commands.
+
+The eight standard skills. Copy all of them into every project. See [Agent Skills](/Standards/agent-skills) for how they are written.
+
+| Skill                                  | Invocation                             | Plain file                                                                            |
+| -------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
+| [Lint](#skill-lint)                    | `/lint [path]`                         | [`/templates/skills/lint.md`](pathname:///templates/skills/lint.md)                   |
+| [Lint & fix](#skill-lintfix)           | `/lintFix [path]`                      | [`/templates/skills/lintFix.md`](pathname:///templates/skills/lintFix.md)             |
+| [Format](#skill-format)                | `/format [path]`                       | [`/templates/skills/format.md`](pathname:///templates/skills/format.md)               |
+| [Code review](#skill-codereview)       | `/codeReview [branch, commit or path]` | [`/templates/skills/codeReview.md`](pathname:///templates/skills/codeReview.md)       |
+| [Update layout](#skill-updatelayout)   | `/updateLayout`                        | [`/templates/skills/updateLayout.md`](pathname:///templates/skills/updateLayout.md)   |
+| [Security audit](#skill-securityaudit) | `/securityAudit [path]`                | [`/templates/skills/securityAudit.md`](pathname:///templates/skills/securityAudit.md) |
+| [TypeScript](#skill-typescript)        | `/typescript [path]`                   | [`/templates/skills/typescript.md`](pathname:///templates/skills/typescript.md)       |
+| [Test](#skill-test)                    | `/test [path]`                         | [`/templates/skills/test.md`](pathname:///templates/skills/test.md)                   |
+
+### Lint {#skill-lint}
+
+Runs ESLint (and Stylelint if configured) in check-only mode; reports all issues grouped by file.
+
+<CodeBlock language="markdown" title="lint.md">
+  {skillLint}
+</CodeBlock>
+
+### Lint & fix {#skill-lintfix}
+
+Runs ESLint and Stylelint in fix mode, then Prettier; reports what changed and what is left.
+
+<CodeBlock language="markdown" title="lintFix.md">
+  {skillLintFix}
+</CodeBlock>
+
+### Format {#skill-format}
+
+Runs Prettier in write mode; reports reformatted files.
+
+<CodeBlock language="markdown" title="format.md">
+  {skillFormat}
+</CodeBlock>
+
+### Code review {#skill-codereview}
+
+Reviews changes for correctness, security, types, tests and standards compliance. Report only.
+
+<CodeBlock language="markdown" title="codeReview.md">
+  {skillCodeReview}
+</CodeBlock>
+
+### Update layout {#skill-updatelayout}
+
+Regenerates the "Repository layout" section of `AGENTS.md` (and "Workspace packages" in monorepos).
+
+<CodeBlock language="markdown" title="updateLayout.md">
+  {skillUpdateLayout}
+</CodeBlock>
+
+### Security audit {#skill-securityaudit}
+
+Audits dependencies and code for secrets, missing access control, unvalidated input and injection. Report only.
+
+<CodeBlock language="markdown" title="securityAudit.md">
+  {skillSecurityAudit}
+</CodeBlock>
+
+### TypeScript {#skill-typescript}
+
+Tightens loose types and removes `any`, `!` and unexplained `as`.
+
+<CodeBlock language="markdown" title="typescript.md">
+  {skillTypescript}
+</CodeBlock>
+
+### Test {#skill-test}
+
+Runs the test suite; reports failures grouped by cause, tests that never ran, and files missing a test.
+
+<CodeBlock language="markdown" title="test.md">
+  {skillTest}
+</CodeBlock>
+
+---
+
+## Husky commit hook {#husky}
+
+**Copy to:** `.husky/commit-msg` in the project root
+
+Refuses a commit whose message does not follow [Conventional Commits](/Standards/conventional-commits#enforcing-commit-messages). Plain file: [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)
+
+<CodeBlock language="text" title=".husky/commit-msg">
+  {huskyHook}
+</CodeBlock>
+
+### Lint before commit {#husky-pre-commit}
+
+**Copy to:** `.husky/pre-commit` in the project root
+
+Refuses a commit while `pnpm lint` reports errors. Plain file: [`/templates/husky/pre-commit`](pathname:///templates/husky/pre-commit)
+
+<CodeBlock language="text" title=".husky/pre-commit">
+  {huskyPreCommit}
+</CodeBlock>
+
+---
+
+## Docs site {#docs-site}
+
+**Copy to:** a `docsSite/` folder in the project root
+
+The Docusaurus viewer that shows the project's `docs/` folder at `/docs`. Copy every file, keeping the folder layout. See [Documentation](/Standards/documentation#-setting-it-up).
+
+| File                     | Plain file                                                                                                                            |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `package.json`           | [`/templates/docsSite/package.json.txt`](pathname:///templates/docsSite/package.json.txt) — rename to `package.json`                  |
+| `docusaurus.config.ts`   | [`/templates/docsSite/docusaurus.config.ts`](pathname:///templates/docsSite/docusaurus.config.ts)                                     |
+| `sidebars.ts`            | [`/templates/docsSite/sidebars.ts`](pathname:///templates/docsSite/sidebars.ts)                                                       |
+| `tsconfig.json`          | [`/templates/docsSite/tsconfig.json`](pathname:///templates/docsSite/tsconfig.json)                                                   |
+| `pnpm-workspace.yaml`    | [`/templates/docsSite/pnpm-workspace.yaml`](pathname:///templates/docsSite/pnpm-workspace.yaml)                                       |
+| `src/css/custom.css`     | [`/templates/docsSite/src/css/custom.css`](pathname:///templates/docsSite/src/css/custom.css)                                         |
+| `.gitignore`             | [`/templates/docsSite/gitignore.txt`](pathname:///templates/docsSite/gitignore.txt) — rename to `.gitignore`                          |
+| `src/pages/index.tsx`    | [`/templates/docsSite/src/pages/index.tsx`](pathname:///templates/docsSite/src/pages/index.tsx)                                       |
+| `static/images/logo.svg` | [`/templates/docsSite/static/images/logo.svg`](pathname:///templates/docsSite/static/images/logo.svg) — replace with the project logo |
+
+Set `PROJECT_NAME` at the top of the config:
+
+<CodeBlock language="ts" title="docusaurus.config.ts">
+  {docsSiteConfig}
+</CodeBlock>
+
+<CodeBlock language="json" title="package.json">
+  {docsSitePackage}
+</CodeBlock>
+
+<CodeBlock language="ts" title="sidebars.ts">
+  {docsSiteSidebars}
+</CodeBlock>
+
+<CodeBlock language="json" title="tsconfig.json">
+  {docsSiteTsconfig}
+</CodeBlock>
+
+<CodeBlock language="yaml" title="pnpm-workspace.yaml">
+  {docsSiteWorkspace}
+</CodeBlock>
+
+<CodeBlock language="css" title="src/css/custom.css">
+  {docsSiteCss}
+</CodeBlock>
+
+<CodeBlock language="text" title=".gitignore">
+  {docsSiteGitignore}
+</CodeBlock>
+
+The home page sends `/docs` to the first Overview doc. Change the path if the overview file is renamed:
+
+<CodeBlock language="tsx" title="src/pages/index.tsx">
+  {docsSiteHome}
+</CodeBlock>
+
+### The `/docs` route {#docs-route}
+
+**Copy to:** `next.config.mjs` in the project root. If the project already has a Next.js config, add the `rewrites` function to it.
+
+Plain file: [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs)
+
+<CodeBlock language="js" title="next.config.mjs">
+  {nextConfig}
+</CodeBlock>
+
+---
+
+## Document templates {#document-templates}
+
+**Copy to:** the `docs/` folder in the project root, keeping the folder layout
+
+The full set of Decision Docs for a new project: every [reusable folder](/Standards/documentation#-the-folders) with every standard file, each marked `Status: Not started`. Copy the whole [`static/templates/docs/`](https://github.com/activatus-life/code-standards/tree/main/static/templates/docs) folder from this repository.
+
+| Folder          | Example file                                                                                  |
+| --------------- | --------------------------------------------------------------------------------------------- |
+| `overview/`     | [`/templates/docs/overview/what-is-it.md`](pathname:///templates/docs/overview/what-is-it.md) |
+| `architecture/` | [`/templates/docs/architecture/system.md`](pathname:///templates/docs/architecture/system.md) |
+| `scope/`        | [`/templates/docs/scope/core.md`](pathname:///templates/docs/scope/core.md)                   |
+| …and 13 more    | Each file is served at `/templates/docs/<folder>/<file>.md`                                   |
+
+After copying, rename `overview/what-is-it.md` after the project and update its title.
+
+### Decision Doc format {#doc-format}
+
+**Copy to:** any new doc that has no template file
+
+The shape every doc follows. See [The doc format](/Standards/documentation#-the-doc-format). Plain file: [`/templates/decision-doc.md`](pathname:///templates/decision-doc.md)
+
+<CodeBlock language="markdown" title="decision-doc.md">
+  {decisionDoc}
+</CodeBlock>
