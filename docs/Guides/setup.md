@@ -92,7 +92,7 @@ The list has nothing about branches, commit messages or whether agents may commi
 
 Do only the standards the person agreed to. Copy every file from `node_modules/@activatus/code-standards/static/templates/` — never write a config file from scratch.
 
-**Every config file is `.mjs`**, in TypeScript and JavaScript projects alike. `.mjs` works in both, so every project looks the same. If the project has a config as `.js` or `.ts`, such as `next.config.ts` from `create-next-app`, rename it to `.mjs`, removing any TypeScript-only syntax: a type annotation becomes a JSDoc comment, for example `/** @type {import("next").NextConfig} */`. A tool that cannot read `.mjs` keeps its own format.
+**Every config file is `.mjs`, even in a TypeScript project.** Never convert one to `.ts` or `.mts`. `.mjs` works in both, so every project looks the same. If the project has a config as `.js`, `.ts` or `.mts`, such as `next.config.ts` from `create-next-app` or `vitest.config.mts`, rename it to `.mjs`, removing any TypeScript-only syntax: a type annotation becomes a JSDoc comment, for example `/** @type {import("next").NextConfig} */`. A tool that cannot read `.mjs` keeps its own format.
 
 **An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/Guides/migrating), one stage per pull request, after the config files below are in place.
 

@@ -92,7 +92,7 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 
 **What to do:**
 
-- Rename each config file that is `.js` or `.ts` to `.mjs`, where the tool can read `.mjs`: `prettier.config.mjs`, `next.config.mjs`, `eslint.config.mjs`, `docsSite/docusaurus.config.mjs`, `docsSite/sidebars.mjs` and so on. Use `git mv`.
+- Rename each config file that is `.js`, `.ts` or `.mts` to `.mjs`, even in a TypeScript project, wherever the tool can read `.mjs`: `prettier.config.mjs`, `next.config.mjs`, `eslint.config.mjs`, `docsSite/docusaurus.config.mjs`, `docsSite/sidebars.mjs` and so on. Use `git mv`. Never convert a config to `.ts` or `.mts`.
 - Remove any TypeScript-only syntax as you go. A type annotation becomes a JSDoc comment: `const config: NextConfig = {` becomes `/** @type {import("next").NextConfig} */ const config = {`. Copy the [`docsSite/` templates](/templates#docs-site), which are already `.mjs`.
 - Update anything that names the old file, such as `sidebarPath: './sidebars.mjs'` in the docs site config.
 
@@ -110,7 +110,37 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 
 **How to check:** `pnpm format:check` passes.
 
-### 7. Unfinished changes are recorded, not hidden
+### 7. When a name clashes, rename our own thing first
+
+**Why:** A third-party name is the name everyone knows it by, and a clash usually means our own name is too vague. Renaming an import for taste makes the code harder to search and to match against the package's docs.
+
+**What to do:** Search for renamed imports: `grep -rn "import {[^}]* as " --include=*.ts --include=*.tsx --exclude-dir=node_modules .`. For each one:
+
+- **If nothing in the file clashes with the original name**, undo the rename and use the original name.
+- **If our own thing clashes**, rename ours to a more specific full-word name, with the editor's Rename Symbol or the [rename script](/Guides/migrating#renaming-from-the-command-line). Then undo the import rename. For example, our `createClient` becomes `createProjectDatabaseClient`, and Supabase's `createClient` keeps its name.
+- **If both names are third-party, or ours is fixed by a framework** (such as a Next.js route's `GET`), keep the import renamed, as the owner plus the original name, never shortened: `Link as LucideLinkIcon`.
+
+See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
+
+**How to check:** Every renamed import that is left clashes with another third-party name or a framework-fixed name, and starts with its owner's name.
+
+### 8. Name a type after what it is, not the job it does
+
+**Why:** A type named after its role in one function, such as `StartAgentRunDependenciesType`, is a second name for what is really part of that function's props.
+
+**What to do:** Find types used for only one field of one `Props` type. Move each one inside that `Props` and delete the separate type. Where the object is built somewhere else, remove its type annotation: TypeScript checks it against the `Props` when it is passed in. See [Name a type after what it is](/Standards/readable-code#name-a-type-after-what-it-is-not-the-job-it-does).
+
+**How to check:** No type is used only as the type of one field of one `Props`.
+
+### 9. "go" means carry on
+
+**Why:** People often send just "go" to nudge an agent along, for example when their connection drops and the agent looks stuck. An agent must never read it as permission to commit.
+
+**What to do:** Copy the line that starts **"go" means carry on** from the top of the [`AGENTS.md` template](/templates#agents) into the top of the project's `AGENTS.md`.
+
+**How to check:** The project's `AGENTS.md` has the line near the top.
+
+### 10. Unfinished changes are recorded, not hidden
 
 **Why:** A big change, such as switching on the standard ESLint config, may be done later in its own Pull Request. The version number has to stay honest about that.
 
@@ -120,6 +150,7 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 
 ### No action needed
 
+- The [Ontology](/ontology) defines `dependency`: something the code relies on but does not define itself. Ticket relationships are not dependencies; each project names those itself.
 - The package now ships a rename script for agents working from the command line, using TypeScript's own rename: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. See [Renaming from the command line](/Guides/migrating#renaming-from-the-command-line).
 - The [Setup](/Guides/setup) guide says the standards are a base for code only, and explains how to get past pnpm's `minimumReleaseAge` when a new version is too fresh to install.
 - [Folder Structure](/Structure/folder-structure) explains each `lib/` folder in one line.

@@ -135,6 +135,7 @@ node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs components/
 - **Give it the file where the name is declared.** It renames that symbol and every use of it, across the whole project, and leaves anything else with the same name alone.
 - **Shorthand stays correct.** `{ properties }` becomes `{ properties: props }`, so objects keep their shape.
 - **It only renames TypeScript and JavaScript names.** Folders, files, form fields, routes and environment variables still need renaming by hand.
+- **It cannot reach keys in plain object literals that aren't typed**, such as the expected value in a test's `toEqual({ properties: … })`. Search the tests for the old name and fix those keys by hand.
 - **Run the type check and tests after each batch** of renames.
 
 ## Stage 5 — AGENTS.md

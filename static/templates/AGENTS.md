@@ -2,6 +2,8 @@
 
 > [The project's most important workflow rule for agents, stated first so every agent sees it: whether an agent may commit, push or make branches. See "Project workflow" below.]
 
+> **"go" means carry on.** When the person sends only "go", carry on with the current task. It is never permission to commit, push or open a Pull Request, and it needs no reply asking what they meant.
+
 ## Project overview
 
 [One paragraph: what this project does, who uses it, and why it exists.]
@@ -100,6 +102,7 @@ Follow these rules in every change:
 - **`id` is a word.** Write `id`, `userId`, `user_id` — never `identifier` and never `userID`. `identifier` is only for an outside system's separate field of that name (Linear's readable `ACT-73`).
 - **Dictionary words stay short:** `id`, `docs`, `lib`, `props`, `ref`, `repo`, `utils`, `app`, `url`, `api`, `uat`, `pdf`, `html`, `css`, `json`, `readme`. Case them as words: `imageUrl`, not `imageURL`. Any other short name is written in full. A new dictionary word is added to the Dictionary in the Human-Readable Names standard first (https://activatus-code-standards.vercel.app/Standards/human-readable-names#dictionary), never just used.
 - **Names owned by someone else stay exactly as they are** — Linear's `id` and `pageInfo`, Node's `cwd` option and `process.env`, React's `ref` and `children`, shadcn/ui's `cn` helper, Next.js's `params`, `searchParams` and `LayoutProps`, HTML attributes, Tailwind classes. The rule is for names we write, not names from someone else's code. Renaming them breaks the code. Give the value a full-word name as soon as it comes into our code: `const workingDirectory = process.cwd();`, then pass `{ cwd: workingDirectory }`.
+- **When a name clashes with a third-party import, rename our own thing first**, to a more specific full-word name: our `createProjectDatabaseClient`, next to Supabase's `createClient`. Rename the import only when both names are third-party, or ours is fixed by a framework (a Next.js route's `GET`). Then use the owner plus the original name, `Link as LucideLinkIcon`. Never rename an import for taste, and never shorten it.
 - **Form fields especially.** A field has one name everywhere it goes: the input's `name` and `id`, the form schema, the API request, the type and the database column (`emailAddress` / `email_address`). Every field has a visible `<label>` in plain English — never a placeholder instead. Option values are words (`"monthly"`), not numbers. Validation messages name the field and say what to do.
 - **The linter only checks some names.** Folders, props, form fields, database columns, routes and environment variables are not linted — check every one of them yourself.
 - **Always `const`.** Never `var`. Use `let` only when a value must be reassigned, with `// eslint-disable-next-line no-restricted-syntax -- <reason>` on the line above.
@@ -114,7 +117,7 @@ Follow these rules in every change:
 - **No nested ternaries. No boolean flag parameters.**
 - **No `any`, no non-null `!`, no `as` cast without a comment saying why.**
 - **Named exports only**, except where a tool requires a default export.
-- **Type names end in `Props` or `Type`.**
+- **Type names end in `Props` or `Type`**, and say what the thing is, not the job it does. A type that only describes one field of a function's props is written inside the `Props`: `StartAgentRunProps` holds its `dependencies`, with no separate `StartAgentRunDependenciesType`.
 - **One component per file.** Server and client components live in separate files.
 - **Component file order**: imports, component, variables, state, `useMemo` values, `useCallback` functions, effects, render. No inline functions in render.
 - **Reusable functions live in a `utils/` folder** — global, section or component level — one folder per function, with an `index.ts`.

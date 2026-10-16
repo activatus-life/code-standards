@@ -521,6 +521,36 @@ interface UserCardData {}
 
 Use a named type instead of a bare `string` wherever the value has a fixed set of options.
 
+### Name a type after what it is, not the job it does
+
+A type name says what the thing is. **If a type only describes one field of a function's props, don't give it its own name**: write it inside the `Props`, so the `Props` is the only type.
+
+```ts
+// ✅ Good — the dependencies are written inside the one Props type
+interface StartAgentRunProps {
+  ticketId: string;
+  dependencies: {
+    launchSession: (ticketId: string) => Promise<void>;
+    reportStatus: (status: AgentRunStatusType) => void;
+  };
+}
+```
+
+```ts
+// ❌ Bad — a second type named after the role it plays in one function
+interface StartAgentRunDependenciesType {
+  launchSession: (ticketId: string) => Promise<void>;
+  reportStatus: (status: AgentRunStatusType) => void;
+}
+
+interface StartAgentRunProps {
+  ticketId: string;
+  dependencies: StartAgentRunDependenciesType;
+}
+```
+
+Where that object is built somewhere else, don't annotate it with a separate type either. TypeScript checks it against `StartAgentRunProps` when it is passed in.
+
 ---
 
 ## Error messages say what happened and what to do

@@ -188,6 +188,47 @@ execFile("pnpm", commandArguments, { workingDirectory });
 const cwd = process.cwd();
 ```
 
+### When a name clashes
+
+**Keep a third-party import's own name.** When it clashes with something the file declares itself, **rename our own thing first**. A clash usually means our name is too vague: give it a more specific full-word name that says what it actually is.
+
+```ts
+// ✅ Good — our function says what it makes, so Supabase's createClient keeps its name
+import { createClient } from "@supabase/supabase-js";
+
+export const createProjectDatabaseClient = () =>
+  createClient(DATABASE_URL, DATABASE_KEY);
+```
+
+```ts
+// ❌ Bad — the import is renamed to make room for our vague name
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+
+export const createClient = () =>
+  createSupabaseClient(DATABASE_URL, DATABASE_KEY);
+```
+
+**Rename the import only when our side can't change:**
+
+| The clash                                                                                          | Why our side can't change                      | Rename the import to                                       |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
+| **Two third-party names**, such as `Link` from `next/link` and the `Link` icon from `lucide-react` | Neither name is ours                           | The owner plus the original name: `Link as LucideLinkIcon` |
+| **Our name is fixed by a framework**, such as a Next.js route's `GET` or `generateMetadata`        | The framework finds it only by that exact name | The owner plus the original name                           |
+
+```ts
+// ✅ Good — two third-party names clash, so one import is renamed: owner plus original name
+import Link from "next/link";
+import { Link as LucideLinkIcon } from "lucide-react";
+```
+
+```ts
+// ❌ Bad — renamed for taste, or shortened
+import { createClient as makeDb } from "@supabase/supabase-js";
+import { Link as Icon } from "lucide-react";
+```
+
+Never rename an import for taste, and never shorten it.
+
 ---
 
 ## Examples in code
