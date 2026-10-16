@@ -97,7 +97,7 @@ The words stay the same everywhere. Only the casing changes, to match where the 
 
 | Term                  | Means                                                                                                                                                |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `branch`              | A line of work in Git, named `type/short-description`. Nobody works straight on `main`. See [Branch Naming](/Standards/branch-naming)                |
+| `branch`              | A line of work in Git, named after its ticket: `ACT-14-invoice-export`. Work without a ticket is named `type/short-description`. Nobody works straight on `main`. See [Branch Naming](/Standards/branch-naming)                |
 | `commit`              | A saved change, with a [Conventional Commits](/Standards/conventional-commits) message. Only humans make commits, unless the project says agents may |
 | `pull_request`        | A request to merge a branch into `main`, with a description of what changed and why                                                                  |
 | `pull_request_review` | Checking a Pull Request against these standards before it is merged, by a human or an agent                                                          |

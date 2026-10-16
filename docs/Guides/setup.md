@@ -62,7 +62,7 @@ Tell me the numbers to skip or change, or say "all good".
 17. API routes: one folder per route, kebab-case
 18. Docs: every file in docs/ is a Decision Doc, shown at /docs by the docs site
 19. Conventional Commits, checked by Husky, with pnpm lint before every commit
-20. Branch names: type/short-description
+20. Branch names: the ticket id then a short title (ACT-14-invoice-export); type/short-description only for work with no ticket
 21. AGENTS.md and the eight agent skills
 22. AI agents never commit, push or make branches (strict no commit)
 23. The Ontology: the shared words for code

@@ -295,7 +295,7 @@ Code files are camelCase or PascalCase. A short list of things are kebab-case in
 | **Route folders**       | `app/account-settings/`                | The folder name becomes the URL          |
 | **Documentation files** | `docs/architecture/background-jobs.md` | The file name becomes the URL            |
 | **CSS variables**       | `--color-brand-primary`                | The CSS convention; required by Tailwind |
-| **Branch names**        | `feat/invoice-export`                  | The Git convention                       |
+| **Branch names**        | `ACT-14-invoice-export`                   | The Git convention                       |
 
 **The rule of thumb: if the name becomes a URL, it is kebab-case.**
 

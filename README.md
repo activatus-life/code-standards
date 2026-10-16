@@ -117,7 +117,7 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 
 ### 🌿 Branches
 
-- 🏷️ **`type/short-description`**, in kebab-case: `feat/invoice-export`, `fix/login-redirect-loop`. Never work straight on `main`.
+- 🏷️ **Every task has a ticket, and the branch is named after it:** `ACT-14-invoice-export`. No ticket (a quick README fix, say)? Then `type/short-description`, like `docs/update-readme`. Never work straight on `main`.
 
 ### 🗂️ Structure
 
@@ -177,7 +177,7 @@ Built with [Docusaurus](https://docusaurus.io). The sidebar generates itself fro
 
 Reckon a rule's wrong, or there's one missing? Good. Standards that never change are standards nobody reads.
 
-1. 🌿 **Branch off `main`**, named `type/short-description` (`docs/add-branch-naming`).
+1. 🌿 **Branch off `main`**, named after the ticket (`ACT-14-add-branch-naming`), or `type/short-description` if there's no ticket (`docs/add-branch-naming`).
 2. 📝 **Edit or add a Markdown file in `docs/`.** Name it in kebab-case (`naming-conventions.md`, not `namingConventions.md`), because the file name becomes the page's URL. Yes, we follow our own rules here.
 3. 📋 **Changing a config?** Edit the file in `static/templates/` and the matching page in `docs/Standards/` so the two don't drift apart.
 4. 🔢 **Add a version** to `docs/version-history.md`: what changed, and what a project has to do about it. Bump the major version in `package.json` to match (version 3 is `3.0.0`), and publish it to npm (npmjs.com) once it's merged. We use pnpm for everything, so that's `pnpm publish`, which lands in the same npm registry as `npm publish`. Projects read only the new versions, so if it's not in there, nobody hears about it.

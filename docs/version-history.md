@@ -39,6 +39,25 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 
 ---
 
+## Version 3 — not released yet
+
+**Not published to npm yet.** These changes are on the live site, and will be released together as version 3. Until then, projects stay on version 2: do not apply anything below.
+
+### 1. Branches are named after their ticket
+
+**Why:** Every task has a ticket. Naming the branch after the ticket links the ticket, the branch and the Pull Request automatically, in Linear and GitHub.
+
+**What to do:**
+
+- Name every new branch for ticket work `<TICKET-ID>-<short-title>`, such as `ACT-14-invoice-export`. No type in front: the type goes in the commit message.
+- Use `type/short-description` only for work with no ticket, such as `docs/update-readme`. Use the Conventional Commits types: `feat`, never `feature`.
+- Update the "Branches" line in `AGENTS.md` from the [template](/templates#agents).
+- Do not rename existing branches.
+
+**How to check:** The "Branches" line in `AGENTS.md` shows `ACT-14-invoice-export`. If the project already names branches this way, there is nothing else to do.
+
+---
+
 ## Version 2
 
 **Released:** 2026-10-15 · **Updates from:** version 1

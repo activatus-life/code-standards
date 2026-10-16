@@ -37,7 +37,7 @@
 
 ## Development workflow
 
-- **Branches**: `<type>/<short-description>` in kebab-case, e.g. `feat/invoice-export`, `fix/login-redirect-loop`. Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`. Never work directly on `main`.
+- **Branches**: every task has a ticket, and its branch is the ticket id then a short title in kebab-case: `ACT-14-invoice-export`. No type in front; the type goes in the commit message. Only work with no ticket uses `<type>/<short-description>`, e.g. `docs/update-readme`, with the Conventional Commits types (`feat`, not `feature`).
 - **Commits**: Conventional Commits (`feat: add invoice export`). **People commit — AI agents never do.**
 - **Pull requests**: [review and CI requirements]
 - **Merging**: [merge strategy, e.g. squash and merge]

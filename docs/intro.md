@@ -22,7 +22,7 @@ This site documents the shared code standards used across all Activatus projects
 | EditorConfig         | [`.editorconfig`](/Standards/editorconfig)     | Editor-level whitespace rules                                                                   |
 | direnv + nvm         | [`.envrc` / `.nvmrc`](/Standards/direnv)       | Automatic Node version switching on `cd`                                                        |
 | Conventional Commits | [Commit spec](/Standards/conventional-commits) | Commit message format and tooling                                                               |
-| Branch Naming        | [Branch names](/Standards/branch-naming)       | `type/short-description` branch names                                                           |
+| Branch Naming        | [Branch names](/Standards/branch-naming)       | `ACT-14-short-title` branch names, after the ticket                                                           |
 | AGENTS.md            | [`AGENTS.md`](/Standards/agent-specs)          | AI agent context and agent skills                                                               |
 | CSS Styling          | [Styling guide](/Standards/styling)            | Tailwind CSS, flexbox-first layout and global colour variables                                  |
 | Tech Stack           | [Tech stack](/Standards/tech-stack)            | The frameworks, libraries and versions we build on                                              |

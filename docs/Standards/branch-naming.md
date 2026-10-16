@@ -4,29 +4,42 @@ sidebar_position: 6.5
 
 # Branch Naming
 
-Every branch name says what kind of work it holds and what the work is.
+Every branch name says which ticket it is for, or, when there is no ticket, what kind of work it holds.
 
-## Format
+## Every task has a ticket
+
+**Work starts from a ticket**, such as a Linear issue. The branch is named after the ticket, so the ticket, the branch and the Pull Request link up on their own.
+
+```text
+<TICKET-ID>-<short-title>
+```
+
+```text
+ACT-14-invoice-export
+ACT-142-login-redirect-loop
+ACT-87-never-commit-rule
+```
+
+- **Start with the ticket id**, exactly as the ticket tracker writes it: `ACT-14`. Linear and GitHub find the ticket from it and link the branch and its Pull Request.
+- **Then the ticket's title, shortened to two to five words**, in lower-case kebab-case.
+- **No type in front.** The kind of work (`feat`, `fix`, `docs`…) goes in each [commit message](/Standards/conventional-commits) instead.
+- **One ticket per branch.**
+
+## Work without a ticket
+
+Work with no ticket is the exception: a quick fix to the README, or tidying up the tooling. Name the branch after the kind of work and what it is:
 
 ```text
 <type>/<short-description>
 ```
 
 ```text
-feat/invoice-export
-fix/login-redirect-loop
 docs/update-readme
+chore/upgrade-next
+fix/login-redirect-loop
 ```
 
-## Rules
-
-- **Start with a type**, followed by a slash. The types are the same as [Conventional Commits](/Standards/conventional-commits#type-reference).
-- **Describe the work in two to five words**, in lower-case kebab-case. Branch names are kebab-case, like route folders, documentation files and CSS variables — it is the Git convention, and it is safe on every operating system.
-- **Use full English words**, the same as in code: `fix/button-alignment`, not `fix/btn-align`.
-- **One piece of work per branch.** If the description needs the word "and", it is two branches.
-- **Never work directly on `main`.**
-
-## Types
+The types are the same as [Conventional Commits](/Standards/conventional-commits#type-reference):
 
 | Type       | Use for                                | Example                       |
 | ---------- | -------------------------------------- | ----------------------------- |
@@ -37,30 +50,32 @@ docs/update-readme
 | `test`     | Adding or correcting tests             | `test/invoice-total-rounding` |
 | `chore`    | Maintenance, dependencies, tooling     | `chore/upgrade-next`          |
 
+If the work turns out to be bigger than a quick fix, make a ticket for it and use the ticket branch name instead.
+
+## Rules for both
+
+- **Use full English words**, the same as in code: `ACT-14-button-alignment`, not `ACT-14-btn-align`.
+- **Lower-case kebab-case** after the ticket id or type. It is the Git convention, and safe on every operating system.
+- **One piece of work per branch.** If the description needs the word "and", it is two branches.
+- **Never work directly on `main`.**
+
 ## Examples
 
 ```text
 ✅ Good
-feat/hero-question-rail
-fix/checkout-total-rounding
+ACT-14-invoice-export
+ACT-142-checkout-total-rounding
 chore/upgrade-tailwind
 
 ❌ Bad
-hero                         # No type, and too vague
-feature/HeroQuestionRail     # Not a standard type, and not kebab-case
-fix/btn                      # Shorthand
+feat/ACT-14-invoice-export   # No type in front of a ticket id
+invoice-export               # Has a ticket, but no ticket id
+feature/hero-question-rail   # "feature" is not a type; use feat
+ACT-14-btn                   # Shorthand
 toms-branch                  # Says nothing about the work
-feat/invoices-and-login-fix  # Two pieces of work
-```
-
-## Ticket numbers
-
-When the work has a ticket, put the ticket number after the type:
-
-```text
-feat/ACT-142-invoice-export
+ACT-14-invoices-and-login    # Two pieces of work
 ```
 
 ## AI agents
 
-AI agents **never commit code**, so they do not create branches to commit to either. A person creates the branch, reviews the agent's changes, and commits them. See [AGENTS.md](/Standards/agent-specs#agents-never-commit-code).
+By default, AI agents **never commit code**, so they do not create branches to commit to either. A person creates the branch, reviews the agent's changes, and commits them. A project can choose otherwise. See [AGENTS.md](/Standards/agent-specs#agents-never-commit-code).
