@@ -31,17 +31,20 @@ sidebar_label: "Version History"
 
 Anyone changing the standards adds a version, in the same pull request as the change:
 
-- **One version per change that reaches `main`**, numbered one higher than the last. Whole numbers only.
+- **One version per release**, numbered one higher than the last. Whole numbers only. A version can collect several changes before it is released.
 - **Bump the package's major version to match** in `package.json`: version 3 is `3.0.0`. Then publish it to npm (npmjs.com) with `pnpm publish`. pnpm is the tool; npm is where the package lives, and projects install it from there with `pnpm add`.
 - **For every change, write:** what changed, why, what to do in a project, and how to check it is done. Write it for an agent that has not read the rest of the standards.
 - **If a project has nothing to do, say so.**
 - **Newest version at the top.**
+- **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over several Pull Requests. To release it: drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
 
 ---
 
-## Version 3 — not released yet
+## Version 3
 
-**Not published to npm yet.** These changes are on the live site, and will be released together as version 3. Until then, projects stay on version 2: do not apply anything below.
+**Released:** 2026-10-17 · **Updates from:** version 2
+
+Install it with `pnpm add -D @activatus/code-standards@3.0.0`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
 
 ### 1. Project workflow is no longer part of the standards
 
