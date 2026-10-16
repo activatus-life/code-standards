@@ -12,10 +12,10 @@ Skills are shared, versioned, and executed with real tool access. A vague one wa
 
 One canonical copy, one mirror:
 
-| Path | Role |
-| --- | --- |
-| `.agents/skills/*.md` | **Canonical.** Portable location any compatible agent reads. The only copy you edit. |
-| `.claude/commands/*.md` | Claude Code mirror, exposed as `/name`. |
+| Path                    | Role                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------ |
+| `.agents/skills/*.md`   | **Canonical.** Portable location any compatible agent reads. The only copy you edit. |
+| `.claude/commands/*.md` | Claude Code mirror, exposed as `/name`.                                              |
 
 Keep the mirror identical to the canonical copy — edit the skill in `.agents/skills/`, then copy it across.
 
@@ -40,14 +40,14 @@ allowed-tools: Read, Glob, Grep, Bash(pnpm lint:*), Bash(eslint:*)
 Run all configured linters and report issues without modifying any files.
 ```
 
-| Field | Required | Purpose |
-| --- | --- | --- |
-| `name` | Yes | The invocation name, in camelCase. Must match the filename. |
-| `description` | Yes | One line, **under 60 characters**. How an agent decides to use it. |
-| `argument-hint` | If it takes arguments | Shown during autocomplete. |
-| `allowed-tools` | Strongly encouraged | The tools the skill may use. See below. |
-| `model` | No | Pin only for genuinely mechanical skills. |
-| `disable-model-invocation` | No | Set when a skill must only ever be run by a human. |
+| Field                      | Required              | Purpose                                                            |
+| -------------------------- | --------------------- | ------------------------------------------------------------------ |
+| `name`                     | Yes                   | The invocation name, in camelCase. Must match the filename.        |
+| `description`              | Yes                   | One line, **under 60 characters**. How an agent decides to use it. |
+| `argument-hint`            | If it takes arguments | Shown during autocomplete.                                         |
+| `allowed-tools`            | Strongly encouraged   | The tools the skill may use. See below.                            |
+| `model`                    | No                    | Pin only for genuinely mechanical skills.                          |
+| `disable-model-invocation` | No                    | Set when a skill must only ever be run by a human.                 |
 
 Quote any `argument-hint` that starts with `[`, or YAML parses it as a list:
 
@@ -60,20 +60,20 @@ argument-hint: [path] # a one-element array — wrong
 
 Prose like "this skill is read-only" is a request. `allowed-tools` is the enforcement. Whatever a skill's body promises not to do, the allowlist should make impossible:
 
-| The skill says | So the allowlist omits |
-| --- | --- |
-| "Do NOT make file changes" | `Edit`, `Write` |
-| "Do NOT auto-fix" | `Edit`, `Write` |
-| "Do NOT stage or commit" | every `Bash(git …)` |
-| "Do NOT push" | `Bash(git push:*)` |
+| The skill says             | So the allowlist omits |
+| -------------------------- | ---------------------- |
+| "Do NOT make file changes" | `Edit`, `Write`        |
+| "Do NOT auto-fix"          | `Edit`, `Write`        |
+| "Do NOT stage or commit"   | every `Bash(git …)`    |
+| "Do NOT push"              | `Bash(git push:*)`     |
 
 Three rules follow from this:
 
 1. **Every command the body tells the agent to run must be allowlisted.** A body that says `eslint $ARGUMENTS` under an allowlist of only `Bash(pnpm exec eslint:*)` blocks itself halfway through. List each form the body actually uses.
 2. **Grant the narrowest set that still works.** `Bash(pnpm lint:*), Bash(eslint:*)` over a bare `Bash`.
-3. **Never grant `git commit` or `git push`.** [Agents never commit code](/Standards/agent-specs#agents-never-commit-code), so no skill is allowed to.
+3. **Never grant `git commit` or `git push`.** A skill does one job and leaves its changes for whoever ran it. Committing is the [project's workflow](/Standards/agent-specs#project-workflow), not a skill's.
 
-Be honest about the limit: patterns gate the command, not its flags. `Bash(eslint:*)` still permits `eslint --fix`. The allowlist reliably prevents a skill from reaching for a whole *category* of tool; keep the prose instruction as well for anything finer.
+Be honest about the limit: patterns gate the command, not its flags. `Bash(eslint:*)` still permits `eslint --fix`. The allowlist reliably prevents a skill from reaching for a whole _category_ of tool; keep the prose instruction as well for anything finer.
 
 ## Write for the agent, not the user
 
@@ -114,12 +114,12 @@ Respect the project's own scripts. `pnpm lint` picks up workspace configuration 
 
 Before merging a skill:
 
-- [ ]  `name` matches the filename
-- [ ]  `description` is one line, under 60 characters
-- [ ]  `argument-hint` present if it takes arguments, and quoted if it starts with `[`
-- [ ]  `allowed-tools` omits everything the body promises not to do
-- [ ]  `allowed-tools` includes every command the body does invoke
-- [ ]  Body is written as instructions to the agent
-- [ ]  Sub-steps indented three spaces
-- [ ]  Prettier leaves the file unchanged
-- [ ]  `.claude/commands/` mirror matches `.agents/skills/`
+- [ ] `name` matches the filename
+- [ ] `description` is one line, under 60 characters
+- [ ] `argument-hint` present if it takes arguments, and quoted if it starts with `[`
+- [ ] `allowed-tools` omits everything the body promises not to do
+- [ ] `allowed-tools` includes every command the body does invoke
+- [ ] Body is written as instructions to the agent
+- [ ] Sub-steps indented three spaces
+- [ ] Prettier leaves the file unchanged
+- [ ] `.claude/commands/` mirror matches `.agents/skills/`

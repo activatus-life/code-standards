@@ -49,25 +49,25 @@ project-root/
 │   │       ├── types.ts                             # Component types
 │   │       └── index.ts                             # Export file
 │   └── shared/                                      # Used by more than one page
-├── library/                                             # Core libraries & integrations
-│   ├── permissions/                                 # Permission files (grouped)
+├── lib/                                             # Outside connections and app-wide setup
+│   ├── permissions/                                 # Who may do what
 │   │   ├── index.ts                                 # Main definitions
 │   │   ├── api.ts                                   # API permissions
 │   │   ├── page.ts                                  # Page permissions
 │   │   └── plan.ts                                  # Plan permissions
-│   ├── integrations/                                # External services (grouped)
+│   ├── integrations/                                # The only code that talks to outside services
 │   │   ├── stripe.ts                                # Payment processing
 │   │   └── supabase/                                # Database integration
 │   │       ├── client.ts
 │   │       └── mock/
-│   ├── middleware/                                  # Middleware concerns (grouped)
+│   ├── middleware/                                  # Code that runs on every request
 │   │   ├── cors.ts
 │   │   ├── rateLimit.ts
 │   │   └── session.ts
-│   ├── validation/                                  # Validation schemas
-│   ├── constants/                                   # Constants
-│   ├── errors/                                      # Error handlers
-│   └── types/                                       # Type definitions
+│   ├── validation/                                  # Schemas that check input
+│   ├── constants/                                   # Constants shared across the app
+│   ├── errors/                                      # Error types and handlers shared across the app
+│   └── types/                                       # Types shared across the app; a component's own types stay in its types.ts
 ├── utils/                                           # Reusable functions used across the app
 │   ├── formatCurrency/                              # One folder per function
 │   │   ├── formatCurrency.ts
@@ -79,10 +79,8 @@ project-root/
 │   │   └── index.ts
 │   └── index.ts                                     # Exports every function
 ├── hooks/                                           # Custom React hooks
-├── services/                                        # Business logic services
+├── services/                                        # Business logic: what the app does
 ├── stores/                                          # State management stores
-├── types/                                           # TypeScript type definitions
-├── constants/                                       # App constants
 ├── styles/                                          # Global styles
 ├── public/                                          # Static assets
 ├── tests/                                           # Test files
@@ -108,7 +106,7 @@ project-root/
 project-root/
 ├── app/                    # Next.js App Router
 ├── components/             # React components
-├── library/                    # Core libraries & integrations
+├── lib/                    # Outside connections and app-wide setup
 ├── utils/                  # Reusable functions
 ├── public/                 # Static assets
 ├── docs/                   # Project documentation (Markdown)
@@ -177,6 +175,21 @@ project-root/
 Other frameworks follow the same rule with their own folders. In a React app without Next.js, a page's folder is the folder for that screen.
 
 ---
+
+## 🗂️ utils, services and lib {#utils-services-and-lib}
+
+Three folders hold functions that are not components. Each function belongs in exactly one of them:
+
+| Folder          | What goes in it                                                                                                                                                                              | Ask yourself                                                              | Examples                                                          |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| **`utils/`**    | Small reusable functions with no side effects. The same input always gives the same output: formatting, calculating, sorting, checking                                                       | "Does it only work with what it is given?"                                | `formatCurrency`, `calculateInvoiceTotal`, `sortInvoicesByDate`   |
+| **`services/`** | The business logic: what the app actually does. Its rules and operations, which may read and write data                                                                                      | "Is this a rule or an action of the product itself?"                      | `createInvoice`, `decideNextActions`, `sendWelcomeEmail`          |
+| **`lib/`**      | Code that connects the app to something outside it, and the app-wide setup around that: integration clients, permissions, middleware, validation schemas, constants, errors and shared types | "Does it talk to another system, or set up something the whole app uses?" | `lib/integrations/stripe/`, `lib/permissions/`, `lib/validation/` |
+
+- **Pages, API routes and server actions stay thin.** They take the request, call a function in `services/`, and return the result. Business logic never lives in them.
+- **`services/` uses `lib/` to reach the outside world.** A service that charges a card calls the Stripe client in `lib/integrations/stripe/`, never the Stripe package directly.
+- **`utils/` uses nothing outside itself.** If a function needs a database, an API or the environment, it is not a util: it belongs in `services/` or `lib/`.
+- **Group `services/` by the [Ontology](/ontology) word it works on**, one folder per function: `services/invoice/createInvoice/`.
 
 ## 🧰 Utils
 
@@ -310,7 +323,7 @@ Name documentation folders and files in **kebab-case** (`background-jobs.md`), n
 ```text
 /root
 ├── eslint.config.mjs         # ESLint configuration
-├── prettier.config.js       # Prettier configuration
+├── prettier.config.mjs       # Prettier configuration
 ├── tsconfig.json            # TypeScript configuration
 ├── next.config.mjs          # Next.js configuration
 ├── package.json             # Dependencies & scripts

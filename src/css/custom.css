@@ -6,3 +6,9 @@
  * :root { --ifm-color-primary: #3578e5; }
  * [data-theme='dark'] { --ifm-color-primary: #72a1ed; }
  */
+
+/* Code is indented with tabs. Show each tab 2 characters wide, as the editors do. */
+pre,
+code {
+	tab-size: 2;
+}

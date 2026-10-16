@@ -1,6 +1,6 @@
 # [Project Name]
 
-> **NEVER COMMIT CODE.** Do not run `git commit`, `git push`, `git merge`, `git rebase` or `git stash`, and do not create, switch or delete branches. Make the changes, leave them uncommitted in the working tree, and tell the person what you changed. A person reviews and commits every change.
+> [The project's most important workflow rule for agents, stated first so every agent sees it: whether an agent may commit, push or make branches. See "Project workflow" below.]
 
 ## Project overview
 
@@ -35,12 +35,15 @@
 | Type-check | `pnpm typecheck` |
 | Docs site | `pnpm docs:dev` (then open `/docs`) |
 
-## Development workflow
+## Project workflow
 
-- **Branches**: every task has a ticket, and its branch is the ticket id then a short title in kebab-case: `ACT-14-invoice-export`. No type in front; the type goes in the commit message. Only work with no ticket uses `<type>/<short-description>`, e.g. `docs/update-readme`, with the Conventional Commits types (`feat`, not `feature`).
-- **Commits**: Conventional Commits (`feat: add invoice export`). **People commit — AI agents never do.**
-- **Pull requests**: [review and CI requirements]
-- **Merging**: [merge strategy, e.g. squash and merge]
+[How this project runs its work. These are the project's own decisions, not part of the code standards. Say where they are written up (usually `docs/development/`), then list the rules an agent must follow:]
+
+- **Who commits**: [whether AI agents may commit, push or make branches, and when]
+- **Branches**: [how branches are named]
+- **Commit messages**: [the commit message format]
+- **Pull requests**: [review and CI requirements, and where Pull Requests merge to]
+- **Merging and releases**: [merge strategy, and how work reaches production]
 
 ## Environment variables
 
@@ -89,14 +92,13 @@ Follow these rules in every change:
   | Never | Always |
   | --- | --- |
   | `btn`, `msg`, `val`, `(e) =>`, `(item, i) =>` | `button`, `message`, `value`, `(event) =>`, `(item, index) =>` |
-  | `inputRef` | `inputReference` |
-  | `deps`, `repo`, `env`, `timeoutMs`, `MAX_` | `dependencies`, `repository`, `environment`, `timeoutMilliseconds`, `MAXIMUM_` |
+  | `deps`, `env`, `timeoutMs`, `MAX_` | `dependencies`, `environment`, `timeoutMilliseconds`, `MAXIMUM_` |
   | `<T>`, `"sm" \| "lg"` | `<ItemType>`, `"small" \| "large"` |
   | `name="email1"` | `name="emailAddress"` |
-  | `lib/`, `helpers/`, `utilities/`, `helpers.ts` | `library/`, `utils/`, a file named after what it does |
+  | `helpers/`, `utilities/`, `helpers.ts` | `utils/`, a file named after what it does |
 
 - **`id` is a word.** Write `id`, `userId`, `user_id` — never `identifier` and never `userID`. `identifier` is only for an outside system's separate field of that name (Linear's readable `ACT-73`).
-- **Dictionary words stay short:** `id`, `docs`, `props`, `utils`, `app`, `url`, `api`, `uat`, `pdf`, `html`, `css`, `json`, `readme`. Case them as words: `imageUrl`, not `imageURL`. Any other short name is written in full. A new dictionary word is added to the Dictionary in the Human-Readable Names standard first (https://activatus-code-standards.vercel.app/Standards/human-readable-names#dictionary), never just used.
+- **Dictionary words stay short:** `id`, `docs`, `lib`, `props`, `ref`, `repo`, `utils`, `app`, `url`, `api`, `uat`, `pdf`, `html`, `css`, `json`, `readme`. Case them as words: `imageUrl`, not `imageURL`. Any other short name is written in full. A new dictionary word is added to the Dictionary in the Human-Readable Names standard first (https://activatus-code-standards.vercel.app/Standards/human-readable-names#dictionary), never just used.
 - **Names owned by someone else stay exactly as they are** — Linear's `id` and `pageInfo`, Node's `cwd` option and `process.env`, React's `ref` and `children`, shadcn/ui's `cn` helper, Next.js's `params`, `searchParams` and `LayoutProps`, HTML attributes, Tailwind classes. The rule is for names we write, not names from someone else's code. Renaming them breaks the code. Give the value a full-word name as soon as it comes into our code: `const workingDirectory = process.cwd();`, then pass `{ cwd: workingDirectory }`.
 - **Form fields especially.** A field has one name everywhere it goes: the input's `name` and `id`, the form schema, the API request, the type and the database column (`emailAddress` / `email_address`). Every field has a visible `<label>` in plain English — never a placeholder instead. Option values are words (`"monthly"`), not numbers. Validation messages name the field and say what to do.
 - **The linter only checks some names.** Folders, props, form fields, database columns, routes and environment variables are not linted — check every one of them yourself.
@@ -152,8 +154,6 @@ Skill files live in `.agents/skills/`, mirrored to `.claude/commands/`.
 
 ## Out of scope for AI agents
 
-- **Never commit code.** No `git commit`, `git push`, `git merge`, `git rebase` or `git stash`. Leave every change uncommitted for a person to review.
-- Do not create, switch or delete branches.
 - Do not write secrets, tokens or `.env` values into any file.
 - Do not change dependencies or lockfiles unless the task requires it.
 - Do not edit generated files, or third-party code in `node_modules/` or `vendor/`.

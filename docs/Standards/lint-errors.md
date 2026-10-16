@@ -132,8 +132,40 @@ Nothing else is switched off. If another rule seems impossible to satisfy, the c
 
 Lint runs in three places, so a broken standard is caught before it reaches `main`:
 
-| Where                              | When                      | What happens on an error                                                 |
-| ---------------------------------- | ------------------------- | ------------------------------------------------------------------------ |
-| **AI agents**                      | Before finishing any task | The agent fixes the error. Its work is not done until `pnpm lint` passes |
-| **Git hook** (`.husky/pre-commit`) | When a person commits     | The commit is refused until the errors are fixed                         |
-| **CI**                             | On every pull request     | The pull request cannot be merged                                        |
+| Where                                                           | When                      | What happens on an error                                                 |
+| --------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------ |
+| **AI agents**                                                   | Before finishing any task | The agent fixes the error. Its work is not done until `pnpm lint` passes |
+| **Git hook** ([`.husky/pre-commit`](#lint-before-every-commit)) | On every commit           | The commit is refused until the errors are fixed                         |
+| **CI**                                                          | On every change pushed    | The change cannot be merged                                              |
+
+## Lint before every commit
+
+A [Husky](https://typicode.github.io/husky/) git hook runs `pnpm lint` before every commit, so code that breaks the standards cannot be committed.
+
+1. Install Husky:
+
+   ```bash
+   pnpm add -D husky
+   ```
+
+2. Add the `prepare` script to `package.json`, so the hook is installed whenever someone runs `pnpm install`:
+
+   ```json
+   {
+     "scripts": {
+       "prepare": "husky"
+     }
+   }
+   ```
+
+3. Copy the hook file [`.husky/pre-commit`](/templates#husky-pre-commit):
+
+   ```text title=".husky/pre-commit"
+   pnpm lint
+   ```
+
+4. Run `pnpm install` once to switch it on.
+
+**Add the hook last**, once the project already passes `pnpm lint`. Otherwise every commit is refused until the whole codebase is fixed.
+
+How the project names commits and branches, and who may commit, is up to the project. See [Project workflow](/Standards/agent-specs#project-workflow).

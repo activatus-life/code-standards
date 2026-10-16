@@ -8,14 +8,13 @@ import eslintTypescript from "!!raw-loader!@site/static/templates/eslint/typescr
 import eslintReact from "!!raw-loader!@site/static/templates/eslint/react/eslint.config.mjs";
 import eslintNextjs from "!!raw-loader!@site/static/templates/eslint/nextjs/eslint.config.mjs";
 import eslintBase from "!!raw-loader!@site/static/templates/eslint/base/eslint.config.mjs";
-import prettier from "!!raw-loader!@site/static/templates/prettier.config.js";
+import prettier from "!!raw-loader!@site/static/templates/prettier.config.mjs";
 import stylelintCss from "!!raw-loader!@site/static/templates/stylelint/css/stylelint.config.mjs";
 import stylelintScss from "!!raw-loader!@site/static/templates/stylelint/scss/stylelint.config.mjs";
 import globalsCss from "!!raw-loader!@site/static/templates/globals.css";
 import editorconfig from "!!raw-loader!@site/static/templates/.editorconfig";
 import nvmrc from "!!raw-loader!@site/static/templates/.nvmrc";
 import envrc from "!!raw-loader!@site/static/templates/.envrc";
-import commitlint from "!!raw-loader!@site/static/templates/.commitlintrc.json";
 import skillLint from "!!raw-loader!@site/static/templates/skills/lint.md";
 import skillLintFix from "!!raw-loader!@site/static/templates/skills/lintFix.md";
 import skillFormat from "!!raw-loader!@site/static/templates/skills/format.md";
@@ -25,8 +24,8 @@ import skillSecurityAudit from "!!raw-loader!@site/static/templates/skills/secur
 import skillTypescript from "!!raw-loader!@site/static/templates/skills/typescript.md";
 import skillTest from "!!raw-loader!@site/static/templates/skills/test.md";
 import docsSitePackage from "!!raw-loader!@site/static/templates/docsSite/package.json.txt";
-import docsSiteConfig from "!!raw-loader!@site/static/templates/docsSite/docusaurus.config.ts";
-import docsSiteSidebars from "!!raw-loader!@site/static/templates/docsSite/sidebars.ts";
+import docsSiteConfig from "!!raw-loader!@site/static/templates/docsSite/docusaurus.config.mjs";
+import docsSiteSidebars from "!!raw-loader!@site/static/templates/docsSite/sidebars.mjs";
 import docsSiteTsconfig from "!!raw-loader!@site/static/templates/docsSite/tsconfig.json";
 import docsSiteWorkspace from "!!raw-loader!@site/static/templates/docsSite/pnpm-workspace.yaml";
 import docsSiteCss from "!!raw-loader!@site/static/templates/docsSite/src/css/custom.css";
@@ -34,7 +33,6 @@ import docsSiteGitignore from "!!raw-loader!@site/static/templates/docsSite/giti
 import decisionDoc from "!!raw-loader!@site/static/templates/decision-doc.md";
 import docsSiteHome from "!!raw-loader!@site/static/templates/docsSite/src/pages/index.tsx";
 import nextConfig from "!!raw-loader!@site/static/templates/next.config.mjs";
-import huskyHook from "!!raw-loader!@site/static/templates/husky/commit-msg";
 import huskyPreCommit from "!!raw-loader!@site/static/templates/husky/pre-commit";
 
 # Templates
@@ -43,6 +41,8 @@ Ready-made files to copy into a project. Every config on this page is the exact 
 
 Each file is also served as a plain file, so a person or an AI agent can fetch it directly instead of copying from this page.
 
+**Every config file is `.mjs`**, in TypeScript and JavaScript projects alike. It works in both, so every project looks the same. A tool that cannot read `.mjs` keeps its own format.
+
 | File                                             | Copy to                                    | Plain file                                                                                                    |
 | ------------------------------------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
 | [AGENTS.md](#agents)                             | `AGENTS.md` in the project root            | [`/templates/AGENTS.md`](pathname:///templates/AGENTS.md)                                                     |
@@ -50,16 +50,15 @@ Each file is also served as a plain file, so a person or an AI agent can fetch i
 | [ESLint — React + TypeScript](#eslintreact)      | `eslint.config.mjs` in the project root    | [`/templates/eslint/react/eslint.config.mjs`](pathname:///templates/eslint/react/eslint.config.mjs)           |
 | [ESLint — Next.js](#eslintnextjs)                | `eslint.config.mjs` in the project root    | [`/templates/eslint/nextjs/eslint.config.mjs`](pathname:///templates/eslint/nextjs/eslint.config.mjs)         |
 | [ESLint — JavaScript / Node.js](#eslintbase)     | `eslint.config.mjs` in the project root    | [`/templates/eslint/base/eslint.config.mjs`](pathname:///templates/eslint/base/eslint.config.mjs)             |
-| [Prettier](#prettier)                            | `prettier.config.js` in the project root   | [`/templates/prettier.config.js`](pathname:///templates/prettier.config.js)                                   |
+| [Prettier](#prettier)                            | `prettier.config.mjs` in the project root  | [`/templates/prettier.config.mjs`](pathname:///templates/prettier.config.mjs)                                 |
 | [Stylelint — CSS and CSS Modules](#stylelintcss) | `stylelint.config.mjs` in the project root | [`/templates/stylelint/css/stylelint.config.mjs`](pathname:///templates/stylelint/css/stylelint.config.mjs)   |
 | [Stylelint — SCSS](#stylelintscss)               | `stylelint.config.mjs` in the project root | [`/templates/stylelint/scss/stylelint.config.mjs`](pathname:///templates/stylelint/scss/stylelint.config.mjs) |
 | [Global styles and colour palette](#globalscss)  | `app/globals.css`                          | [`/templates/globals.css`](pathname:///templates/globals.css)                                                 |
 | [EditorConfig](#editorconfig)                    | `.editorconfig` in the project root        | [`/templates/.editorconfig`](pathname:///templates/.editorconfig)                                             |
 | [Node version](#nvmrc)                           | `.nvmrc` in the project root               | [`/templates/.nvmrc`](pathname:///templates/.nvmrc)                                                           |
 | [direnv](#envrc)                                 | `.envrc` in the project root               | [`/templates/.envrc`](pathname:///templates/.envrc)                                                           |
-| [Commitlint](#commitlint)                        | `.commitlintrc.json` in the project root   | [`/templates/.commitlintrc.json`](pathname:///templates/.commitlintrc.json)                                   |
 | [Agent skills](#skills)                          | `.agents/skills/` and `.claude/commands/`  | Eight files — see [below](#skills)                                                                            |
-| [Husky commit hook](#husky)                      | `.husky/commit-msg`                        | [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)                                       |
+| [Lint before commit](#husky-pre-commit)          | `.husky/pre-commit`                        | [`/templates/husky/pre-commit`](pathname:///templates/husky/pre-commit)                                       |
 | [Docs site](#docs-site)                          | `docsSite/` in the project root            | Several files — see [below](#docs-site)                                                                       |
 | [`/docs` route](#docs-route)                     | `next.config.mjs`                          | [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs)                                         |
 | [Document templates](#document-templates)        | `docs/` in the project root                | Several files — see [below](#document-templates)                                                              |
@@ -128,11 +127,11 @@ For plain JavaScript and Node.js projects.
 
 ## Prettier {#prettier}
 
-**Copy to:** `prettier.config.js` in the project root
+**Copy to:** `prettier.config.mjs` in the project root
 
 See the [Prettier page](/Standards/prettier).
 
-<CodeBlock language="js" title="prettier.config.js">
+<CodeBlock language="js" title="prettier.config.mjs">
   {prettier}
 </CodeBlock>
 
@@ -206,18 +205,6 @@ Run `direnv allow` after adding it. See [direnv + nvm](/Standards/direnv).
 
 <CodeBlock language="bash" title=".envrc">
   {envrc}
-</CodeBlock>
-
----
-
-## Commitlint {#commitlint}
-
-**Copy to:** `.commitlintrc.json` in the project root
-
-See [Conventional Commits](/Standards/conventional-commits).
-
-<CodeBlock language="json" title=".commitlintrc.json">
-  {commitlint}
 </CodeBlock>
 
 ---
@@ -305,21 +292,11 @@ Runs the test suite; reports failures grouped by cause, tests that never ran, an
 
 ---
 
-## Husky commit hook {#husky}
-
-**Copy to:** `.husky/commit-msg` in the project root
-
-Refuses a commit whose message does not follow [Conventional Commits](/Standards/conventional-commits#enforcing-commit-messages). Plain file: [`/templates/husky/commit-msg`](pathname:///templates/husky/commit-msg)
-
-<CodeBlock language="text" title=".husky/commit-msg">
-  {huskyHook}
-</CodeBlock>
-
-### Lint before commit {#husky-pre-commit}
+## Lint before commit {#husky-pre-commit}
 
 **Copy to:** `.husky/pre-commit` in the project root
 
-Refuses a commit while `pnpm lint` reports errors. Plain file: [`/templates/husky/pre-commit`](pathname:///templates/husky/pre-commit)
+Refuses a commit while `pnpm lint` reports errors. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit). Plain file: [`/templates/husky/pre-commit`](pathname:///templates/husky/pre-commit)
 
 <CodeBlock language="text" title=".husky/pre-commit">
   {huskyPreCommit}
@@ -336,8 +313,8 @@ The Docusaurus viewer that shows the project's `docs/` folder at `/docs`. Copy e
 | File                     | Plain file                                                                                                                            |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `package.json`           | [`/templates/docsSite/package.json.txt`](pathname:///templates/docsSite/package.json.txt) — rename to `package.json`                  |
-| `docusaurus.config.ts`   | [`/templates/docsSite/docusaurus.config.ts`](pathname:///templates/docsSite/docusaurus.config.ts)                                     |
-| `sidebars.ts`            | [`/templates/docsSite/sidebars.ts`](pathname:///templates/docsSite/sidebars.ts)                                                       |
+| `docusaurus.config.mjs`  | [`/templates/docsSite/docusaurus.config.mjs`](pathname:///templates/docsSite/docusaurus.config.mjs)                                   |
+| `sidebars.mjs`           | [`/templates/docsSite/sidebars.mjs`](pathname:///templates/docsSite/sidebars.mjs)                                                     |
 | `tsconfig.json`          | [`/templates/docsSite/tsconfig.json`](pathname:///templates/docsSite/tsconfig.json)                                                   |
 | `pnpm-workspace.yaml`    | [`/templates/docsSite/pnpm-workspace.yaml`](pathname:///templates/docsSite/pnpm-workspace.yaml)                                       |
 | `src/css/custom.css`     | [`/templates/docsSite/src/css/custom.css`](pathname:///templates/docsSite/src/css/custom.css)                                         |
@@ -347,7 +324,7 @@ The Docusaurus viewer that shows the project's `docs/` folder at `/docs`. Copy e
 
 Set `PROJECT_NAME` at the top of the config:
 
-<CodeBlock language="ts" title="docusaurus.config.ts">
+<CodeBlock language="js" title="docusaurus.config.mjs">
   {docsSiteConfig}
 </CodeBlock>
 
@@ -355,7 +332,7 @@ Set `PROJECT_NAME` at the top of the config:
   {docsSitePackage}
 </CodeBlock>
 
-<CodeBlock language="ts" title="sidebars.ts">
+<CodeBlock language="js" title="sidebars.mjs">
   {docsSiteSidebars}
 </CodeBlock>
 

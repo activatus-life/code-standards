@@ -56,6 +56,7 @@ The live site is at **[activatus-code-standards.vercel.app](https://activatus-co
 | `pnpm build`     | 📦 Builds the static site into `build/`      |
 | `pnpm serve`     | 👀 Serves the built site so you can check it |
 | `pnpm typecheck` | 🔍 Runs TypeScript over the site config      |
+| `pnpm format`    | ✨ Formats everything with Prettier          |
 
 > 🔎 **Search only works on the built site.** Run `pnpm build` then `pnpm serve` if you want to test it. It won't show up in `pnpm start`, so don't go thinking you've broken it.
 
@@ -84,7 +85,7 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 ### ✍️ Writing code
 
 - 📄 **No file over 300 lines.** If it's longer, it's doing two jobs. Split it. (Test files get a leave pass.)
-- 🗣️ **Every name is real English words.** Variables, props, form fields, types, files, folders, the lot. `button`, not `btn`. `library/`, not `lib/`. We're not paying by the letter. The one exception: names someone else owns, like Linear's `id` or Node's `cwd` option.
+- 🗣️ **Every name is real English words.** Variables, props, form fields, types, files, folders, the lot. `button`, not `btn`. We're not paying by the letter. The one exception: names someone else owns, like Linear's `id` or Node's `cwd` option.
 - 🔒 **Always `const`.** Need `let`? Fine, but leave a comment saying why, or the linter knocks it back.
 - 🏹 **Arrow functions everywhere.** `const Button = () => {}`. The word `function` is clutter, so we don't use it.
 - 🔄 **No circular imports. Ever.** If two files import each other, pull the shared bit into a third file.
@@ -109,20 +110,18 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 - 🔒 **`/docs` only exists when `DOCS_URL` is set.** It's never set in production, so the docs never leak onto a live site.
 - ✅ **Not finished until the docs are updated.** Change how something works, fix the doc in the same change.
 
-### 🤖 AI agents
+### 🤖 Workflow is the project's call
 
-- 🛑 **Agents never commit code.** No commits, no pushes, no branches. They make the change, leave it sitting there, and a human reviews and commits it. Every time.
+- 🧭 **Branches, commit messages, Pull Requests and whether AI agents may commit are up to each project.** Every team runs its work differently, so it goes in the project's own `AGENTS.md` and docs, not here. These standards are the base for the code itself.
+
+### 📦 Third-party code
 
 - 📦 **Third-party code is exempt.** Anything in `node_modules/` or `vendor/` isn't ours. Don't lint it, don't tidy it, leave it be.
-
-### 🌿 Branches
-
-- 🏷️ **Every task has a ticket, and the branch is named after it:** `ACT-14-invoice-export`. No ticket (a quick README fix, say)? Then `type/short-description`, like `docs/update-readme`. Never work straight on `main`.
 
 ### 🗂️ Structure
 
 - 🐫 **Code files are camelCase.** Components are PascalCase (`Button.tsx`) inside a camelCase folder (`button/`).
-- 🔗 **If it becomes a URL, it's kebab-case.** Route folders and doc files (`background-jobs.md`). CSS variables and branch names too.
+- 🔗 **If it becomes a URL, it's kebab-case.** Route folders and doc files (`background-jobs.md`). CSS variables too.
 - 🧰 **Reusable functions live in `utils/`.** Global, section or component level, one folder per function, with an `index.ts` so imports stay tidy.
 - 📍 **Components live where they're used.** Design System Components in `components/ui/`, anything used on more than one page in `components/shared/`, and one-page components in that page's own `components/` folder. No feature folders.
 - 🧱 **Components follow the same order every time.** Imports, component, variables, state, effects, render. No inline functions in the render.
@@ -142,11 +141,11 @@ static/templates/
 ├── docsSite/               # 🌐 Docusaurus viewer that shows docs/ at /docs
 ├── eslint/                 # 🚨 Four flavours: base, typescript, react, nextjs
 ├── stylelint/              # 💅 CSS and SCSS
-├── prettier.config.js      # ✨ Formatting
+├── prettier.config.mjs     # ✨ Formatting
 ├── globals.css             # 🎨 Tailwind + starter colour palette
 ├── .editorconfig           # ⌨️ Editor whitespace rules
 ├── .nvmrc / .envrc         # 🟢 Node version switching
-└── .commitlintrc.json      # 📝 Commit message rules
+└── husky/pre-commit        # 🚦 Lint before every commit
 ```
 
 Copy them. Don't retype them. The ESLint ones have been run against real code, so they actually work, which is more than you can say for most configs floating around the internet.
@@ -165,8 +164,8 @@ Copy them. Don't retype them. The ESLint ones have been run against real code, s
 │   ├── images/             # 🖼️ Logo and favicon
 │   └── templates/          # 📋 The copy-paste files
 ├── src/css/custom.css      # 🎨 Site theme overrides
-├── docusaurus.config.ts    # ⚙️ Site config
-└── sidebars.ts             # 📑 Sidebar (builds itself from docs/)
+├── docusaurus.config.mjs   # ⚙️ Site config
+└── sidebars.mjs            # 📑 Sidebar (builds itself from docs/)
 ```
 
 Built with [Docusaurus](https://docusaurus.io). The sidebar generates itself from the folders, so there's no menu file to forget about.
@@ -177,7 +176,7 @@ Built with [Docusaurus](https://docusaurus.io). The sidebar generates itself fro
 
 Reckon a rule's wrong, or there's one missing? Good. Standards that never change are standards nobody reads.
 
-1. 🌿 **Branch off `main`**, named after the ticket (`ACT-14-add-branch-naming`), or `type/short-description` if there's no ticket (`docs/add-branch-naming`).
+1. 🌿 **Branch off `main`**, named after the ticket (`ACT-14-update-eslint-page`), or `type/short-description` if there's no ticket (`docs/update-eslint-page`).
 2. 📝 **Edit or add a Markdown file in `docs/`.** Name it in kebab-case (`naming-conventions.md`, not `namingConventions.md`), because the file name becomes the page's URL. Yes, we follow our own rules here.
 3. 📋 **Changing a config?** Edit the file in `static/templates/` and the matching page in `docs/Standards/` so the two don't drift apart.
 4. 🔢 **Add a version** to `docs/version-history.md`: what changed, and what a project has to do about it. Bump the major version in `package.json` to match (version 3 is `3.0.0`), and publish it to npm (npmjs.com) once it's merged. We use pnpm for everything, so that's `pnpm publish`, which lands in the same npm registry as `npm publish`. Projects read only the new versions, so if it's not in there, nobody hears about it.

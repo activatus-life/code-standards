@@ -19,17 +19,14 @@ This applies to everyone writing code, **including AI agents**. An agent copies 
 | `(e) =>`, `(item, i) =>`   | `(event) =>`, `(item, index) =>`               |
 | `acc` in a `reduce`        | `runningTotal` — what it actually holds        |
 | `args`, `params` (our own) | `commandArguments`, `searchFilters`            |
-| `inputRef`                 | `inputReference`                               |
-| `inputRef`                 | `inputReference`                               |
 | `cwd` (our own variable)   | `workingDirectory`                             |
-| `deps`, `repo`, `env`      | `dependencies`, `repository`, `environment`    |
+| `deps`, `env`              | `dependencies`, `environment`                  |
 | `timeoutMs`                | `timeoutMilliseconds`                          |
 | `MAX_RETRY_ATTEMPTS`       | `MAXIMUM_RETRY_ATTEMPTS`                       |
 | `size: "sm" \| "lg"`       | `size: "small" \| "large"`                     |
 | `<T>`                      | `<ItemType>`                                   |
 | `name="email1"`            | `name="emailAddress"`                          |
 | `helpers.ts`, `misc.ts`    | `formatCurrency.ts` — named after what it does |
-| `lib/`                     | `library/`                                     |
 | `helpers/`, `utilities/`   | `utils/`                                       |
 | `useAuth`, `authStore`     | `useAuthentication`, `authenticationStore`     |
 | `STRIPE_SK`                | `STRIPE_SECRET_KEY`                            |
@@ -59,7 +56,6 @@ Everything that has a name:
 | **API routes**                  | `/api/calendar-events`                               | `/api/ce`, `/api/data`, `/api/v2x`                |
 | **Environment variables**       | `STRIPE_SECRET_KEY`, `DOCS_URL`                      | `SK`, `KEY2`, `URL_1`                             |
 | **Test names**                  | `it("adds a thousands separator")`                   | `it("works")`, `it("test 1")`                     |
-| **Branches**                    | `ACT-14-invoice-export`                                | `fix/stuff`, `toms-branch`                        |
 | **Doc files**                   | `architecture/background-jobs.md`                    | `arch/bg.md`, `notes2.md`                         |
 | **Error messages**              | `"Enter an email address"`                           | `"Invalid input"`, `"Error 42"`                   |
 
@@ -129,30 +125,33 @@ Form fields are where names slip most, and where they matter most: a field's nam
 
 Some short names are not abbreviations. They are the word people actually say, and the long form would only make the name harder to read. **These are dictionary words, and stay short:**
 
-| Word                         | Means                                      | Example names                                     |
-| ---------------------------- | ------------------------------------------ | ------------------------------------------------- |
-| `id`                         | A unique id                                | `userId`, `user_id`, `DEFAULT_PROJECT_ID`         |
-| `docs`                       | A project's documentation                  | `docs/`, `docsSite/`, `DOCS_URL`, `pnpm docs:dev` |
-| `props`                      | The values a component takes               | `props`, `ButtonProps`                            |
-| `utils`                      | Reusable functions that are not components | `utils/`, `utils/formatCurrency/`                 |
-| `app`                        | The application                            | `app/`, `appName`                                 |
-| `url`                        | A web address                              | `imageUrl`, `DOCS_URL`                            |
-| `api`                        | An application programming interface       | `api/`, `apiResponse`                             |
-| `uat`                        | User acceptance testing                    | `uatEnvironment`                                  |
-| `pdf`, `html`, `css`, `json` | File formats                               | `invoicePdf`, `htmlContent`, `globals.css`        |
-| `readme`                     | A project's README file                    | `readmeContent`                                   |
+| Word                         | Means                                                                                                       | Example names                                     |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `id`                         | A unique id                                                                                                 | `userId`, `user_id`, `DEFAULT_PROJECT_ID`         |
+| `docs`                       | A project's documentation                                                                                   | `docs/`, `docsSite/`, `DOCS_URL`, `pnpm docs:dev` |
+| `lib`                        | The folder for outside connections and app-wide setup. Next.js and shadcn/ui use the same name              | `lib/`, `lib/integrations/`                       |
+| `props`                      | The values a component takes                                                                                | `props`, `ButtonProps`                            |
+| `ref`                        | A React ref: a handle on an element or a value kept between renders                                         | `inputRef`, `useRef`, `scrollContainerRef`        |
+| `repo`                       | A repository: in GitHub's words, it "contains all of your project's files and each file's revision history" | `repoName`, `repoUrl`                             |
+| `utils`                      | Reusable functions that are not components                                                                  | `utils/`, `utils/formatCurrency/`                 |
+| `app`                        | The application                                                                                             | `app/`, `appName`                                 |
+| `url`                        | A web address                                                                                               | `imageUrl`, `DOCS_URL`                            |
+| `api`                        | An application programming interface                                                                        | `api/`, `apiResponse`                             |
+| `uat`                        | User acceptance testing                                                                                     | `uatEnvironment`                                  |
+| `pdf`, `html`, `css`, `json` | File formats                                                                                                | `invoicePdf`, `htmlContent`, `globals.css`        |
+| `readme`                     | A project's README file                                                                                     | `readmeContent`                                   |
 
 **Case them as words** in camelCase and PascalCase: `imageUrl`, `apiResponse`, `docsSite` — never `imageURL` or `APIResponse`.
 
-**This list is the only back door.** A short name not on it gets written out in full. If people say the long form out loud — "environment", "repository", "application" — write the long form.
+**This list is the only back door.** A short name not on it gets written out in full. If people say the long form out loud — "environment", "dependencies", "message" — write the long form.
 
 ### Adding a word to the dictionary
 
 When a short name feels like a dictionary word, don't just use it — add it here first:
 
-1. **Ask:** would a non-developer say this word out loud, and know what it means? `docs`: yes. `env`, `repo`, `btn`: no.
+1. **Ask:** is this the word people actually say, so the long form would only be harder to read? `docs`, `repo`: yes. `env`, `btn`, `msg`: no.
 2. **Add a row** to the table above, in the same pull request as the code that uses it.
-3. **If ESLint flags the word**, add it to `replacements` in the `unicorn/name-replacements` rule of the [ESLint config](/Standards/eslint), so the linter agrees: `replacements: { docs: false, props: false, utils: false }`.
+3. **If ESLint flags the word**, add it to `replacements` in the `unicorn/name-replacements` rule of the [ESLint config](/Standards/eslint), so the linter agrees: `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }`.
 
 The list is the record. If a word is not on it, it is not a dictionary word yet.
 
@@ -231,4 +230,4 @@ users.map((u) => u.name);
 | CSS variables and CSS Module classes                                                                                         | Stylelint                                                                                            |
 | **Everything else** — folders, props, form fields, union values, database columns, routes, environment variables, test names | **Code review and AI agents.** The linter cannot read these, so every agent and reviewer checks them |
 
-ESLint allows the [dictionary](#dictionary) it would otherwise flag (`docs`, `props`, `utils`), and exactly three third-party names as they are — `ref`, `params` and `searchParams`. It still flags any of our own names built from an third-party name, such as `inputRef`.
+ESLint allows the [dictionary](#dictionary) words it would otherwise flag (`docs`, `lib`, `props`, `ref`, `repo`, `utils`), and exactly two third-party names as they are: `params` and `searchParams`. It still flags any of our own names built from an third-party name, such as `inputRef`.

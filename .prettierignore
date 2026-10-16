@@ -1,0 +1,5 @@
+build/
+.docusaurus/
+pnpm-lock.yaml
+# The templates are copied into projects and formatted there, with the project's own Prettier setup.
+static/templates/

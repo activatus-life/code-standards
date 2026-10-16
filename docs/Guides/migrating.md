@@ -25,7 +25,7 @@ Formatting changes are safe to land in one big PR because they don't change beha
 pnpm add -D prettier prettier-plugin-tailwindcss
 ```
 
-Add `prettier.config.js` — see the [Prettier page](/Standards/prettier) for the full file contents.
+Add `prettier.config.mjs` — see the [Prettier page](/Standards/prettier) for the full file contents.
 
 Format everything at once:
 
@@ -33,7 +33,7 @@ Format everything at once:
 pnpm prettier --write .
 ```
 
-Commit with message `chore: apply prettier formatting`. This keeps the formatting diff isolated, making future `git blame` useful.
+Commit it on its own, following the project's commit message format. This keeps the formatting diff isolated, making future `git blame` useful.
 
 Add a `.prettierignore` if you have generated files you don't want touched:
 
@@ -82,7 +82,7 @@ Before renaming anything, sort the short names into three piles:
 | ---------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------- |
 | **A dictionary word** — `id`, `docs`, `app`, `url`, `api`                                                              | Leave it                  | [Dictionary](/Standards/human-readable-names#dictionary)                  |
 | **A third-party name** — React's `ref`, Next.js's `params`, shadcn/ui's `cn`, Linear's `pageInfo`, Node's `cwd` option | Leave it exactly as it is | [Third-party names](/Standards/human-readable-names#third-party-names)    |
-| **Our own shorthand** — `btn`, `props`, `lib/`, `utils/`, `inputRef`                                                   | Rename it                 | The [Never / Always](/Standards/human-readable-names#never--always) table |
+| **Our own shorthand** — `btn`, `lib/`, `helpers/`, `utilities/`                                                        | Rename it                 | The [Never / Always](/Standards/human-readable-names#never--always) table |
 
 **Not sure which pile?** Don't guess and don't rename it. Ask, and if it is a dictionary word, [add it to the dictionary](/Standards/human-readable-names#adding-a-word-to-the-dictionary) first. Everyone then makes the same call.
 
@@ -90,16 +90,14 @@ Before renaming anything, sort the short names into three piles:
 
 These come up in nearly every project:
 
-| Before                                 | After                                                 |
-| -------------------------------------- | ----------------------------------------------------- |
-| `lib/`                                 | `library/`                                            |
-| `utilities/`, `helpers/`, `helpers.ts` | `utils/`, or a file named after what it does          |
-| `ButtonProperties`, `properties`       | `ButtonProps`, `props`                                |
-| `inputRef`                             | `inputReference` (React's own `ref` prop stays `ref`) |
-| `MAX_`, `MIN_`                         | `MAXIMUM_`, `MINIMUM_`                                |
-| `"sm" \| "md" \| "lg"`                 | `"small" \| "medium" \| "large"`                      |
-| `auth`, `useAuth`                      | `authentication`, `useAuthentication`                 |
-| `(e) =>`, `(i) =>`                     | `(event) =>`, `(index) =>`                            |
+| Before                                 | After                                        |
+| -------------------------------------- | -------------------------------------------- |
+| `utilities/`, `helpers/`, `helpers.ts` | `utils/`, or a file named after what it does |
+| `ButtonProperties`, `properties`       | `ButtonProps`, `props`                       |
+| `MAX_`, `MIN_`                         | `MAXIMUM_`, `MINIMUM_`                       |
+| `"sm" \| "md" \| "lg"`                 | `"small" \| "medium" \| "large"`             |
+| `auth`, `useAuth`                      | `authentication`, `useAuthentication`        |
+| `(e) =>`, `(i) =>`                     | `(event) =>`, `(index) =>`                   |
 
 `docs/`, `docsSite/`, `DOCS_URL` and `pnpm docs:dev` already follow the standard. Leave them.
 
@@ -107,7 +105,7 @@ These come up in nearly every project:
 
 1. **Folders**, with `git mv` so the history follows the files. Fix the imports in the same pull request.
 2. **Types**, so the `@typescript-eslint/naming-convention` errors clear.
-3. **Variables, functions and properties.** Use your editor's **Rename Symbol** (F2), not find-and-replace: it renames every use and nothing else.
+3. **Variables, functions and properties.** Use your editor's **Rename Symbol** (F2), not find-and-replace: it renames every use and nothing else. An agent working from the command line has no editor, so it uses the [rename script](#renaming-from-the-command-line) instead.
 4. **Everything the linter can't see** — form fields, union values, routes, scripts, environment variables. Search for each one by hand.
 
 ### 4. Names that leave the codebase
@@ -121,6 +119,24 @@ Some names are used outside the code. Renaming them needs more than a code chang
 
 Write each of these up in the pull request so nobody gets caught out.
 
+### Renaming from the command line
+
+An AI agent working in a terminal has no editor, so it cannot press F2. The package ships a script that does the same job, using the project's own TypeScript and the same rename engine as the editor:
+
+```bash
+node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>
+```
+
+```bash
+# Rename a type everywhere it is used
+node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs components/ui/button/types.ts ButtonProperties ButtonProps
+```
+
+- **Give it the file where the name is declared.** It renames that symbol and every use of it, across the whole project, and leaves anything else with the same name alone.
+- **Shorthand stays correct.** `{ properties }` becomes `{ properties: props }`, so objects keep their shape.
+- **It only renames TypeScript and JavaScript names.** Folders, files, form fields, routes and environment variables still need renaming by hand.
+- **Run the type check and tests after each batch** of renames.
+
 ## Stage 5 — AGENTS.md
 
 Copy the [AGENTS.md template](/templates#agents) to the project root and replace every `[placeholder]`. Agree the standards with the person first ([Setup, step 3](/Guides/setup#3-agree-the-standards)), and set the code standards version from the [Version History](/version-history).
@@ -133,9 +149,9 @@ Copy the eight [standard skill files](/templates#skills) into `.agents/skills/`,
 
 Move the project's existing documentation into the standard [`docs/` folders](/Standards/documentation#-the-folders), rewriting each as a [Decision Doc](/Standards/documentation#-the-doc-format), then add the [`docsSite/` viewer](/Standards/documentation#-setting-it-up) so it shows at `/docs`.
 
-## Stage 8 — Commit message checks
+## Stage 8 — Lint before every commit
 
-Add Commitlint and the two Husky hooks: one checks the commit message, the other runs `pnpm lint` before every commit. Add the lint hook **last**, once the project passes `pnpm lint`. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages).
+Add the Husky hook that runs `pnpm lint` before every commit. Add it **last**, once the project passes `pnpm lint`. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit).
 
 ## Tips
 

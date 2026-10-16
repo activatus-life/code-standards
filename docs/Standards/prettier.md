@@ -15,23 +15,32 @@ pnpm add -D prettier prettier-plugin-tailwindcss
 
 ## Usage
 
-Create `prettier.config.js` in your project root:
+Create `prettier.config.mjs` in your project root:
 
-```js title="prettier.config.js"
+```js title="prettier.config.mjs"
 /** @type {import("prettier").Config & import("prettier-plugin-tailwindcss").PluginOptions} */
 const config = {
-  printWidth: 100,
-  tabWidth: 2,
-  useTabs: false,
-  singleQuote: false,
-  trailingComma: "all",
-  bracketSpacing: true,
-  bracketSameLine: false,
-  arrowParens: "always",
-  semi: true,
-  endOfLine: "lf",
-  plugins: ["prettier-plugin-tailwindcss"],
-  tailwindStylesheet: "./app/globals.css",
+	// Short lines, so code reads well on a phone.
+	printWidth: 70,
+	// Tabs indent. A tab counts as 2 characters towards the line width.
+	useTabs: true,
+	tabWidth: 2,
+	singleQuote: false,
+	trailingComma: "all",
+	bracketSpacing: true,
+	bracketSameLine: false,
+	arrowParens: "always",
+	semi: true,
+	endOfLine: "lf",
+	plugins: ["prettier-plugin-tailwindcss"],
+	tailwindStylesheet: "./app/globals.css",
+	overrides: [
+		{
+			// YAML does not allow tabs, and Markdown reads a tab as four spaces.
+			files: ["*.md", "*.mdx", "*.yml", "*.yaml"],
+			options: { useTabs: false },
+		},
+	],
 };
 
 export default config;
@@ -66,18 +75,18 @@ The config includes [`prettier-plugin-tailwindcss`](https://github.com/tailwindl
 
 ## Settings reference
 
-| Option | Value | Rationale |
-| --- | --- | --- |
-| `printWidth` | `100` | Wider than 80 but avoids the illegibility of unconstrained lines |
-| `tabWidth` | `2` | Standard for JS/TS; matches `.editorconfig` |
-| `useTabs` | `false` | Spaces are consistent across all editors |
-| `singleQuote` | `false` | Double quotes are standard in JSX and HTML; one style for all |
-| `trailingComma` | `"all"` | Cleaner diffs when adding items to the end of a list |
-| `bracketSpacing` | `true` | `{ foo }` is more readable than `{foo}` |
-| `bracketSameLine` | `false` | Closing `>` on its own line for JSX |
-| `arrowParens` | `"always"` | `(x) => x` is consistent whether 0, 1, or many params |
-| `semi` | `true` | Explicit semicolons avoid ASI footguns |
-| `endOfLine` | `"lf"` | Unix line endings everywhere; matches `.editorconfig` |
+| Option            | Value      | Rationale                                                                                                   |
+| ----------------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| `printWidth`      | `70`       | Short lines read well on a phone, where a lot of code is reviewed                                           |
+| `tabWidth`        | `2`        | How many characters a tab counts as towards the line width; matches `.editorconfig`                         |
+| `useTabs`         | `true`     | Tabs indent code: each person sees the width they like, and files are smaller. Markdown and YAML use spaces |
+| `singleQuote`     | `false`    | Double quotes are standard in JSX and HTML; one style for all                                               |
+| `trailingComma`   | `"all"`    | Cleaner diffs when adding items to the end of a list                                                        |
+| `bracketSpacing`  | `true`     | `{ foo }` is more readable than `{foo}`                                                                     |
+| `bracketSameLine` | `false`    | Closing `>` on its own line for JSX                                                                         |
+| `arrowParens`     | `"always"` | `(x) => x` is consistent whether 0, 1, or many params                                                       |
+| `semi`            | `true`     | Explicit semicolons avoid ASI footguns                                                                      |
+| `endOfLine`       | `"lf"`     | Unix line endings everywhere; matches `.editorconfig`                                                       |
 
 ## Editor integration
 

@@ -18,6 +18,22 @@ Each config builds on the one above it — React adds to TypeScript, which adds 
 
 ## Installation
 
+:::warning[ESLint 10.4 or later]
+
+**The config needs ESLint 10.4 or later.** `eslint-plugin-unicorn` 78, which provides the naming rules, requires it. A project on ESLint 9 must upgrade first:
+
+```bash
+pnpm add -D eslint@latest @eslint/js@latest
+```
+
+:::
+
+:::note[eslint-plugin-react on ESLint 10]
+
+`eslint-plugin-react` 7.37 officially supports ESLint only up to 9.7, and on ESLint 10 it crashes when it tries to detect the React version by itself. The React and Next.js configs below avoid this by setting the version: `settings: { react: { version: "19.0" } }`. **Keep that setting** and update the number when the project upgrades React. pnpm warns about the unmet peer dependency on install; that warning is expected.
+
+:::
+
 ```bash
 pnpm add -D eslint @eslint/js globals \
   @eslint-community/eslint-plugin-eslint-comments \
@@ -65,90 +81,101 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
 export default [
-  { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
-  js.configs.recommended,
-  comments.recommended,
-  importX.recommended,
-  unicorn.configs.recommended,
-  {
-    languageOptions: { globals: { ...globals.node } },
-    rules: {
-      "@eslint-community/eslint-comments/require-description": "error",
-      "func-style": ["error", "expression"],
-      "max-depth": ["error", 3],
-      "max-lines": [
-        "error",
-        { max: 300, skipBlankLines: true, skipComments: true },
-      ],
-      "no-nested-ternary": "error",
-      "no-var": "error",
-      "prefer-arrow-callback": "error",
-      "prefer-const": "error",
-      "no-magic-numbers": [
-        "error",
-        {
-          ignore: [-1, 0, 1],
-          ignoreArrayIndexes: true,
-          ignoreDefaultValues: true,
-          enforceConst: true,
-        },
-      ],
-      "no-restricted-syntax": [
-        "error",
-        {
-          selector: "ClassDeclaration",
-          message: "Use functions, not classes.",
-        },
-        { selector: "ClassExpression", message: "Use functions, not classes." },
-        {
-          selector: "VariableDeclarator > FunctionExpression",
-          message: "Use an arrow function.",
-        },
-        {
-          selector: "VariableDeclaration[kind='let']",
-          message:
-            "Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
-        },
-        {
-          selector: "FunctionDeclaration[params.length>1]",
-          message:
-            "Use a single object parameter when a function needs more than one value.",
-        },
-        {
-          selector:
-            "VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
-          message:
-            "Use a single object parameter when a function needs more than one value.",
-        },
-      ],
-      "import-x/no-cycle": "error",
-      "import-x/no-default-export": "error",
-      "no-use-before-define": "error",
-      "unicorn/default-export-style": "off",
-      "unicorn/filename-case": [
-        "error",
-        { cases: { camelCase: true, pascalCase: true } },
-      ],
-      "unicorn/name-replacements": [
-        "error",
-        {
-          // Dictionary words: see "Dictionary" in the Human-Readable Names standard.
-          replacements: { docs: false, props: false, utils: false },
-          // Third-party names, allowed only exactly as they are.
-          allowList: { ref: true, params: true, searchParams: true },
-        },
-      ],
-    },
-  },
-  {
-    files: ["**/*.test.{js,mjs}"],
-    rules: { "max-lines": "off", "no-magic-numbers": "off" },
-  },
-  {
-    files: ["**/*.config.{js,mjs}"],
-    rules: { "import-x/no-default-export": "off" },
-  },
-  prettier,
+	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
+	js.configs.recommended,
+	comments.recommended,
+	importX.recommended,
+	unicorn.configs.recommended,
+	{
+		languageOptions: { globals: { ...globals.node } },
+		rules: {
+			"@eslint-community/eslint-comments/require-description":
+				"error",
+			"func-style": ["error", "expression"],
+			"max-depth": ["error", 3],
+			"max-lines": [
+				"error",
+				{ max: 300, skipBlankLines: true, skipComments: true },
+			],
+			"no-nested-ternary": "error",
+			"no-var": "error",
+			"prefer-arrow-callback": "error",
+			"prefer-const": "error",
+			"no-magic-numbers": [
+				"error",
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					enforceConst: true,
+				},
+			],
+			"no-restricted-syntax": [
+				"error",
+				{
+					selector: "ClassDeclaration",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "ClassExpression",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "VariableDeclarator > FunctionExpression",
+					message: "Use an arrow function.",
+				},
+				{
+					selector: "VariableDeclaration[kind='let']",
+					message:
+						"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+				},
+				{
+					selector: "FunctionDeclaration[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+				{
+					selector:
+						"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+			],
+			"import-x/no-cycle": "error",
+			"import-x/no-default-export": "error",
+			"no-use-before-define": "error",
+			"unicorn/default-export-style": "off",
+			"unicorn/filename-case": [
+				"error",
+				{ cases: { camelCase: true, pascalCase: true } },
+			],
+			"unicorn/name-replacements": [
+				"error",
+				{
+					// Dictionary words: see "Dictionary" in the Human-Readable Names standard.
+					replacements: {
+						docs: false,
+						lib: false,
+						props: false,
+						ref: false,
+						repo: false,
+						utils: false,
+					},
+					// Third-party names, allowed only exactly as they are.
+					allowList: { params: true, searchParams: true },
+				},
+			],
+		},
+	},
+	{
+		files: ["**/*.test.{js,mjs}"],
+		rules: { "max-lines": "off", "no-magic-numbers": "off" },
+	},
+	{
+		files: ["**/*.config.{js,mjs}"],
+		rules: { "import-x/no-default-export": "off" },
+	},
+	prettier,
 ];
 ```
 
@@ -165,138 +192,149 @@ import globals from "globals";
 import { configs as typescript } from "typescript-eslint";
 
 export default [
-  { ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
-  js.configs.recommended,
-  comments.recommended,
-  importX.recommended,
-  importX.typescript,
-  unicorn.configs.recommended,
-  ...typescript.recommended,
-  {
-    languageOptions: { globals: { ...globals.node } },
-    settings: {
-      "import-x/resolver-next": [createTypeScriptImportResolver()],
-    },
-    rules: {
-      "@eslint-community/eslint-comments/require-description": "error",
-      "func-style": ["error", "expression"],
-      "max-depth": ["error", 3],
-      "max-lines": [
-        "error",
-        { max: 300, skipBlankLines: true, skipComments: true },
-      ],
-      "no-nested-ternary": "error",
-      "no-var": "error",
-      "prefer-arrow-callback": "error",
-      "prefer-const": "error",
-      "no-magic-numbers": [
-        "error",
-        {
-          ignore: [-1, 0, 1],
-          ignoreArrayIndexes: true,
-          ignoreDefaultValues: true,
-          enforceConst: true,
-        },
-      ],
-      "no-restricted-syntax": [
-        "error",
-        {
-          selector: "ClassDeclaration",
-          message: "Use functions, not classes.",
-        },
-        { selector: "ClassExpression", message: "Use functions, not classes." },
-        {
-          selector: "VariableDeclarator > FunctionExpression",
-          message: "Use an arrow function.",
-        },
-        {
-          selector: "VariableDeclaration[kind='let']",
-          message:
-            "Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
-        },
-        {
-          selector: "FunctionDeclaration[params.length>1]",
-          message:
-            "Use a single object parameter when a function needs more than one value.",
-        },
-        {
-          selector:
-            "VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
-          message:
-            "Use a single object parameter when a function needs more than one value.",
-        },
-      ],
-      "import-x/no-cycle": "error",
-      "import-x/no-default-export": "error",
-      "no-use-before-define": "error",
-      "unicorn/default-export-style": "off",
-      "unicorn/filename-case": [
-        "error",
-        { cases: { camelCase: true, pascalCase: true } },
-      ],
-      "unicorn/name-replacements": [
-        "error",
-        {
-          // Dictionary words: see "Dictionary" in the Human-Readable Names standard.
-          replacements: { docs: false, props: false, utils: false },
-          // Third-party names, allowed only exactly as they are.
-          allowList: { ref: true, params: true, searchParams: true },
-        },
-      ],
-    },
-  },
-  {
-    files: ["**/*.{ts,tsx}"],
-    rules: {
-      "no-undef": "off",
-      "no-magic-numbers": "off",
-      "no-use-before-define": "off",
-      "@typescript-eslint/consistent-type-assertions": [
-        "error",
-        { assertionStyle: "never" },
-      ],
-      "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          selector: ["typeAlias", "interface"],
-          format: ["PascalCase"],
-          custom: { regex: "(Props|Type)$", match: true },
-        },
-      ],
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-magic-numbers": [
-        "error",
-        {
-          ignore: [-1, 0, 1],
-          ignoreArrayIndexes: true,
-          ignoreDefaultValues: true,
-          enforceConst: true,
-          ignoreEnums: true,
-          ignoreNumericLiteralTypes: true,
-        },
-      ],
-      "@typescript-eslint/no-non-null-assertion": "error",
-      "@typescript-eslint/no-use-before-define": "error",
-    },
-  },
-  {
-    files: ["**/*.test.{ts,tsx}"],
-    rules: {
-      "max-lines": "off",
-      "no-magic-numbers": "off",
-      "@typescript-eslint/no-magic-numbers": "off",
-    },
-  },
-  {
-    files: ["**/*.config.{js,mjs,ts}", "**/*.stories.tsx"],
-    rules: { "import-x/no-default-export": "off" },
-  },
-  {
-    files: ["**/*.config.{js,mjs,ts}"],
-    rules: { "unicorn/no-top-level-side-effects": "off" },
-  },
-  prettier,
+	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
+	js.configs.recommended,
+	comments.recommended,
+	importX.recommended,
+	importX.typescript,
+	unicorn.configs.recommended,
+	...typescript.recommended,
+	{
+		languageOptions: { globals: { ...globals.node } },
+		settings: {
+			"import-x/resolver-next": [createTypeScriptImportResolver()],
+		},
+		rules: {
+			"@eslint-community/eslint-comments/require-description":
+				"error",
+			"func-style": ["error", "expression"],
+			"max-depth": ["error", 3],
+			"max-lines": [
+				"error",
+				{ max: 300, skipBlankLines: true, skipComments: true },
+			],
+			"no-nested-ternary": "error",
+			"no-var": "error",
+			"prefer-arrow-callback": "error",
+			"prefer-const": "error",
+			"no-magic-numbers": [
+				"error",
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					enforceConst: true,
+				},
+			],
+			"no-restricted-syntax": [
+				"error",
+				{
+					selector: "ClassDeclaration",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "ClassExpression",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "VariableDeclarator > FunctionExpression",
+					message: "Use an arrow function.",
+				},
+				{
+					selector: "VariableDeclaration[kind='let']",
+					message:
+						"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+				},
+				{
+					selector: "FunctionDeclaration[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+				{
+					selector:
+						"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+			],
+			"import-x/no-cycle": "error",
+			"import-x/no-default-export": "error",
+			"no-use-before-define": "error",
+			"unicorn/default-export-style": "off",
+			"unicorn/filename-case": [
+				"error",
+				{ cases: { camelCase: true, pascalCase: true } },
+			],
+			"unicorn/name-replacements": [
+				"error",
+				{
+					// Dictionary words: see "Dictionary" in the Human-Readable Names standard.
+					replacements: {
+						docs: false,
+						lib: false,
+						props: false,
+						ref: false,
+						repo: false,
+						utils: false,
+					},
+					// Third-party names, allowed only exactly as they are.
+					allowList: { params: true, searchParams: true },
+				},
+			],
+		},
+	},
+	{
+		files: ["**/*.{ts,tsx}"],
+		rules: {
+			"no-undef": "off",
+			"no-magic-numbers": "off",
+			"no-use-before-define": "off",
+			"@typescript-eslint/consistent-type-assertions": [
+				"error",
+				{ assertionStyle: "never" },
+			],
+			"@typescript-eslint/consistent-type-imports": "error",
+			"@typescript-eslint/naming-convention": [
+				"error",
+				{
+					selector: ["typeAlias", "interface"],
+					format: ["PascalCase"],
+					custom: { regex: "(Props|Type)$", match: true },
+				},
+			],
+			"@typescript-eslint/no-explicit-any": "error",
+			"@typescript-eslint/no-magic-numbers": [
+				"error",
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					enforceConst: true,
+					ignoreEnums: true,
+					ignoreNumericLiteralTypes: true,
+				},
+			],
+			"@typescript-eslint/no-non-null-assertion": "error",
+			"@typescript-eslint/no-use-before-define": "error",
+		},
+	},
+	{
+		files: ["**/*.test.{ts,tsx}"],
+		rules: {
+			"max-lines": "off",
+			"no-magic-numbers": "off",
+			"@typescript-eslint/no-magic-numbers": "off",
+		},
+	},
+	{
+		files: ["**/*.config.{js,mjs,ts}", "**/*.stories.tsx"],
+		rules: { "import-x/no-default-export": "off" },
+	},
+	{
+		files: ["**/*.config.{js,mjs,ts}"],
+		rules: { "unicorn/no-top-level-side-effects": "off" },
+	},
+	prettier,
 ];
 ```
 
@@ -307,40 +345,178 @@ TypeScript files are checked by the compiler, so `no-undef` is off for them. The
 Start from the [TypeScript](#typescript) config and make five changes:
 
 ```js title="eslint.config.mjs"
-// 1. Import the React plugins
+import js from "@eslint/js";
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import prettier from "eslint-config-prettier";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
+import { flatConfigs as importX } from "eslint-plugin-import-x";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import unicorn from "eslint-plugin-unicorn";
+import globals from "globals";
+import { configs as typescript } from "typescript-eslint";
 
 export default [
-  // ...
-  ...typescript.recommended,
-  // 2. Add the React presets after the TypeScript preset
-  react.configs.flat.recommended,
-  react.configs.flat["jsx-runtime"],
-  reactHooks.configs.flat.recommended,
-  {
-    // 3. Declare browser globals alongside the Node ones
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-    settings: {
-      // 4. Tell the React plugin which React version the project uses
-      react: { version: "19.0" },
-      "import-x/resolver-next": [createTypeScriptImportResolver()],
-    },
-    rules: {
-      // ...
-      // 5. Add the React rules
-      "react/function-component-definition": [
-        "error",
-        {
-          namedComponents: "arrow-function",
-          unnamedComponents: "arrow-function",
-        },
-      ],
-      "react/jsx-no-bind": "error",
-      "react/no-multi-comp": "error",
-    },
-  },
-  // ...
+	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
+	js.configs.recommended,
+	comments.recommended,
+	importX.recommended,
+	importX.typescript,
+	unicorn.configs.recommended,
+	...typescript.recommended,
+	react.configs.flat.recommended,
+	react.configs.flat["jsx-runtime"],
+	reactHooks.configs.flat.recommended,
+	{
+		languageOptions: {
+			globals: { ...globals.browser, ...globals.node },
+		},
+		settings: {
+			// Keep this. eslint-plugin-react crashes on ESLint 10 if it has to detect the version itself.
+			// Update the number when the project upgrades React.
+			react: { version: "19.0" },
+			"import-x/resolver-next": [createTypeScriptImportResolver()],
+		},
+		rules: {
+			"@eslint-community/eslint-comments/require-description":
+				"error",
+			"func-style": ["error", "expression"],
+			"max-depth": ["error", 3],
+			"max-lines": [
+				"error",
+				{ max: 300, skipBlankLines: true, skipComments: true },
+			],
+			"no-nested-ternary": "error",
+			"no-var": "error",
+			"prefer-arrow-callback": "error",
+			"prefer-const": "error",
+			"no-magic-numbers": [
+				"error",
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					enforceConst: true,
+				},
+			],
+			"no-restricted-syntax": [
+				"error",
+				{
+					selector: "ClassDeclaration",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "ClassExpression",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "VariableDeclarator > FunctionExpression",
+					message: "Use an arrow function.",
+				},
+				{
+					selector: "VariableDeclaration[kind='let']",
+					message:
+						"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+				},
+				{
+					selector: "FunctionDeclaration[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+				{
+					selector:
+						"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+			],
+			"import-x/no-cycle": "error",
+			"import-x/no-default-export": "error",
+			"no-use-before-define": "error",
+			"unicorn/default-export-style": "off",
+			"unicorn/filename-case": [
+				"error",
+				{ cases: { camelCase: true, pascalCase: true } },
+			],
+			"unicorn/name-replacements": [
+				"error",
+				{
+					// Dictionary words: see "Dictionary" in the Human-Readable Names standard.
+					replacements: {
+						docs: false,
+						lib: false,
+						props: false,
+						ref: false,
+						repo: false,
+						utils: false,
+					},
+					// Third-party names, allowed only exactly as they are.
+					allowList: { params: true, searchParams: true },
+				},
+			],
+			"react/function-component-definition": [
+				"error",
+				{
+					namedComponents: "arrow-function",
+					unnamedComponents: "arrow-function",
+				},
+			],
+			"react/jsx-no-bind": "error",
+			"react/no-multi-comp": "error",
+		},
+	},
+	{
+		files: ["**/*.{ts,tsx}"],
+		rules: {
+			"no-undef": "off",
+			"no-magic-numbers": "off",
+			"no-use-before-define": "off",
+			"@typescript-eslint/consistent-type-assertions": [
+				"error",
+				{ assertionStyle: "never" },
+			],
+			"@typescript-eslint/consistent-type-imports": "error",
+			"@typescript-eslint/naming-convention": [
+				"error",
+				{
+					selector: ["typeAlias", "interface"],
+					format: ["PascalCase"],
+					custom: { regex: "(Props|Type)$", match: true },
+				},
+			],
+			"@typescript-eslint/no-explicit-any": "error",
+			"@typescript-eslint/no-magic-numbers": [
+				"error",
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					enforceConst: true,
+					ignoreEnums: true,
+					ignoreNumericLiteralTypes: true,
+				},
+			],
+			"@typescript-eslint/no-non-null-assertion": "error",
+			"@typescript-eslint/no-use-before-define": "error",
+		},
+	},
+	{
+		files: ["**/*.test.{ts,tsx}"],
+		rules: {
+			"max-lines": "off",
+			"no-magic-numbers": "off",
+			"@typescript-eslint/no-magic-numbers": "off",
+		},
+	},
+	{
+		files: ["**/*.config.{js,mjs,ts}", "**/*.stories.tsx"],
+		rules: { "import-x/no-default-export": "off" },
+	},
+	{
+		files: ["**/*.config.{js,mjs,ts}"],
+		rules: { "unicorn/no-top-level-side-effects": "off" },
+	},
+	prettier,
 ];
 ```
 
@@ -365,161 +541,176 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
 export default [
-  {
-    ignores: [
-      ".next/",
-      "out/",
-      "build/",
-      "coverage/",
-      "next-env.d.ts",
-      "**/vendor/**",
-    ],
-  },
-  ...nextVitals,
-  ...nextTypescript,
-  comments.recommended,
-  importX.recommended,
-  importX.typescript,
-  unicorn.configs.recommended,
-  {
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-    settings: {
-      react: { version: "19.0" },
-      "import-x/resolver-next": [createTypeScriptImportResolver()],
-    },
-    rules: {
-      "@eslint-community/eslint-comments/require-description": "error",
-      "func-style": ["error", "expression"],
-      "max-depth": ["error", 3],
-      "max-lines": [
-        "error",
-        { max: 300, skipBlankLines: true, skipComments: true },
-      ],
-      "no-nested-ternary": "error",
-      "no-var": "error",
-      "prefer-arrow-callback": "error",
-      "prefer-const": "error",
-      "no-magic-numbers": [
-        "error",
-        {
-          ignore: [-1, 0, 1],
-          ignoreArrayIndexes: true,
-          ignoreDefaultValues: true,
-          enforceConst: true,
-        },
-      ],
-      "no-restricted-syntax": [
-        "error",
-        {
-          selector: "ClassDeclaration",
-          message: "Use functions, not classes.",
-        },
-        { selector: "ClassExpression", message: "Use functions, not classes." },
-        {
-          selector: "VariableDeclarator > FunctionExpression",
-          message: "Use an arrow function.",
-        },
-        {
-          selector: "VariableDeclaration[kind='let']",
-          message:
-            "Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
-        },
-        {
-          selector: "FunctionDeclaration[params.length>1]",
-          message:
-            "Use a single object parameter when a function needs more than one value.",
-        },
-        {
-          selector:
-            "VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
-          message:
-            "Use a single object parameter when a function needs more than one value.",
-        },
-      ],
-      "import-x/no-cycle": "error",
-      "import-x/no-default-export": "error",
-      "no-use-before-define": "error",
-      "unicorn/default-export-style": "off",
-      "unicorn/filename-case": [
-        "error",
-        { cases: { camelCase: true, pascalCase: true } },
-      ],
-      "unicorn/name-replacements": [
-        "error",
-        {
-          // Dictionary words: see "Dictionary" in the Human-Readable Names standard.
-          replacements: { docs: false, props: false, utils: false },
-          // Third-party names, allowed only exactly as they are.
-          allowList: { ref: true, params: true, searchParams: true },
-        },
-      ],
-      "react/function-component-definition": [
-        "error",
-        {
-          namedComponents: "arrow-function",
-          unnamedComponents: "arrow-function",
-        },
-      ],
-      "react/jsx-no-bind": "error",
-      "react/no-multi-comp": "error",
-    },
-  },
-  {
-    files: ["**/*.{ts,tsx}"],
-    rules: {
-      "no-undef": "off",
-      "no-magic-numbers": "off",
-      "no-use-before-define": "off",
-      "@typescript-eslint/consistent-type-assertions": [
-        "error",
-        { assertionStyle: "never" },
-      ],
-      "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          selector: ["typeAlias", "interface"],
-          format: ["PascalCase"],
-          custom: { regex: "(Props|Type)$", match: true },
-        },
-      ],
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-magic-numbers": [
-        "error",
-        {
-          ignore: [-1, 0, 1],
-          ignoreArrayIndexes: true,
-          ignoreDefaultValues: true,
-          enforceConst: true,
-          ignoreEnums: true,
-          ignoreNumericLiteralTypes: true,
-        },
-      ],
-      "@typescript-eslint/no-non-null-assertion": "error",
-      "@typescript-eslint/no-use-before-define": "error",
-    },
-  },
-  {
-    files: ["**/*.test.{ts,tsx}"],
-    rules: {
-      "max-lines": "off",
-      "no-magic-numbers": "off",
-      "@typescript-eslint/no-magic-numbers": "off",
-    },
-  },
-  {
-    files: [
-      "**/*.config.{js,mjs,ts}",
-      "**/*.stories.tsx",
-      "app/**/{page,layout,template,default,loading,error,global-error,not-found}.tsx",
-    ],
-    rules: { "import-x/no-default-export": "off" },
-  },
-  {
-    files: ["**/*.config.{js,mjs,ts}"],
-    rules: { "unicorn/no-top-level-side-effects": "off" },
-  },
-  prettier,
+	{
+		ignores: [
+			".next/",
+			"out/",
+			"build/",
+			"coverage/",
+			"next-env.d.ts",
+			"**/vendor/**",
+		],
+	},
+	...nextVitals,
+	...nextTypescript,
+	comments.recommended,
+	importX.recommended,
+	importX.typescript,
+	unicorn.configs.recommended,
+	{
+		languageOptions: {
+			globals: { ...globals.browser, ...globals.node },
+		},
+		settings: {
+			// Keep this. eslint-plugin-react crashes on ESLint 10 if it has to detect the version itself.
+			// Update the number when the project upgrades React.
+			react: { version: "19.0" },
+			"import-x/resolver-next": [createTypeScriptImportResolver()],
+		},
+		rules: {
+			"@eslint-community/eslint-comments/require-description":
+				"error",
+			"func-style": ["error", "expression"],
+			"max-depth": ["error", 3],
+			"max-lines": [
+				"error",
+				{ max: 300, skipBlankLines: true, skipComments: true },
+			],
+			"no-nested-ternary": "error",
+			"no-var": "error",
+			"prefer-arrow-callback": "error",
+			"prefer-const": "error",
+			"no-magic-numbers": [
+				"error",
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					enforceConst: true,
+				},
+			],
+			"no-restricted-syntax": [
+				"error",
+				{
+					selector: "ClassDeclaration",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "ClassExpression",
+					message: "Use functions, not classes.",
+				},
+				{
+					selector: "VariableDeclarator > FunctionExpression",
+					message: "Use an arrow function.",
+				},
+				{
+					selector: "VariableDeclaration[kind='let']",
+					message:
+						"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+				},
+				{
+					selector: "FunctionDeclaration[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+				{
+					selector:
+						"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
+					message:
+						"Use a single object parameter when a function needs more than one value.",
+				},
+			],
+			"import-x/no-cycle": "error",
+			"import-x/no-default-export": "error",
+			"no-use-before-define": "error",
+			"unicorn/default-export-style": "off",
+			"unicorn/filename-case": [
+				"error",
+				{ cases: { camelCase: true, pascalCase: true } },
+			],
+			"unicorn/name-replacements": [
+				"error",
+				{
+					// Dictionary words: see "Dictionary" in the Human-Readable Names standard.
+					replacements: {
+						docs: false,
+						lib: false,
+						props: false,
+						ref: false,
+						repo: false,
+						utils: false,
+					},
+					// Third-party names, allowed only exactly as they are.
+					allowList: { params: true, searchParams: true },
+				},
+			],
+			"react/function-component-definition": [
+				"error",
+				{
+					namedComponents: "arrow-function",
+					unnamedComponents: "arrow-function",
+				},
+			],
+			"react/jsx-no-bind": "error",
+			"react/no-multi-comp": "error",
+		},
+	},
+	{
+		files: ["**/*.{ts,tsx}"],
+		rules: {
+			"no-undef": "off",
+			"no-magic-numbers": "off",
+			"no-use-before-define": "off",
+			"@typescript-eslint/consistent-type-assertions": [
+				"error",
+				{ assertionStyle: "never" },
+			],
+			"@typescript-eslint/consistent-type-imports": "error",
+			"@typescript-eslint/naming-convention": [
+				"error",
+				{
+					selector: ["typeAlias", "interface"],
+					format: ["PascalCase"],
+					custom: { regex: "(Props|Type)$", match: true },
+				},
+			],
+			"@typescript-eslint/no-explicit-any": "error",
+			"@typescript-eslint/no-magic-numbers": [
+				"error",
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					enforceConst: true,
+					ignoreEnums: true,
+					ignoreNumericLiteralTypes: true,
+				},
+			],
+			"@typescript-eslint/no-non-null-assertion": "error",
+			"@typescript-eslint/no-use-before-define": "error",
+		},
+	},
+	{
+		files: ["**/*.test.{ts,tsx}"],
+		rules: {
+			"max-lines": "off",
+			"no-magic-numbers": "off",
+			"@typescript-eslint/no-magic-numbers": "off",
+		},
+	},
+	{
+		files: [
+			"**/*.config.{js,mjs,ts}",
+			"**/*.stories.tsx",
+			"app/**/{page,layout,template,default,loading,error,global-error,not-found}.tsx",
+		],
+		rules: { "import-x/no-default-export": "off" },
+	},
+	{
+		files: ["**/*.config.{js,mjs,ts}"],
+		rules: { "unicorn/no-top-level-side-effects": "off" },
+	},
+	prettier,
 ];
 ```
 
@@ -673,7 +864,7 @@ The plugin's default is kebab-case, which contradicts our [naming conventions](/
 
 ### `unicorn/name-replacements: error`
 
-Names are full English words: `btn` must be `button`, `e` must be `error` or `event`, `acc` must be `accumulator`. `docs`, `props` and `utils` are allowed because they are on the [dictionary](/Standards/human-readable-names#dictionary) list. Only three names owned by React and Next.js are allowed exactly as they are — `ref`, `params` and `searchParams` — and our own names built from them are still flagged (`inputRef` must be `inputReference`). See [Human-Readable Names](/Standards/human-readable-names). (Before `eslint-plugin-unicorn` 77 this rule was called `unicorn/prevent-abbreviations`.)
+Names are full English words: `btn` must be `button`, `e` must be `error` or `event`, `acc` must be `accumulator`. `docs`, `lib`, `props`, `ref`, `repo` and `utils` are allowed because they are on the [dictionary](/Standards/human-readable-names#dictionary) list. Only three names owned by React and Next.js are allowed exactly as they are — `ref`, `params` and `searchParams` — and our own names built from them are still flagged (`inputRef` must be `inputReference`). See [Human-Readable Names](/Standards/human-readable-names). (Before `eslint-plugin-unicorn` 77 this rule was called `unicorn/prevent-abbreviations`.)
 
 ### `@typescript-eslint/no-explicit-any: error`
 

@@ -295,7 +295,6 @@ Code files are camelCase or PascalCase. A short list of things are kebab-case in
 | **Route folders**       | `app/account-settings/`                | The folder name becomes the URL          |
 | **Documentation files** | `docs/architecture/background-jobs.md` | The file name becomes the URL            |
 | **CSS variables**       | `--color-brand-primary`                | The CSS convention; required by Tailwind |
-| **Branch names**        | `ACT-14-invoice-export`                   | The Git convention                       |
 
 **The rule of thumb: if the name becomes a URL, it is kebab-case.**
 
@@ -314,7 +313,6 @@ Code files are camelCase or PascalCase. A short list of things are kebab-case in
 | **Constant files**      | camelCase / SCREAMING_SNAKE_CASE | `userRole.ts` / `API_URL.ts` |
 | **CSS modules**         | camelCase + `.module.css`        | `userProfile.module.css`     |
 | **CSS variables**       | kebab-case                       | `--color-brand-primary`      |
-| **Branches**            | `type/kebab-case`                | `feat/invoice-export`        |
 | **Documentation files** | kebab-case                       | `background-jobs.md`         |
 | **Variables**           | camelCase                        | `userName`                   |
 | **Functions**           | camelCase                        | `getUserData`                |

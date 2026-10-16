@@ -56,7 +56,9 @@ export const PageHeaderActions = () => {
       <button className="rounded-md bg-brand-primary px-4 py-2 text-white">
         Save
       </button>
-      <button className="rounded-md px-4 py-2 text-text">Cancel</button>
+      <button className="rounded-md px-4 py-2 text-text">
+        Cancel
+      </button>
     </div>
   );
 };
@@ -71,13 +73,17 @@ export const PageHeader = () => {
     <header className="grid grid-cols-[1fr_auto] items-center gap-4">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold text-text">Invoices</h1>
-        <p className="text-sm text-text">All invoices for this account</p>
+        <p className="text-sm text-text">
+          All invoices for this account
+        </p>
       </div>
       <div className="flex items-center gap-2">
         <button className="rounded-md bg-brand-primary px-4 py-2 text-white">
           Save
         </button>
-        <button className="rounded-md px-4 py-2 text-text">Cancel</button>
+        <button className="rounded-md px-4 py-2 text-text">
+          Cancel
+        </button>
       </div>
     </header>
   );

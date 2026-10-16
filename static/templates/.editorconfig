@@ -4,25 +4,22 @@ root = true
 charset = utf-8
 end_of_line = lf
 indent_size = 2
-indent_style = space
+indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.md]
+# Markdown reads a tab as four spaces, so it uses spaces.
+[*.{md,mdx}]
+indent_style = space
 trim_trailing_whitespace = false
 max_line_length = off
 
+# YAML does not allow tabs.
 [*.{yml,yaml}]
+indent_style = space
 indent_size = 2
 
-[*.json]
-indent_size = 2
-
-[Makefile]
-indent_style = tab
-
-[*.go]
-indent_style = tab
-
+# Python's own style guide uses 4 spaces.
 [*.py]
+indent_style = space
 indent_size = 4

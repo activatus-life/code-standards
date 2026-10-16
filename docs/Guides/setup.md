@@ -9,10 +9,19 @@ sidebar_label: "Setup"
 
 The person creates the app themselves — with `create-next-app`, Expo or anything else — and tells you to follow the standards. **Do not ask which framework the project uses.** Look at the project: its `package.json` and files tell you. The person only answers the questions below and checks your work. They never run a command.
 
+**These standards are the base, for code only.** A project builds on top of them: it can add its own folders and conventions, and it makes its own project-management decisions (tickets, statuses, releases, who commits). Those go in the project's own docs, not here.
+
 ## 1. Install the standards
 
 ```bash
 pnpm add -D @activatus/code-standards
+```
+
+**If pnpm refuses because the version is too new**, that is pnpm's `minimumReleaseAge` setting: by default it will not install a version published less than a day ago. The standards come from us, so add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`:
+
+```yaml title="pnpm-workspace.yaml"
+minimumReleaseAgeExclude:
+  - "@activatus/code-standards"
 ```
 
 The standards are now in `node_modules/@activatus/code-standards/`:
@@ -54,56 +63,56 @@ Tell me the numbers to skip or change, or say "all good".
  9. EditorConfig
 10. Node version set by .nvmrc and direnv
 11. Styling: Tailwind, flexbox first, colours only from the global palette
-12. Folder structure: folders at the project root, functions in utils/
+12. Folder structure: folders at the project root; reusable helper functions in utils/ (no business rules, no outside calls)
 13. Components live where they are used: components/ui/, components/shared/, or beside their page
 14. Component files in a fixed order, with index.ts exports, and server and client code in separate files
 15. Design System Components: every project builds the standard components with the same props
 16. Imports: no circular imports, import from folders not files
 17. API routes: one folder per route, kebab-case
 18. Docs: every file in docs/ is a Decision Doc, shown at /docs by the docs site
-19. Conventional Commits, checked by Husky, with pnpm lint before every commit
-20. Branch names: the ticket id then a short title (ACT-14-invoice-export); type/short-description only for work with no ticket
-21. AGENTS.md and the eight agent skills
-22. AI agents never commit, push or make branches (strict no commit)
-23. The Ontology: the shared words for code
+19. Lint before every commit: a Husky hook runs pnpm lint
+20. AGENTS.md and the eight agent skills
+21. The Ontology: the shared words for code
 ```
 
 Then wait for the answer.
 
-| The person says                                           | Do                            |
-| --------------------------------------------------------- | ----------------------------- |
-| "All good"                                                | Apply every standard          |
-| "Skip 7"                                                  | Apply every standard except 7 |
-| "Change 22: agents can commit when I say I'm on my phone" | Apply 22 as they describe it  |
-| Something unclear                                         | Ask. Do not guess             |
+| The person says                         | Do                            |
+| --------------------------------------- | ----------------------------- |
+| "All good"                              | Apply every standard          |
+| "Skip 7"                                | Apply every standard except 7 |
+| "Change 7: we use Biome for formatting" | Apply 7 as they describe it   |
+| Something unclear                       | Ask. Do not guess             |
 
 **Record the answer** in `docs/development/coding-standards.md`, under "Details". For each skipped or changed standard, write its number, its name, what is different, and the reason the person gave. If nothing is different, write "No differences". Copy the file from `static/templates/docs/development/coding-standards.md` if it does not exist.
 
-If standard 22 is changed, also replace the "NEVER COMMIT CODE" lines in `AGENTS.md` with the person's rule. See [A project can choose otherwise](/Standards/agent-specs#a-project-can-choose-otherwise).
+The list has nothing about branches, commit messages or whether agents may commit. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/Standards/agent-specs#project-workflow).
 
 ## 4. Apply the standards
 
 Do only the standards the person agreed to. Copy every file from `node_modules/@activatus/code-standards/static/templates/` — never write a config file from scratch.
+
+**Every config file is `.mjs`**, in TypeScript and JavaScript projects alike. `.mjs` works in both, so every project looks the same. If the project has a config as `.js` or `.ts`, such as `next.config.ts` from `create-next-app`, rename it to `.mjs`, removing any TypeScript-only syntax: a type annotation becomes a JSDoc comment, for example `/** @type {import("next").NextConfig} */`. A tool that cannot read `.mjs` keeps its own format.
 
 **An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/Guides/migrating), one stage per pull request, after the config files below are in place.
 
 | Standard                 | What to set up                                                                                                                                                                                                                                                                                                       |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 6. ESLint                | Copy the config for the project's framework from `static/templates/eslint/`: `base`, `typescript`, `react` or `nextjs`. Install the packages listed on the [ESLint page](/Standards/eslint). Add the scripts `"lint": "eslint ."` and `"lint:fix": "eslint . --fix"`                                                 |
-| 7. Prettier              | `pnpm add -D prettier prettier-plugin-tailwindcss`. Copy `static/templates/prettier.config.js`. Add the scripts `"format": "prettier --write ."` and `"format:check": "prettier --check ."`                                                                                                                          |
+| 7. Prettier              | `pnpm add -D prettier prettier-plugin-tailwindcss`. Copy `static/templates/prettier.config.mjs`. Add the scripts `"format": "prettier --write ."` and `"format:check": "prettier --check ."`                                                                                                                         |
 | 8. Stylelint             | Only if the project has hand-written CSS or SCSS. Copy the config from `static/templates/stylelint/css/` or `scss/`. See [Stylelint](/Standards/stylelint)                                                                                                                                                           |
 | 9. EditorConfig          | Copy `static/templates/.editorconfig`                                                                                                                                                                                                                                                                                |
 | 10. Node version         | Copy `static/templates/.nvmrc` and `static/templates/.envrc`. See [direnv + nvm](/Standards/direnv)                                                                                                                                                                                                                  |
 | 11. Styling              | Copy `static/templates/globals.css` to `app/globals.css`. Ask the person for the project's colours, and replace the example palette                                                                                                                                                                                  |
 | 18. Docs                 | Copy `static/templates/docs/` to `docs/` and `static/templates/docsSite/` to `docsSite/`. Add the `/docs` route from `static/templates/next.config.mjs`. See [Setting it up](/Standards/documentation#-setting-it-up)                                                                                                |
-| 19. Commits              | Copy `static/templates/.commitlintrc.json` and the two hooks in `static/templates/husky/`. Add the lint hook last, once `pnpm lint` passes. See [Enforcing commit messages](/Standards/conventional-commits#enforcing-commit-messages)                                                                               |
-| 21. AGENTS.md and skills | Copy `static/templates/AGENTS.md` to the project root and fill in every `[placeholder]`. If the framework wrote its own `AGENTS.md` (Next.js does), keep any instruction it gives about reading the framework's own docs. Copy `static/templates/skills/` into `.agents/skills/`, and again into `.claude/commands/` |
+| 19. Lint before commit   | Copy `static/templates/husky/pre-commit` to `.husky/pre-commit`, once `pnpm lint` passes. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit)                                                                                                                                            |
+| 20. AGENTS.md and skills | Copy `static/templates/AGENTS.md` to the project root and fill in every `[placeholder]`. If the framework wrote its own `AGENTS.md` (Next.js does), keep any instruction it gives about reading the framework's own docs. Copy `static/templates/skills/` into `.agents/skills/`, and again into `.claude/commands/` |
 
 The other standards are rules for how code is written. There is nothing to install for them: follow them in every change.
 
 **Finish by:**
 
-1. Setting `**Code standards version:**` in `AGENTS.md` to the installed package's major version.
+1. Setting `**Code standards version:**` in `AGENTS.md` to the installed package's major version. See [Finishing a change later](#finishing-a-change-later) if anything is left to do.
 2. Running `pnpm lint`, `pnpm format:check` and the tests.
 3. Telling the person what you set up, which standards they skipped, and anything only they can do, such as filling in a secret in `.env.local`.
 
@@ -125,6 +134,25 @@ The project already follows the standards, and a newer version is out.
 3. **Read `node_modules/@activatus/code-standards/docs/version-history.md`**, but only the versions newer than the project's. Do not re-read the rest of the standards.
 4. **Skip any change to a standard the project opted out of.** The opt-outs are listed in `docs/development/coding-standards.md`.
 5. **Do every other change** as its "What to do" says, and run its "How to check" search. One pull request per kind of change.
-6. **Set `**Code standards version:**`** in `AGENTS.md` to the new version, and tell the person what changed.
+6. **Set `**Code standards version:**`** in `AGENTS.md` to the new version, and tell the person what changed. If a change is being finished later, record it first: see [Finishing a change later](#finishing-a-change-later).
 
 See the [Version History](/version-history) for the full update rules.
+
+---
+
+## Finishing a change later
+
+Sometimes a change is too big for the update, such as switching on the standard ESLint config in a project that never had it. It can be done later in its own Pull Request, but **the version number must stay honest**.
+
+1. Set the project's version to the new version anyway.
+2. In `docs/development/coding-standards.md`, under **Unfinished changes**, list each change that is not done yet: its version and number, what is left, and where it is being done (a ticket or a Pull Request).
+
+   ```md
+   ## Unfinished changes
+
+   - Version 2, change 4: the standard ESLint config is not switched on yet. Being done in ACT-120.
+   ```
+
+3. When it is finished, remove it from the list.
+
+An agent updating to a later version reads this list first, and finishes or skips those changes before starting the new ones.

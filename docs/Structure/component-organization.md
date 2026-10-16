@@ -216,7 +216,11 @@ export const UserListClient = ({
       <input value={searchText} onChange={handleSearchTextChange} />
       <ul>
         {visibleUsers.map((user) => (
-          <UserListItem key={user.id} user={user} onUserSelect={onUserSelect} />
+          <UserListItem
+            key={user.id}
+            user={user}
+            onUserSelect={onUserSelect}
+          />
         ))}
       </ul>
     </section>
@@ -301,7 +305,10 @@ interface UserListItemProps {
   onUserSelect?: (user: UserType) => void;
 }
 
-export const UserListItem = ({ user, onUserSelect }: UserListItemProps) => {
+export const UserListItem = ({
+  user,
+  onUserSelect,
+}: UserListItemProps) => {
   const handleClick = useCallback(() => {
     onUserSelect?.(user);
   }, [onUserSelect, user]);

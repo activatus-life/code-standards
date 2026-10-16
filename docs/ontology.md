@@ -17,7 +17,7 @@ An ontology is a shared vocabulary. When a person or an agent says "component", 
 
 This page only holds **code words**: how code is written, named, tested, documented and reviewed.
 
-**Product words live in each project's own ontology**, in `docs/product/ontology.md`: the words for what that project builds and how its team plans the work. Launchpad's Draft Ticket, Pitch and UAT are product words, so they are in Launchpad's ontology, not here.
+**Product words live in each project's own ontology**, in `docs/product/ontology.md`: the words for what that project builds and how its team plans the work. **Project-management words live there too**: project, feature, ticket, branch, commit, Pull Request, release. Every project defines those for itself. Launchpad's Draft Ticket, Pitch and UAT are product words, so they are in Launchpad's ontology, not here.
 
 |              | Code words                                               | Product words                                       |
 | ------------ | -------------------------------------------------------- | --------------------------------------------------- |
@@ -48,12 +48,10 @@ The words stay the same everywhere. Only the casing changes, to match where the 
 
 ## The terms
 
-### Projects and docs
+### Docs
 
 | Term           | Means                                                                                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `project`      | One product's code and docs. One project is exactly one repository                                                                                     |
-| `repository`   | The Git repository that holds a project's code and docs                                                                                                |
 | `decision`     | A choice made on purpose and written down, never left implied                                                                                          |
 | `decision_doc` | One Markdown file that records one decision and why it was made. Every file in a project's `docs/` folder is one. See [Docs](/Standards/documentation) |
 | `docs`         | A project's `docs/` folder: its Decision Docs, in the same standard folders in every project                                                           |
@@ -62,17 +60,17 @@ The words stay the same everywhere. Only the casing changes, to match where the 
 
 ### People and agents
 
-| Term            | Means                                                                                                                                                                                                                                                  |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `human`         | A person, as opposed to an agent. Only humans commit code, unless the project's `AGENTS.md` says agents may                                                                                                                                            |
-| `developer`     | A human who writes code                                                                                                                                                                                                                                |
-| `agent`         | An AI that writes or checks code, such as Claude Code. It follows every standard a developer does. By default it never commits, pushes or makes branches — see [A project can choose otherwise](/Standards/agent-specs#a-project-can-choose-otherwise) |
-| `agent_spec`    | A project's `AGENTS.md` file: the first thing an agent reads, setting out how to work on that project. See [Agent Specs](/Standards/agent-specs)                                                                                                       |
-| `agent_harness` | Everything around an agent that runs it: the program it runs in (such as Claude Code), its instructions, the tools and permissions it has, and the rules it follows. The ontology says what words mean; the harness says how an agent behaves          |
-| `context`       | Everything an agent is given to read for its task: the agent spec, the docs and the code it is working on                                                                                                                                              |
-| `tool`          | One action an agent is allowed to take, such as editing a file or running the tests. Tools come from the agent harness or an MCP server                                                                                                                |
-| `model`         | The AI model an agent thinks with                                                                                                                                                                                                                      |
-| `mcp`           | Model Context Protocol: the standard way to connect an agent to outside tools and data, such as Linear or GitHub. An MCP server offers tools, and the agent calls them                                                                                 |
+| Term            | Means                                                                                                                                                                                                                                         |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `human`         | A person, as opposed to an agent                                                                                                                                                                                                              |
+| `developer`     | A human who writes code                                                                                                                                                                                                                       |
+| `agent`         | An AI that writes or checks code, such as Claude Code. It follows every standard a developer does                                                                                                                                             |
+| `agent_spec`    | A project's `AGENTS.md` file: the first thing an agent reads, setting out how to work on that project. See [Agent Specs](/Standards/agent-specs)                                                                                              |
+| `agent_harness` | Everything around an agent that runs it: the program it runs in (such as Claude Code), its instructions, the tools and permissions it has, and the rules it follows. The ontology says what words mean; the harness says how an agent behaves |
+| `context`       | Everything an agent is given to read for its task: the agent spec, the docs and the code it is working on                                                                                                                                     |
+| `tool`          | One action an agent is allowed to take, such as editing a file or running the tests. Tools come from the agent harness or an MCP server                                                                                                       |
+| `model`         | The AI model an agent thinks with                                                                                                                                                                                                             |
+| `mcp`           | Model Context Protocol: the standard way to connect an agent to outside tools and data, such as Linear or GitHub. An MCP server offers tools, and the agent calls them                                                                        |
 
 ### Code
 
@@ -85,6 +83,8 @@ The words stay the same everywhere. Only the casing changes, to match where the 
 | `props`                                 | The values a component takes. `props` is a [dictionary word](/Standards/human-readable-names#dictionary). Their type is named after the component and ends in `Props`: `ButtonProps`                                                                                                                                                                                                    |
 | `type`                                  | A TypeScript type or interface. Its name ends in `Props` or `Type`                                                                                                                                                                                                                                                                                                                      |
 | `utils`                                 | Reusable functions that are not components, such as `formatCurrency`. They live in a `utils/` folder: global, for one section, or for one component. Each function has its own folder with its test file and an `index.ts`. `utils` is a [dictionary word](/Standards/human-readable-names#dictionary). Never `helpers` or `utilities`. See [Utils](/Structure/folder-structure#-utils) |
+| `services`                              | The business logic: what the app does, its rules and operations. Pages, API routes and server actions stay thin and call into `services/`. See [utils, services and lib](/Structure/folder-structure#utils-services-and-lib)                                                                                                                                                            |
+| `lib`                                   | Code that connects the app to something outside it, such as integration clients in `lib/integrations/stripe/`, and app-wide setup: permissions, middleware, validation, constants, errors and shared types                                                                                                                                                                              |
 | `route`                                 | A web address in the app, such as `/account-settings` or `/api/calendar-events`, and the folder or file that creates it. Route folders are kebab-case, because their names become the URL. In Next.js, routes are the folders under `app/`. See [API Routes](/Structure/api-routes)                                                                                                     |
 | `server_component` / `client_component` | A component that runs on the server, and one that runs in the browser. They live in separate files, and the server one wraps the client one                                                                                                                                                                                                                                             |
 | `test_file`                             | The file that tests one function or component, named after it: `formatCurrency.test.ts`. Every function and component has one                                                                                                                                                                                                                                                           |
@@ -93,16 +93,11 @@ The words stay the same everywhere. Only the casing changes, to match where the 
 | `third_party_code`                      | Code we did not write: `node_modules/`, and anything copied into `vendor/`. It is never linted, reformatted or renamed                                                                                                                                                                                                                                                                  |
 | `global_palette`                        | The colours defined in `app/globals.css`. Every colour in a project comes from it. See [Styling](/Standards/styling)                                                                                                                                                                                                                                                                    |
 
-### Changes and checks
+### Checks
 
-| Term                  | Means                                                                                                                                                |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `branch`              | A line of work in Git, named after its ticket: `ACT-14-invoice-export`. Work without a ticket is named `type/short-description`. Nobody works straight on `main`. See [Branch Naming](/Standards/branch-naming)                |
-| `commit`              | A saved change, with a [Conventional Commits](/Standards/conventional-commits) message. Only humans make commits, unless the project says agents may |
-| `pull_request`        | A request to merge a branch into `main`, with a description of what changed and why                                                                  |
-| `pull_request_review` | Checking a Pull Request against these standards before it is merged, by a human or an agent                                                          |
-| `lint_error`          | A broken rule the linter reports. Fix the code; never switch the rule off without a comment saying why. See [Lint Errors](/Standards/lint-errors)    |
-| `production`          | The live app that real users use                                                                                                                     |
+| Term         | Means                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lint_error` | A broken rule the linter reports. Fix the code; never switch the rule off without a comment saying why. See [Lint Errors](/Standards/lint-errors) |
 
 ---
 
@@ -114,11 +109,10 @@ These are the terms most easily confused. The **Not** column is the word we do n
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | **Decision / Decision Doc**                 | The choice itself vs the file that records it                                                                                                           |                        |
 | **Docs / Docs Site**                        | The Markdown files vs the viewer that shows them                                                                                                        |                        |
-| **Human / Agent**                           | By default only a human commits. An agent makes the change and leaves it for a human to review                                                          |                        |
 | **Props**                                   | The values a component takes                                                                                                                            | `properties`           |
 | **Utils**                                   | Reusable functions                                                                                                                                      | `helpers`, `utilities` |
 | **Dictionary Word / Third-Party Name**      | A short name we chose to keep vs a name someone else chose for us                                                                                       |                        |
-| **Design System / Shared / Page Component** | The same in every project (`components/ui/`) vs used on several pages of this project (`components/shared/`) vs used by one page or section (beside it) | feature components     |
+| **Design System / Shared / Page Component** | The same in every project (`components/ui/`) vs used on several pages of this project (`components/shared/`) vs used by one page or section (beside it) |                        |
 
 ---
 

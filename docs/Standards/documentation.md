@@ -247,7 +247,10 @@ const nextConfig = {
 
     return [
       { source: "/docs", destination: `${DOCS_URL}/docs/` },
-      { source: "/docs/:path*", destination: `${DOCS_URL}/docs/:path*` },
+      {
+        source: "/docs/:path*",
+        destination: `${DOCS_URL}/docs/:path*`,
+      },
     ];
   },
 };
@@ -261,7 +264,7 @@ export default nextConfig;
 
 1. **Copy the docs.** Copy the [`docs/` templates](/templates#document-templates) into the project's `docs/` folder. Rename `overview/what-is-it.md` after the project (`what-is-launchpad.md`) and update its title.
 
-2. **Copy the viewer.** Copy the [`docsSite/` template](/templates#docs-site) into the project root. Rename `package.json.txt` to `package.json` and `gitignore.txt` to `.gitignore`, set `PROJECT_NAME` in `docusaurus.config.ts`, and point the home redirect in `src/pages/index.tsx` at the renamed overview file.
+2. **Copy the viewer.** Copy the [`docsSite/` template](/templates#docs-site) into the project root. Rename `package.json.txt` to `package.json` and `gitignore.txt` to `.gitignore`, set `PROJECT_NAME` in `docusaurus.config.mjs`, and point the home redirect in `src/pages/index.tsx` at the renamed overview file.
 
 3. **Add the route.** Add the rewrite above to `next.config.mjs`.
 

@@ -38,7 +38,9 @@ the code reads as though it were typed. Storyblok's story type is the one to wat
 
 ```ts
 // storyblok-js-client
-interface ISbStoryData<Content = ISbComponentType<string> & { [index: string]: any }> {
+interface ISbStoryData<
+  Content = ISbComponentType<string> & { [index: string]: any },
+> {
   content: Content;
   // …
 }

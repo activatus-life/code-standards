@@ -10,9 +10,9 @@ Automatically switch to the project's Node.js version when you `cd` into the rep
 
 Two files work together:
 
-| File | Purpose |
-| --- | --- |
-| `.nvmrc` | Declares the required Node.js major version (e.g. `20`) |
+| File     | Purpose                                                                  |
+| -------- | ------------------------------------------------------------------------ |
+| `.nvmrc` | Declares the required Node.js major version (e.g. `20`)                  |
 | `.envrc` | Loaded by direnv on `cd`; sources nvm and activates the declared version |
 
 When you enter the project directory direnv runs `.envrc`, which installs the declared Node version (if missing) and activates it for your shell session. Leaving the directory restores the previous environment automatically.
@@ -207,11 +207,11 @@ fi
 
 The script handles four environments:
 
-| Environment | How nvm is loaded |
-| --- | --- |
-| macOS — manual install | `$HOME/.nvm/nvm.sh` sourced directly |
-| macOS — Homebrew | `$(brew --prefix nvm)/nvm.sh` sourced as fallback |
-| Linux / WSL 2 | `$HOME/.nvm/nvm.sh` sourced directly |
+| Environment                      | How nvm is loaded                                               |
+| -------------------------------- | --------------------------------------------------------------- |
+| macOS — manual install           | `$HOME/.nvm/nvm.sh` sourced directly                            |
+| macOS — Homebrew                 | `$(brew --prefix nvm)/nvm.sh` sourced as fallback               |
+| Linux / WSL 2                    | `$HOME/.nvm/nvm.sh` sourced directly                            |
 | Windows — Git Bash + nvm-windows | `nvm` is already in `PATH` as an executable; no sourcing needed |
 
 The version is read explicitly from `.nvmrc` (stripping whitespace) and passed to both `nvm install` and `nvm use`, making the script compatible with both nvm and nvm-windows.

@@ -7,10 +7,10 @@ sidebar_label: "Stylelint"
 
 Components are styled with [Tailwind CSS](/Standards/styling), and Stylelint lints the CSS that is still written by hand — `globals.css` and any CSS Modules. Start from the config below that matches the project:
 
-| Config | Use when |
-| --- | --- |
+| Config                                  | Use when                                  |
+| --------------------------------------- | ----------------------------------------- |
 | [Plain CSS](#plain-css-and-css-modules) | Plain CSS and CSS Modules (`.module.css`) |
-| [SCSS](#scss) | SCSS / Sass |
+| [SCSS](#scss)                           | SCSS / Sass                               |
 
 ## Installation
 
@@ -34,7 +34,10 @@ Create `stylelint.config.mjs` in your project root:
 /** @type {import("stylelint").Config} */
 export default {
   ignoreFiles: ["**/vendor/**"],
-  extends: ["stylelint-config-standard", "stylelint-config-recess-order"],
+  extends: [
+    "stylelint-config-standard",
+    "stylelint-config-recess-order",
+  ],
   rules: {
     "selector-max-id": 0,
     "property-no-vendor-prefix": true,
@@ -42,7 +45,16 @@ export default {
     "import-notation": "string",
     "at-rule-no-unknown": [
       true,
-      { ignoreAtRules: ["theme", "utility", "variant", "custom-variant", "source", "plugin"] },
+      {
+        ignoreAtRules: [
+          "theme",
+          "utility",
+          "variant",
+          "custom-variant",
+          "source",
+          "plugin",
+        ],
+      },
     ],
   },
   overrides: [
@@ -67,7 +79,10 @@ export default {
 /** @type {import("stylelint").Config} */
 export default {
   ignoreFiles: ["**/vendor/**"],
-  extends: ["stylelint-config-standard-scss", "stylelint-config-recess-order"],
+  extends: [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recess-order",
+  ],
   rules: {
     "selector-max-id": 0,
     "property-no-vendor-prefix": true,
@@ -104,11 +119,11 @@ Add a lint script to `package.json`:
 
 ## Extended configs
 
-| Config | Used by | Purpose |
-| --- | --- | --- |
-| `stylelint-config-standard` | Plain CSS and CSS Modules | Stylelint's recommended modern CSS rules |
-| `stylelint-config-standard-scss` | SCSS | Standard rules + SCSS-specific rules |
-| `stylelint-config-recess-order` | all | Enforces Bootstrap/RECESS property order |
+| Config                           | Used by                   | Purpose                                  |
+| -------------------------------- | ------------------------- | ---------------------------------------- |
+| `stylelint-config-standard`      | Plain CSS and CSS Modules | Stylelint's recommended modern CSS rules |
+| `stylelint-config-standard-scss` | SCSS                      | Standard rules + SCSS-specific rules     |
+| `stylelint-config-recess-order`  | all                       | Enforces Bootstrap/RECESS property order |
 
 ## Property order
 

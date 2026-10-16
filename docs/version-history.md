@@ -43,18 +43,88 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 
 **Not published to npm yet.** These changes are on the live site, and will be released together as version 3. Until then, projects stay on version 2: do not apply anything below.
 
-### 1. Branches are named after their ticket
+### 1. Project workflow is no longer part of the standards
 
-**Why:** Every task has a ticket. Naming the branch after the ticket links the ticket, the branch and the Pull Request automatically, in Linear and GitHub.
+**Why:** The standards are a base for code. How a project runs its work — branch names, commit messages, Pull Requests, merging, releases, and whether AI agents may commit — is each project's own decision, and every project makes it differently.
 
 **What to do:**
 
-- Name every new branch for ticket work `<TICKET-ID>-<short-title>`, such as `ACT-14-invoice-export`. No type in front: the type goes in the commit message.
-- Use `type/short-description` only for work with no ticket, such as `docs/update-readme`. Use the Conventional Commits types: `feat`, never `feature`.
-- Update the "Branches" line in `AGENTS.md` from the [template](/templates#agents).
-- Do not rename existing branches.
+- The Branch Naming and Commit Messages standards are gone, along with standards 19, 20 and 22 from the setup list. Keep whatever the project already does, and make sure it is written up in the project's own docs, usually `docs/development/`.
+- In `AGENTS.md`, replace the "Development workflow" section with a **Project workflow** section, copied from the [template](/templates#agents). Fill it in with the project's own rules: who commits, branches, commit messages, Pull Requests, merging and releases. Put the most important rule for agents — whether they may commit — in the line at the very top.
+- Remove the "Never commit code" and "Do not create, switch or delete branches" lines from "Out of scope for AI agents", unless they are the project's own rule. If they are, they belong in Project workflow.
+- Commitlint and the `.husky/commit-msg` hook are no longer templates. Keep them if the project wants its commit messages checked; they are now the project's choice.
+- **Keep `.husky/pre-commit`.** Running `pnpm lint` before every commit is still a standard. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit).
 
-**How to check:** The "Branches" line in `AGENTS.md` shows `ACT-14-invoice-export`. If the project already names branches this way, there is nothing else to do.
+**How to check:** `AGENTS.md` has a Project workflow section, and every rule in it is written up in the project's docs.
+
+### 2. `lib`, `ref` and `repo` are dictionary words, and `library/` is `lib/`
+
+**Why:** They are the words developers use. `lib/` is the name Next.js and shadcn/ui use too.
+
+**What to do:**
+
+- Rename the `library/` folder to `lib/` with `git mv`, and fix the imports: `@/library/` → `@/lib/`.
+- Rename names ending in `Reference` that hold a React ref back to `Ref`: `inputReference` → `inputRef`. Rename `repository` back to `repo` where it is short for a Git repository, such as `repositoryName` → `repoName`. Use the editor's Rename Symbol (F2), or the [rename script](/Guides/migrating#renaming-from-the-command-line).
+- Copy the new [ESLint config](/Standards/eslint). The naming rule now has `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }` and `allowList: { params: true, searchParams: true }`.
+- Update the "Dictionary words stay short" line in `AGENTS.md` from the [template](/templates#agents), and remove `lib/` → `library/` and `repo` → `repository` from its Never / Always table.
+
+**How to check:** There is no `library/` folder, `grep -rn "@/library" --exclude-dir=node_modules .` finds nothing, and `pnpm lint` passes.
+
+### 3. utils, services and lib are defined
+
+**Why:** It wasn't clear which functions go in `utils/`, `services/` or `lib/`. See [utils, services and lib](/Structure/folder-structure#utils-services-and-lib).
+
+**What to do:** Check each function in those three folders against the definitions, and move any that are in the wrong one. The common one: a function in `utils/` that calls a database or an API belongs in `services/` or `lib/`. Shared constants and types live in `lib/constants/` and `lib/types/`; a component's own types stay in its `types.ts`. Move any root-level `constants/` or `types/` folder into `lib/`.
+
+**How to check:** Nothing in `utils/` imports from `services/`, `lib/integrations/` or a database client, and there is no root-level `constants/` or `types/` folder.
+
+### 4. The Ontology only holds code words
+
+**Why:** Project-management words mean different things in different projects. Launchpad's "project" is a product made of several MVPs, and its Pull Requests go through `feature → dev → uat → main`.
+
+**What to do:** The code [Ontology](/ontology) no longer defines `project`, `repository`, `branch`, `commit`, `pull_request`, `pull_request_review` or `production`, and `human`, `developer` and `agent` no longer say who may commit. If the project uses those words, define them in its own `docs/product/ontology.md`, the way the project actually works.
+
+**How to check:** The project's ontology defines every project-management word it uses.
+
+### 5. Every config file is `.mjs`
+
+**Why:** `.mjs` works in TypeScript and JavaScript projects alike, so every project looks the same.
+
+**What to do:**
+
+- Rename each config file that is `.js` or `.ts` to `.mjs`, where the tool can read `.mjs`: `prettier.config.mjs`, `next.config.mjs`, `eslint.config.mjs`, `docsSite/docusaurus.config.mjs`, `docsSite/sidebars.mjs` and so on. Use `git mv`.
+- Remove any TypeScript-only syntax as you go. A type annotation becomes a JSDoc comment: `const config: NextConfig = {` becomes `/** @type {import("next").NextConfig} */ const config = {`. Copy the [`docsSite/` templates](/templates#docs-site), which are already `.mjs`.
+- Update anything that names the old file, such as `sidebarPath: './sidebars.mjs'` in the docs site config.
+
+**How to check:** `ls *.config.* docsSite/*.config.* docsSite/sidebars.*` shows only `.mjs` files, and `pnpm lint`, `pnpm format:check`, the build and `pnpm docs:build` still run.
+
+### 6. Prettier: 70-character lines and tabs
+
+**Why:** A lot of code is read and reviewed on a phone, where short lines fit the screen. Tabs let each person see the indent at the width they like.
+
+**What to do:**
+
+- Copy the new [`prettier.config.mjs`](/templates#prettier) and [`.editorconfig`](/templates#editorconfig). Prettier now has `printWidth: 70` and `useTabs: true`, and keeps spaces for Markdown and YAML. EditorConfig indents with tabs, except Markdown, YAML and Python.
+- Run `pnpm format` once, on its own, in a Pull Request with nothing else in it. It touches nearly every file, so keep it apart from real changes.
+- If the project shows code on a web page, such as its docs site, add `pre, code { tab-size: 2; }` to its CSS, so tabs are not shown 8 characters wide. The [`docsSite/` template](/templates#docs-site) already has it.
+
+**How to check:** `pnpm format:check` passes.
+
+### 7. Unfinished changes are recorded, not hidden
+
+**Why:** A big change, such as switching on the standard ESLint config, may be done later in its own Pull Request. The version number has to stay honest about that.
+
+**What to do:** Add an "Unfinished changes" section to `docs/development/coding-standards.md`, from the [template](/templates#document-templates). List any change from any version that is not done yet, with what is left and where it is being done, or write "None". See [Finishing a change later](/Guides/setup#finishing-a-change-later).
+
+**How to check:** `docs/development/coding-standards.md` has an "Unfinished changes" section.
+
+### No action needed
+
+- The package now ships a rename script for agents working from the command line, using TypeScript's own rename: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. See [Renaming from the command line](/Guides/migrating#renaming-from-the-command-line).
+- The [Setup](/Guides/setup) guide says the standards are a base for code only, and explains how to get past pnpm's `minimumReleaseAge` when a new version is too fresh to install.
+- [Folder Structure](/Structure/folder-structure) explains each `lib/` folder in one line.
+- The [ESLint page](/Standards/eslint#installation) says the config needs ESLint 10.4 or later, and the React configs explain why they set `settings.react.version`.
+- "Lint before every commit" moved to [Lint Errors](/Standards/lint-errors#lint-before-every-commit).
 
 ---
 
@@ -92,14 +162,17 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 **What to do:**
 
 - Rename the folders with `git mv`: `documentation/` → `docs/`, `documentationSite/` → `docsSite/`.
+- **If both `docsSite/` and `documentationSite/` exist**, merge them into `docsSite/`: move each tracked file from `documentationSite/` with `git mv`, keeping whichever copy is newer, then delete `documentationSite/`. Ask the person before deleting a file that exists in only one of them.
 - Rename `docs/overview/writing-documentation.md` → `docs/overview/writing-docs.md`, and fix every link to it.
 - Rename the environment variable `DOCUMENTATION_URL` → `DOCS_URL` in `next.config.mjs`, `.env.local`, `.env.example` and the hosting provider's settings.
 - Rename the route `/documentation` → `/docs`. Copy the new rewrite from the [`next.config.mjs` template](/templates#docs-route).
-- In `docsSite/docusaurus.config.ts`, set `baseUrl: '/docs/'` and `path: '../docs'`. Copy the [`docsSite/` template](/templates#docs-site) if unsure.
+- **Re-copy `docsSite/docusaurus.config.ts`** from the [`docsSite/` template](/templates#docs-site), keeping the project's name and theme. Version 2 changed it: `baseUrl: '/docs/'`, `path: '../docs'`, full-word variable names (`rest` → `remainingArguments`, `doc` → `page`), and `static/img` → `static/images`. Rename the project's `docsSite/static/img/` to `static/images/` to match.
 - Rename the scripts in `package.json`: `documentation:install` → `docs:install`, `documentation:dev` → `docs:dev`, `documentation:build` → `docs:build`.
+- If the docs site's generated folders were ever committed, stop tracking them: `git rm -r --cached docsSite/.docusaurus docsSite/build`. They are in the [`docsSite/` template's](/templates#docs-site) `.gitignore`.
 - Update every mention in `AGENTS.md`, `README.md` and the docs themselves.
+- **Update every ignore list** that names the old folders: ESLint, Prettier, `tsconfig.json`, Vitest or Jest, and `.gitignore`. A leftover docs site with its own `node_modules` makes test runners and linters run its files too.
 
-**How to check:** `grep -rn "documentation/\|documentationSite\|DOCUMENTATION_URL\|documentation:" --exclude-dir=node_modules .` finds nothing. Normal sentences that say "documentation" are fine.
+**How to check:** `grep -rn "documentation/\|'../documentation'\|documentationSite\|DOCUMENTATION_URL\|documentation:" --exclude-dir=node_modules .` finds nothing. Normal sentences that say "documentation" are fine.
 
 ### 4. `props` is a dictionary word: prop types end in `Props`
 
@@ -107,11 +180,12 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 
 **What to do:**
 
-- Rename every type ending in `Properties` to end in `Props`: `ButtonProperties` → `ButtonProps`. Use the editor's Rename Symbol (F2), not find-and-replace.
+- Rename every type ending in `Properties` to end in `Props`: `ButtonProperties` → `ButtonProps`. Never use find-and-replace. Use the editor's Rename Symbol (F2) or, for an agent working from the command line, the rename script in version 3 and later of the package: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. Both use TypeScript's own rename, so they change every use and nothing else.
 - Rename variables and parameters called `properties` to `props`, including spreads: `...buttonProperties` → `...buttonProps`.
-- Copy the new [ESLint config](/Standards/eslint). Two things changed in it:
+- **If the project already uses the standard ESLint config**, copy the new [ESLint config](/Standards/eslint). It needs ESLint 10.4 or later. Two things changed in it:
   - The type-name rule is now `(Props|Type)$`.
   - `unicorn/name-replacements` now has `replacements: { docs: false, props: false, utils: false }`.
+- **If the project never had the standard ESLint config**, do only the renames in this change. Switching the config on can find hundreds of problems, so do it separately with [Migrating an Existing Project](/Guides/migrating), one stage per Pull Request, and record it as unfinished: see [Finishing a change later](/Guides/setup#finishing-a-change-later).
 
 **How to check:** `grep -rn "Properties\b" --include=*.ts --include=*.tsx --exclude-dir=node_modules .` finds nothing of ours, and `pnpm lint` passes.
 
@@ -198,7 +272,7 @@ Anyone changing the standards adds a version, in the same pull request as the ch
 
 **Why:** Strict no commit is right for most projects, but a tool built to ship code with AI, such as Launchpad, needs agents to commit.
 
-**What to do:** This is standard 22 in the list from change 2. If the person kept it, keep the template's "NEVER COMMIT CODE" lines for strict no commit. Otherwise, replace them with the project's own rule, saying exactly which agents may commit, push and open Pull Requests, and when. See [A project can choose otherwise](/Standards/agent-specs#a-project-can-choose-otherwise).
+**What to do:** This is standard 22 in the list from change 2. If the person kept it, keep the template's "NEVER COMMIT CODE" lines for strict no commit. Otherwise, replace them with the project's own rule, saying exactly which agents may commit, push and open Pull Requests, and when. See [A project can choose otherwise](/Standards/agent-specs#project-workflow).
 
 **How to check:** The top of `AGENTS.md` states the project's commit rule.
 

@@ -1,1 +1,7 @@
 /* Theme overrides for the docs site. Empty by default: the stock theme is the standard look. */
+
+/* Code is indented with tabs. Show each tab 2 characters wide, as the editors do. */
+pre,
+code {
+	tab-size: 2;
+}
