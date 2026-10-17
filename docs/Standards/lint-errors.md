@@ -132,4 +132,4 @@ Nothing else is switched off. If another rule seems impossible to satisfy, the c
 
 **Work is not finished until `pnpm lint` passes.** That goes for people and AI agents alike: an agent fixes every lint error before it says a task is done.
 
-How a project makes sure of it, such as a git hook or a check that runs on every change, is the project's own choice. See [Project workflow](/Standards/agent-specs#project-workflow).
+Most projects check it automatically on every change, with a CI job that runs `pnpm lint` (often with `pnpm test` and the build) or with a git hook. Which one, if any, is the project's own choice. See [Project workflow](/Standards/agent-specs#project-workflow).

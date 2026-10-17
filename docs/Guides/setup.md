@@ -83,6 +83,7 @@ Then wait for the answer.
 
 - **A number is never reused.** A removed standard keeps its number in the list, marked "Removed in version N", so a project's old choices still point at the right thing.
 - **A new standard takes the number of the standard it sits closest to, plus a decimal:** a new styling standard after 11 is 11.1, then 11.2, up to 11.9. The list stays short, and nothing after it moves.
+- **A removed decimal standard keeps its number too**, marked the same way: `11.2. Removed in version N`.
 - **Skip the removed ones** when applying the standards. There is nothing to do for them.
 
 | The person says                         | Do                            |
@@ -128,6 +129,8 @@ The other standards are rules for how code is written. There is nothing to insta
 ## Updating to a newer version
 
 The project already follows the standards, and a newer version is out.
+
+**A patch keeps the same version number.** When only the last number changes, such as 3.0.0 → 3.0.1, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
 
 1. **Note the project's version.** Read `**Code standards version:**` in `AGENTS.md`. This is the version the code follows.
 2. **Update the package:**

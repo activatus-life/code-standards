@@ -24,6 +24,8 @@ sidebar_label: "Version History"
 5. **Run `pnpm lint`, `pnpm test` and the build** after each change.
 6. **Update the version number** in `AGENTS.md` once every change is done.
 
+**A patch keeps the same version number.** When only the last number changes, such as 3.0.0 → 3.0.1, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
+
 **When a change does not fit the project**, for example it renames a folder the project does not have, skip it. If you are not sure, ask; do not guess.
 
 ## Adding a version
@@ -36,15 +38,21 @@ Anyone changing the standards adds a version, alongside the change:
 - **If a project has nothing to do, say so.**
 - **Newest version at the top.**
 - **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
-- **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`.
+- **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`. Write each fix so a project already on that version knows what to do.
 
 ---
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.1
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.2
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.1`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.2`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.0.2.** Nothing to do in a project:
+
+- The update steps say how to pick up a patch: the version number in `AGENTS.md` stays the same, so always read the version's Fixes list after updating the package.
+- A removed decimal standard keeps its number, such as `11.2. Removed in version N`.
+- [When lint must pass](/Standards/lint-errors#when-lint-must-pass) names the usual ways projects check it: a CI job or a git hook.
 
 **Fixes in 3.0.1.** If the project already applied 3.0.0, check these:
 
