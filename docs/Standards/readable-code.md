@@ -523,33 +523,70 @@ Use a named type instead of a bare `string` wherever the value has a fixed set o
 
 ### Name a type after what it is, not the job it does
 
-A type name says what the thing is. **If a type only describes one field of a function's props, don't give it its own name**: write it inside the `Props`, so the `Props` is the only type.
+A type name says what the thing is. **If a type only describes one field of a function's props, don't give it its own name**: write that field inside the `Props`.
+
+**Every function still gets its own `Props` type** for its single object parameter, named after the function: `launchSession` takes `LaunchSessionProps`. Use it wherever that function is written, so its parameters always have a type.
 
 ```ts
-// ✅ Good — the dependencies are written inside the one Props type
+// ✅ Good — each function has its own Props; the dependencies are written inside StartAgentRunProps
+interface LaunchSessionProps {
+  worktreePath: string;
+}
+
 interface StartAgentRunProps {
   ticketId: string;
   dependencies: {
-    launchSession: (ticketId: string) => Promise<void>;
-    reportStatus: (status: AgentRunStatusType) => void;
+    launchSession: (props: LaunchSessionProps) => Promise<void>;
   };
 }
+
+const dependencies = {
+  launchSession: async ({ worktreePath }: LaunchSessionProps) =>
+    openTerminal(worktreePath),
+};
 ```
 
 ```ts
-// ❌ Bad — a second type named after the role it plays in one function
+// ❌ Bad — a wrapper type named after the role it plays in one function
 interface StartAgentRunDependenciesType {
-  launchSession: (ticketId: string) => Promise<void>;
-  reportStatus: (status: AgentRunStatusType) => void;
+  launchSession: (props: LaunchSessionProps) => Promise<void>;
 }
 
-interface StartAgentRunProps {
-  ticketId: string;
-  dependencies: StartAgentRunDependenciesType;
-}
+// ❌ Bad — no type: worktreePath is an implicit any, and the type check fails
+const dependencies = {
+  launchSession: async ({ worktreePath }) => openTerminal(worktreePath),
+};
+
+// ❌ Bad — the type is written out inline instead of using LaunchSessionProps
+const dependencies = {
+  launchSession: async ({ worktreePath }: { worktreePath: string }) =>
+    openTerminal(worktreePath),
+};
 ```
 
-Where that object is built somewhere else, don't annotate it with a separate type either. TypeScript checks it against `StartAgentRunProps` when it is passed in.
+### Type first, never `satisfies`
+
+**A value gets its type where it is declared**, and the value is written to match. Never write the value first and attach the type afterwards with `satisfies`.
+
+```ts
+// ✅ Good — the type comes first
+const config: ConfigType = {
+  name: "Activatus",
+  retries: MAXIMUM_RETRY_ATTEMPTS,
+};
+```
+
+```ts
+// ❌ Bad — the type is attached after the fact
+const config = {
+  name: "Activatus",
+  retries: MAXIMUM_RETRY_ATTEMPTS,
+} satisfies ConfigType;
+```
+
+ESLint reports `satisfies` as an error.
+
+**Story files are the one exception.** Storybook's own docs type stories with `satisfies Meta<typeof Component>`, because it lets Storybook see which props are already set for every story, so each story only sets the props that change. Story files (`*.stories.tsx`) follow Storybook's docs as they are, and ESLint allows `satisfies` there. See [Storybook stories](/Structure/component-organization#-componentstoriestsx).
 
 ---
 

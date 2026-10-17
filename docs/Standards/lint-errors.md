@@ -57,6 +57,7 @@ This applies to everyone, **including AI agents**. An agent's work is not finish
 | `no-restricted-syntax`  | `Use an arrow function`                                                   | `const name = function () {}` was used          | Rewrite as `const name = () => {}`                                             |
 | `no-restricted-syntax`  | `Use a single object parameter when a function needs more than one value` | A function has more than one parameter          | Take one object instead: `({ name, emailAddress }: CreateUserProps) =>`        |
 | `no-restricted-syntax`  | `Use functions, not classes`                                              | A `class` was used                              | Rewrite it as functions                                                        |
+| `no-restricted-syntax`  | `Type a value where it is declared, not with satisfies afterwards`        | `satisfies` was used outside a story file       | Put the type on the declaration instead: `const config: ConfigType = { … }`    |
 | `max-depth`             | `Blocks are nested too deeply (4). Maximum allowed is 3`                  | `if`s and loops are nested more than three deep | Return early for the error cases, or move the inner part into its own function |
 | `no-nested-ternary`     | `Do not nest ternary expressions`                                         | A `? :` sits inside another `? :`               | Use an `if`, or move it into its own function                                  |
 

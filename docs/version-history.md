@@ -44,9 +44,11 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.2
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.3
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.2`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.0.3.** Change 8 now says how to type a function inside an object that is built somewhere else: give the function its own `Props` type, such as `LaunchSessionProps`, and use it. If the project wrote those parameter types out inline, such as `({ worktreePath }: { worktreePath: string })`, replace each with the function's `Props` type. Also new: type first, never `satisfies`. It is an ESLint error now, so copy the new ESLint config and replace each `satisfies` with a type on the declaration, except in Storybook story files.
 
 **Fixes in 3.0.2.** Nothing to do in a project:
 
@@ -146,9 +148,11 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 **Why:** A type named after its role in one function, such as `StartAgentRunDependenciesType`, is a second name for what is really part of that function's props.
 
-**What to do:** Find types used for only one field of one `Props` type. Move each one inside that `Props` and delete the separate type. Where the object is built somewhere else, remove its type annotation: TypeScript checks it against the `Props` when it is passed in. See [Name a type after what it is](/Standards/readable-code#name-a-type-after-what-it-is-not-the-job-it-does).
+**What to do:** Find types used for only one field of one `Props` type. Move each one inside that `Props` and delete the separate type. Where the object is built somewhere else, don't just delete its type: the functions inside lose their parameter types and the type check fails. Give each function its own `Props` type for its single object parameter, named after the function, and use it there: `launchSession: async ({ worktreePath }: LaunchSessionProps) =>`. Don't write the type out inline, such as `({ worktreePath }: { worktreePath: string })`.
 
-**How to check:** No type is used only as the type of one field of one `Props`.
+**Type first, never `satisfies`.** A value gets its type where it is declared, and `satisfies` is now an ESLint error. Replace each `{ … } satisfies SomeType` with a type on the declaration: `const config: ConfigType = { … }`. **Leave story files alone**: they follow Storybook's docs, `satisfies Meta<typeof Component>` with `StoryObj<typeof meta>`, and ESLint allows it there. Copy the new [ESLint config](/Standards/eslint) to switch the check on.
+
+**How to check:** No type is used only as the type of one field of one `Props`, `grep -rn " satisfies " --include=*.ts --include=*.tsx --exclude=*.stories.* --exclude-dir=node_modules .` finds nothing, and the type check and `pnpm lint` pass.
 
 ### 9. "go" means carry on
 

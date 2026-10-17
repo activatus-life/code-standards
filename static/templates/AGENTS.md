@@ -117,7 +117,7 @@ Follow these rules in every change:
 - **No nested ternaries. No boolean flag parameters.**
 - **No `any`, no non-null `!`, no `as` cast without a comment saying why.**
 - **Named exports only**, except where a tool requires a default export.
-- **Type names end in `Props` or `Type`**, and say what the thing is, not the job it does. A type that only describes one field of a function's props is written inside the `Props`: `StartAgentRunProps` holds its `dependencies`, with no separate `StartAgentRunDependenciesType`.
+- **Type names end in `Props` or `Type`**, and say what the thing is, not the job it does. A type that only describes one field of a function's props is written inside the `Props`: `StartAgentRunProps` holds its `dependencies`, with no separate `StartAgentRunDependenciesType`. Every function still has its own `Props` for its single object parameter, such as `LaunchSessionProps` for `launchSession`, used wherever that function is written: `async ({ worktreePath }: LaunchSessionProps) =>`. Type a value where it is declared, never afterwards with `satisfies`. The one exception is Storybook story files, which follow Storybook's docs: `satisfies Meta<typeof Component>`.
 - **One component per file.** Server and client components live in separate files.
 - **Component file order**: imports, component, variables, state, `useMemo` values, `useCallback` functions, effects, render. No inline functions in render.
 - **Reusable functions live in a `utils/` folder** — global, section or component level — one folder per function, with an `index.ts`.

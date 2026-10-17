@@ -9,6 +9,45 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import { configs as typescript } from "typescript-eslint";
 
+// Code patterns that are errors in every file.
+const RESTRICTED_SYNTAX = [
+	{
+		selector: "ClassDeclaration",
+		message: "Use functions, not classes.",
+	},
+	{
+		selector: "ClassExpression",
+		message: "Use functions, not classes.",
+	},
+	{
+		selector: "VariableDeclarator > FunctionExpression",
+		message: "Use an arrow function.",
+	},
+	{
+		selector: "VariableDeclaration[kind='let']",
+		message:
+			"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+	},
+	{
+		selector: "FunctionDeclaration[params.length>1]",
+		message:
+			"Use a single object parameter when a function needs more than one value.",
+	},
+	{
+		selector:
+			"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
+		message:
+			"Use a single object parameter when a function needs more than one value.",
+	},
+];
+
+// Type a value where it is declared. Story files are the exception: see below.
+const NO_SATISFIES = {
+	selector: "TSSatisfiesExpression",
+	message:
+		"Type a value where it is declared, not with satisfies afterwards.",
+};
+
 export default [
 	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
 	js.configs.recommended,
@@ -54,34 +93,8 @@ export default [
 			],
 			"no-restricted-syntax": [
 				"error",
-				{
-					selector: "ClassDeclaration",
-					message: "Use functions, not classes.",
-				},
-				{
-					selector: "ClassExpression",
-					message: "Use functions, not classes.",
-				},
-				{
-					selector: "VariableDeclarator > FunctionExpression",
-					message: "Use an arrow function.",
-				},
-				{
-					selector: "VariableDeclaration[kind='let']",
-					message:
-						"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
-				},
-				{
-					selector: "FunctionDeclaration[params.length>1]",
-					message:
-						"Use a single object parameter when a function needs more than one value.",
-				},
-				{
-					selector:
-						"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
-					message:
-						"Use a single object parameter when a function needs more than one value.",
-				},
+				NO_SATISFIES,
+				...RESTRICTED_SYNTAX,
 			],
 			"import-x/no-cycle": "error",
 			"import-x/no-default-export": "error",
@@ -168,6 +181,13 @@ export default [
 	{
 		files: ["**/*.config.{js,mjs,ts}"],
 		rules: { "unicorn/no-top-level-side-effects": "off" },
+	},
+	{
+		// Storybook's own docs type stories with `satisfies Meta<typeof Component>`, so story files may use it.
+		files: ["**/*.stories.{ts,tsx}"],
+		rules: {
+			"no-restricted-syntax": ["error", ...RESTRICTED_SYNTAX],
+		},
 	},
 	prettier,
 ];

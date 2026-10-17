@@ -103,7 +103,7 @@ describe('Button', () => {
 
 ### 📖 `Component.stories.tsx`
 
-Storybook stories for documentation and visual testing.
+Storybook stories for documentation and visual testing. Written the way [Storybook's docs](https://storybook.js.org/docs/writing-stories) write them, with `satisfies Meta<typeof Component>`: it is the one place `satisfies` is allowed. See [Type first, never `satisfies`](/Standards/readable-code#type-first-never-satisfies).
 
 ```typescript
 // Button.stories.tsx
@@ -113,10 +113,11 @@ import { Button } from "./Button";
 const meta = {
   title: "Components/Button",
   component: Button,
+  args: { variant: "primary" },
 } satisfies Meta<typeof Button>;
 
 export default meta;
-type StoryType = StoryObj<typeof Button>;
+type StoryType = StoryObj<typeof meta>;
 
 export const Primary: StoryType = {
   args: {
