@@ -144,8 +144,7 @@ static/templates/
 ├── prettier.config.mjs     # ✨ Formatting
 ├── globals.css             # 🎨 Tailwind + starter colour palette
 ├── .editorconfig           # ⌨️ Editor whitespace rules
-├── .nvmrc / .envrc         # 🟢 Node version switching
-└── husky/pre-commit        # 🚦 Lint before every commit
+└── .nvmrc / .envrc         # 🟢 Node version switching
 ```
 
 Copy them. Don't retype them. The ESLint ones have been run against real code, so they actually work, which is more than you can say for most configs floating around the internet.

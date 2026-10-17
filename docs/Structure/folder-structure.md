@@ -189,7 +189,7 @@ Three folders hold functions that are not components. Each function belongs in e
 - **Pages, API routes and server actions stay thin.** They take the request, call a function in `services/`, and return the result. Business logic never lives in them.
 - **`services/` uses `lib/` to reach the outside world.** A service that charges a card calls the Stripe client in `lib/integrations/stripe/`, never the Stripe package directly.
 - **`utils/` uses nothing outside itself.** If a function needs a database, an API or the environment, it is not a util: it belongs in `services/` or `lib/`.
-- **Group `services/` by the [Ontology](/ontology) word it works on**, one folder per function: `services/invoice/createInvoice/`.
+- **Group `services/` by the project's own ontology word it works on**, one folder per function: `services/invoice/createInvoice/`. The project's ontology is usually in `docs/product/ontology.md`, but it can be in another file. If you can't find it, ask.
 
 ## 🧰 Utils
 

@@ -33,7 +33,6 @@ import docsSiteGitignore from "!!raw-loader!@site/static/templates/docsSite/giti
 import decisionDoc from "!!raw-loader!@site/static/templates/decision-doc.md";
 import docsSiteHome from "!!raw-loader!@site/static/templates/docsSite/src/pages/index.tsx";
 import nextConfig from "!!raw-loader!@site/static/templates/next.config.mjs";
-import huskyPreCommit from "!!raw-loader!@site/static/templates/husky/pre-commit";
 
 # Templates
 
@@ -58,7 +57,6 @@ Each file is also served as a plain file, so a person or an AI agent can fetch i
 | [Node version](#nvmrc)                           | `.nvmrc` in the project root               | [`/templates/.nvmrc`](pathname:///templates/.nvmrc)                                                           |
 | [direnv](#envrc)                                 | `.envrc` in the project root               | [`/templates/.envrc`](pathname:///templates/.envrc)                                                           |
 | [Agent skills](#skills)                          | `.agents/skills/` and `.claude/commands/`  | Eight files — see [below](#skills)                                                                            |
-| [Lint before commit](#husky-pre-commit)          | `.husky/pre-commit`                        | [`/templates/husky/pre-commit`](pathname:///templates/husky/pre-commit)                                       |
 | [Docs site](#docs-site)                          | `docsSite/` in the project root            | Several files — see [below](#docs-site)                                                                       |
 | [`/docs` route](#docs-route)                     | `next.config.mjs`                          | [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs)                                         |
 | [Document templates](#document-templates)        | `docs/` in the project root                | Several files — see [below](#document-templates)                                                              |
@@ -288,18 +286,6 @@ Runs the test suite; reports failures grouped by cause, tests that never ran, an
 
 <CodeBlock language="markdown" title="test.md">
   {skillTest}
-</CodeBlock>
-
----
-
-## Lint before commit {#husky-pre-commit}
-
-**Copy to:** `.husky/pre-commit` in the project root
-
-Refuses a commit while `pnpm lint` reports errors. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit). Plain file: [`/templates/husky/pre-commit`](pathname:///templates/husky/pre-commit)
-
-<CodeBlock language="text" title=".husky/pre-commit">
-  {huskyPreCommit}
 </CodeBlock>
 
 ---

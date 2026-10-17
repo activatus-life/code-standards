@@ -131,7 +131,7 @@ Some short names are not abbreviations. They are the word people actually say, a
 | `docs`                       | A project's documentation                                                                                   | `docs/`, `docsSite/`, `DOCS_URL`, `pnpm docs:dev` |
 | `lib`                        | The folder for outside connections and app-wide setup. Next.js and shadcn/ui use the same name              | `lib/`, `lib/integrations/`                       |
 | `props`                      | The values a component takes                                                                                | `props`, `ButtonProps`                            |
-| `ref`                        | A React ref: a handle on an element or a value kept between renders                                         | `inputRef`, `useRef`, `scrollContainerRef`        |
+| `ref`                        | A reference or handle to something: a React ref, or any other handle, such as a terminal tab's ref          | `inputRef`, `useRef`, `surfaceRef`                |
 | `repo`                       | A repository: in GitHub's words, it "contains all of your project's files and each file's revision history" | `repoName`, `repoUrl`                             |
 | `utils`                      | Reusable functions that are not components                                                                  | `utils/`, `utils/formatCurrency/`                 |
 | `app`                        | The application                                                                                             | `app/`, `appName`                                 |
@@ -150,7 +150,7 @@ Some short names are not abbreviations. They are the word people actually say, a
 When a short name feels like a dictionary word, don't just use it — add it here first:
 
 1. **Ask:** is this the word people actually say, so the long form would only be harder to read? `docs`, `repo`: yes. `env`, `btn`, `msg`: no.
-2. **Add a row** to the table above, in the same pull request as the code that uses it.
+2. **Add a row** to the table above, before or alongside the code that uses it.
 3. **If ESLint flags the word**, add it to `replacements` in the `unicorn/name-replacements` rule of the [ESLint config](/Standards/eslint), so the linter agrees: `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }`.
 
 The list is the record. If a word is not on it, it is not a dictionary word yet.

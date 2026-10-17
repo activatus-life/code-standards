@@ -136,7 +136,6 @@ See `package.json` for specific version requirements. Key dependencies:
 
 - **Linting**: ESLint 9+
 - **Formatting**: Prettier
-- **Git Hooks**: Husky
 - **Monorepo**: Turborepo
 - **Documentation**: Docusaurus
 

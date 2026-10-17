@@ -70,12 +70,20 @@ Tell me the numbers to skip or change, or say "all good".
 16. Imports: no circular imports, import from folders not files
 17. API routes: one folder per route, kebab-case
 18. Docs: every file in docs/ is a Decision Doc, shown at /docs by the docs site
-19. Lint before every commit: a Husky hook runs pnpm lint
-20. AGENTS.md and the eight agent skills
-21. The Ontology: the shared words for code
+19. Removed in version 3: commit messages are the project's own workflow
+20. Removed in version 3: branch names are the project's own workflow
+21. AGENTS.md and the eight agent skills
+22. Removed in version 3: whether agents commit is the project's own workflow
+23. The Ontology: the shared words for code
 ```
 
 Then wait for the answer.
+
+**The numbers never change.** A project records its choices by number, so the numbers stay put:
+
+- **A number is never reused.** A removed standard keeps its number in the list, marked "Removed in version N", so a project's old choices still point at the right thing.
+- **A new standard takes the number of the standard it sits closest to, plus a decimal:** a new styling standard after 11 is 11.1, then 11.2, up to 11.9. The list stays short, and nothing after it moves.
+- **Skip the removed ones** when applying the standards. There is nothing to do for them.
 
 | The person says                         | Do                            |
 | --------------------------------------- | ----------------------------- |
@@ -94,7 +102,7 @@ Do only the standards the person agreed to. Copy every file from `node_modules/@
 
 **Every config file is `.mjs`, even in a TypeScript project.** Never convert one to `.ts` or `.mts`. `.mjs` works in both, so every project looks the same. If the project has a config as `.js`, `.ts` or `.mts`, such as `next.config.ts` from `create-next-app` or `vitest.config.mts`, rename it to `.mjs`, removing any TypeScript-only syntax: a type annotation becomes a JSDoc comment, for example `/** @type {import("next").NextConfig} */`. A tool that cannot read `.mjs` keeps its own format.
 
-**An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/Guides/migrating), one stage per pull request, after the config files below are in place.
+**An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/Guides/migrating), one stage at a time, after the config files below are in place.
 
 | Standard                 | What to set up                                                                                                                                                                                                                                                                                                       |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -105,8 +113,7 @@ Do only the standards the person agreed to. Copy every file from `node_modules/@
 | 10. Node version         | Copy `static/templates/.nvmrc` and `static/templates/.envrc`. See [direnv + nvm](/Standards/direnv)                                                                                                                                                                                                                  |
 | 11. Styling              | Copy `static/templates/globals.css` to `app/globals.css`. Ask the person for the project's colours, and replace the example palette                                                                                                                                                                                  |
 | 18. Docs                 | Copy `static/templates/docs/` to `docs/` and `static/templates/docsSite/` to `docsSite/`. Add the `/docs` route from `static/templates/next.config.mjs`. See [Setting it up](/Standards/documentation#-setting-it-up)                                                                                                |
-| 19. Lint before commit   | Copy `static/templates/husky/pre-commit` to `.husky/pre-commit`, once `pnpm lint` passes. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit)                                                                                                                                            |
-| 20. AGENTS.md and skills | Copy `static/templates/AGENTS.md` to the project root and fill in every `[placeholder]`. If the framework wrote its own `AGENTS.md` (Next.js does), keep any instruction it gives about reading the framework's own docs. Copy `static/templates/skills/` into `.agents/skills/`, and again into `.claude/commands/` |
+| 21. AGENTS.md and skills | Copy `static/templates/AGENTS.md` to the project root and fill in every `[placeholder]`. If the framework wrote its own `AGENTS.md` (Next.js does), keep any instruction it gives about reading the framework's own docs. Copy `static/templates/skills/` into `.agents/skills/`, and again into `.claude/commands/` |
 
 The other standards are rules for how code is written. There is nothing to install for them: follow them in every change.
 
@@ -133,7 +140,7 @@ The project already follows the standards, and a newer version is out.
 
 3. **Read `node_modules/@activatus/code-standards/docs/version-history.md`**, but only the versions newer than the project's. Do not re-read the rest of the standards.
 4. **Skip any change to a standard the project opted out of.** The opt-outs are listed in `docs/development/coding-standards.md`.
-5. **Do every other change** as its "What to do" says, and run its "How to check" search. One pull request per kind of change.
+5. **Do every other change** as its "What to do" says, and run its "How to check" search.
 6. **Set `**Code standards version:**`** in `AGENTS.md` to the new version, and tell the person what changed. If a change is being finished later, record it first: see [Finishing a change later](#finishing-a-change-later).
 
 See the [Version History](/version-history) for the full update rules.
@@ -142,10 +149,10 @@ See the [Version History](/version-history) for the full update rules.
 
 ## Finishing a change later
 
-Sometimes a change is too big for the update, such as switching on the standard ESLint config in a project that never had it. It can be done later in its own Pull Request, but **the version number must stay honest**.
+Sometimes a change is too big for the update, such as switching on the standard ESLint config in a project that never had it. It can be finished later, but **the version number must stay honest**.
 
 1. Set the project's version to the new version anyway.
-2. In `docs/development/coding-standards.md`, under **Unfinished changes**, list each change that is not done yet: its version and number, what is left, and where it is being done (a ticket or a Pull Request).
+2. In `docs/development/coding-standards.md`, under **Unfinished changes**, list each change that is not done yet: its version and number, what is left, and where it is being done, if the project tracks that.
 
    ```md
    ## Unfinished changes

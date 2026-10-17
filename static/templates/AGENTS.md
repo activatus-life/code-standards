@@ -1,6 +1,6 @@
 # [Project Name]
 
-> [The project's most important workflow rule for agents, stated first so every agent sees it: whether an agent may commit, push or make branches. See "Project workflow" below.]
+> [The project's most important rule for agents, stated first so every agent sees it. Usually whether an agent may commit, push or make branches. One line, or a short section if it needs more, such as which agents may commit, when, and how the others ask. See "Project workflow" below.]
 
 > **"go" means carry on.** When the person sends only "go", carry on with the current task. It is never permission to commit, push or open a Pull Request, and it needs no reply asking what they meant.
 

@@ -21,30 +21,37 @@ sidebar_label: "Version History"
 2. **Update the package:** `pnpm update @activatus/code-standards --latest`. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
 3. **Read each version newer than the project's**, oldest first. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
 4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished.
-5. **One pull request per kind of change** (for example, all the folder renames together), so each one stays easy to review. Follow the project's commit rule in `AGENTS.md`.
-6. **Run `pnpm lint`, `pnpm test` and the build** after each change.
-7. **Update the version number** in `AGENTS.md` once every change is done.
+5. **Run `pnpm lint`, `pnpm test` and the build** after each change.
+6. **Update the version number** in `AGENTS.md` once every change is done.
 
 **When a change does not fit the project**, for example it renames a folder the project does not have, skip it. If you are not sure, ask; do not guess.
 
 ## Adding a version
 
-Anyone changing the standards adds a version, in the same pull request as the change:
+Anyone changing the standards adds a version, alongside the change:
 
 - **One version per release**, numbered one higher than the last. Whole numbers only. A version can collect several changes before it is released.
 - **Bump the package's major version to match** in `package.json`: version 3 is `3.0.0`. Then publish it to npm (npmjs.com) with `pnpm publish`. pnpm is the tool; npm is where the package lives, and projects install it from there with `pnpm add`.
 - **For every change, write:** what changed, why, what to do in a project, and how to check it is done. Write it for an agent that has not read the rest of the standards.
 - **If a project has nothing to do, say so.**
 - **Newest version at the top.**
-- **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over several Pull Requests. To release it: drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
+- **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
+- **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`.
 
 ---
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.1
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.0`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.1`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.0.1.** If the project already applied 3.0.0, check these:
+
+- Setup list numbers are permanent again: 19, 20 and 22 are marked removed, and AGENTS.md and the Ontology are back to 21 and 23. Choices recorded under the version 2 numbers are still right.
+- The Husky lint hook is no longer a standard. Lint must pass before work is finished; how that is enforced is the project's choice.
+- Every name ending in `Reference` uses `Ref`, not only React refs.
+- The rename script takes a list of renames with `--list`.
 
 ### 1. Project workflow is no longer part of the standards
 
@@ -53,10 +60,10 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.0`. Do change 1 first
 **What to do:**
 
 - The Branch Naming and Commit Messages standards are gone, along with standards 19, 20 and 22 from the setup list. Keep whatever the project already does, and make sure it is written up in the project's own docs, usually `docs/development/`.
-- In `AGENTS.md`, replace the "Development workflow" section with a **Project workflow** section, copied from the [template](/templates#agents). Fill it in with the project's own rules: who commits, branches, commit messages, Pull Requests, merging and releases. Put the most important rule for agents — whether they may commit — in the line at the very top.
+- **Standards 19, 20 and 22 keep their numbers, marked as removed.** No other number changes. If `docs/development/coding-standards.md` records a choice for 19, 20 or 22, move that rule into Project workflow and take it off the list.
+- In `AGENTS.md`, replace the "Development workflow" section with a **Project workflow** section, copied from the [template](/templates#agents). Fill it in with the project's own rules: who commits, branches, commit messages, Pull Requests, merging and releases. Put the most important rule for agents, usually whether they may commit, at the very top: one line, or a short section if it needs more.
 - Remove the "Never commit code" and "Do not create, switch or delete branches" lines from "Out of scope for AI agents", unless they are the project's own rule. If they are, they belong in Project workflow.
-- Commitlint and the `.husky/commit-msg` hook are no longer templates. Keep them if the project wants its commit messages checked; they are now the project's choice.
-- **Keep `.husky/pre-commit`.** Running `pnpm lint` before every commit is still a standard. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit).
+- Commitlint and the Husky hooks (`.husky/commit-msg` and `.husky/pre-commit`) are no longer templates. Keep them if the project wants them: they are now the project's choice. The standard is only that `pnpm lint` passes before work is finished. See [When lint must pass](/Standards/lint-errors#when-lint-must-pass).
 
 **How to check:** `AGENTS.md` has a Project workflow section, and every rule in it is written up in the project's docs.
 
@@ -67,7 +74,7 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.0`. Do change 1 first
 **What to do:**
 
 - Rename the `library/` folder to `lib/` with `git mv`, and fix the imports: `@/library/` → `@/lib/`.
-- Rename names ending in `Reference` that hold a React ref back to `Ref`: `inputReference` → `inputRef`. Rename `repository` back to `repo` where it is short for a Git repository, such as `repositoryName` → `repoName`. Use the editor's Rename Symbol (F2), or the [rename script](/Guides/migrating#renaming-from-the-command-line).
+- Rename every name ending in `Reference` to end in `Ref`, whatever it refers to: `inputReference` → `inputRef`, `surfaceReference` → `surfaceRef`. Rename `repository` back to `repo` where it is short for a Git repository, such as `repositoryName` → `repoName`. Use the editor's Rename Symbol (F2), or the [rename script](/Guides/migrating#renaming-from-the-command-line).
 - Copy the new [ESLint config](/Standards/eslint). The naming rule now has `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }` and `allowList: { params: true, searchParams: true }`.
 - Update the "Dictionary words stay short" line in `AGENTS.md` from the [template](/templates#agents), and remove `lib/` → `library/` and `repo` → `repository` from its Never / Always table.
 
@@ -108,7 +115,7 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.0`. Do change 1 first
 **What to do:**
 
 - Copy the new [`prettier.config.mjs`](/templates#prettier) and [`.editorconfig`](/templates#editorconfig). Prettier now has `printWidth: 70` and `useTabs: true`, and keeps spaces for Markdown and YAML. EditorConfig indents with tabs, except Markdown, YAML and Python.
-- Run `pnpm format` once, on its own, in a Pull Request with nothing else in it. It touches nearly every file, so keep it apart from real changes.
+- Run `pnpm format` once, on its own, with no other changes mixed in. It touches nearly every file, so keep it apart from real changes.
 - If the project shows code on a web page, such as its docs site, add `pre, code { tab-size: 2; }` to its CSS, so tabs are not shown 8 characters wide. The [`docsSite/` template](/templates#docs-site) already has it.
 
 **How to check:** `pnpm format:check` passes.
@@ -145,7 +152,7 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 ### 10. Unfinished changes are recorded, not hidden
 
-**Why:** A big change, such as switching on the standard ESLint config, may be done later in its own Pull Request. The version number has to stay honest about that.
+**Why:** A big change, such as switching on the standard ESLint config, may be finished later. The version number has to stay honest about that.
 
 **What to do:** Add an "Unfinished changes" section to `docs/development/coding-standards.md`, from the [template](/templates#document-templates). List any change from any version that is not done yet, with what is left and where it is being done, or write "None". See [Finishing a change later](/Guides/setup#finishing-a-change-later).
 
@@ -154,11 +161,10 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 ### No action needed
 
 - The [Ontology](/ontology) defines `dependency`: something the code relies on but does not define itself. Ticket relationships are not dependencies; each project names those itself.
-- The package now ships a rename script for agents working from the command line, using TypeScript's own rename: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. See [Renaming from the command line](/Guides/migrating#renaming-from-the-command-line).
+- The package now ships a rename script for agents working from the command line, using TypeScript's own rename: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. Pass `--list renames.txt` to do many renames in one run, one per line. It can't reach keys in untyped object literals, such as the expected value in a test's `toEqual({ … })`: search the tests for old names and fix those by hand. See [Renaming from the command line](/Guides/migrating#renaming-from-the-command-line).
 - The [Setup](/Guides/setup) guide says the standards are a base for code only, and explains how to get past pnpm's `minimumReleaseAge` when a new version is too fresh to install.
 - [Folder Structure](/Structure/folder-structure) explains each `lib/` folder in one line.
 - The [ESLint page](/Standards/eslint#installation) says the config needs ESLint 10.4 or later, and the React configs explain why they set `settings.react.version`.
-- "Lint before every commit" moved to [Lint Errors](/Standards/lint-errors#lint-before-every-commit).
 
 ---
 

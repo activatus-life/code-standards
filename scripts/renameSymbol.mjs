@@ -6,14 +6,23 @@
 //   node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>
 // For example:
 //   node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs components/ui/button/types.ts ButtonProperties ButtonProps
+//
+// To do many renames in one run, list them in a text file, one per line: <file> <currentName> <newName>.
+// Blank lines and lines starting with # are skipped. The renames run in order.
+//   node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs --list renames.txt
 import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
 // process.argv starts with the node binary and this script's path.
 const FIRST_ARGUMENT_INDEX = 2;
-const USAGE =
-	"Usage: node renameSymbol.mjs <file> <currentName> <newName>";
+const LIST_FLAG = "--list";
+// A rename line has three parts: file, current name, new name.
+const RENAME_PARTS = 3;
+const USAGE = [
+	"Usage: node renameSymbol.mjs <file> <currentName> <newName>",
+	"   or: node renameSymbol.mjs --list <file of renames>",
+].join("\n");
 
 // Uses the project's own TypeScript, so the rename matches the project's compiler exactly.
 const requireFromProject = createRequire(
@@ -176,12 +185,45 @@ const renameSymbol = ({ filePath, currentName, newName }) => {
 	return `Renamed ${currentName} to ${newName}: ${renameLocations.length} places in ${fileCount} ${fileWord}.`;
 };
 
-const [filePath, currentName, newName] = process.argv.slice(
-	FIRST_ARGUMENT_INDEX,
-);
+// Each line of a list file is one rename: <file> <currentName> <newName>.
+const readRenameList = (listPath) =>
+	readFileSync(listPath, "utf8")
+		.split("\n")
+		.map((line) => line.trim())
+		.filter((line) => line !== "" && !line.startsWith("#"))
+		.map((line) => {
+			const [filePath, currentName, newName] = line.split(
+				/\s+/u,
+				RENAME_PARTS,
+			);
 
-if (filePath && currentName && newName) {
-	console.log(renameSymbol({ filePath, currentName, newName }));
+			return { filePath, currentName, newName };
+		});
+
+const isCompleteRename = ({ filePath, currentName, newName }) =>
+	Boolean(filePath && currentName && newName);
+
+const commandArguments = process.argv.slice(FIRST_ARGUMENT_INDEX);
+const [firstArgument, secondArgument] = commandArguments;
+const renames =
+	firstArgument === LIST_FLAG && secondArgument
+		? readRenameList(secondArgument)
+		: [
+				{
+					filePath: commandArguments[0],
+					currentName: commandArguments[1],
+					newName: commandArguments[2],
+				},
+			];
+
+if (
+	renames.length > 0 &&
+	renames.every((rename) => isCompleteRename(rename))
+) {
+	// Each rename reloads the project, so it sees the renames before it.
+	for (const rename of renames) {
+		console.log(renameSymbol(rename));
+	}
 } else {
 	console.error(USAGE);
 	process.exitCode = 1;

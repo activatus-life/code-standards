@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Migrating an Existing Project
 
-Migrating an established codebase to the shared standards is best done in stages to keep PRs reviewable.
+Migrating an established codebase to the shared standards is best done in stages, so each change stays small enough to check properly.
 
 **Already following the standards, and just updating to a newer version?** You don't need this whole guide. Read the [Version History](/version-history) from your project's version onward, and do only what it lists.
 
@@ -19,7 +19,7 @@ The standards apply to **code we write**, not to packages we pull in. Do not lin
 
 ## Stage 1 — Prettier (formatting only)
 
-Formatting changes are safe to land in one big PR because they don't change behaviour.
+Formatting changes are safe to make all at once because they don't change behaviour.
 
 ```bash
 pnpm add -D prettier prettier-plugin-tailwindcss
@@ -33,7 +33,7 @@ Format everything at once:
 pnpm prettier --write .
 ```
 
-Commit it on its own, following the project's commit message format. This keeps the formatting diff isolated, making future `git blame` useful.
+Keep the reformat apart from any other change, so the formatting is easy to tell apart from real changes later.
 
 Add a `.prettierignore` if you have generated files you don't want touched:
 
@@ -68,7 +68,7 @@ export default [
 ];
 ```
 
-Run `pnpm lint` and triage the output. Fix issues in thematic PRs (e.g. all `any` removals together). Once clean, remove the overrides.
+Run `pnpm lint` and triage the output. Fix them one kind at a time (for example, all `any` removals together). Once clean, remove the overrides.
 
 ## Stage 4 — Names
 
@@ -101,9 +101,9 @@ These come up in nearly every project:
 
 `docs/`, `docsSite/`, `DOCS_URL` and `pnpm docs:dev` already follow the standard. Leave them.
 
-### 3. Rename in this order, one pull request each
+### 3. Rename in this order
 
-1. **Folders**, with `git mv` so the history follows the files. Fix the imports in the same pull request.
+1. **Folders**, with `git mv` so the history follows the files. Fix the imports at the same time.
 2. **Types**, so the `@typescript-eslint/naming-convention` errors clear.
 3. **Variables, functions and properties.** Use your editor's **Rename Symbol** (F2), not find-and-replace: it renames every use and nothing else. An agent working from the command line has no editor, so it uses the [rename script](#renaming-from-the-command-line) instead.
 4. **Everything the linter can't see** — form fields, union values, routes, scripts, environment variables. Search for each one by hand.
@@ -117,7 +117,7 @@ Some names are used outside the code. Renaming them needs more than a code chang
 - **API routes and request fields** used by another app need both names to work until that app is updated.
 - **Routes people have bookmarked** need a redirect from the old path.
 
-Write each of these up in the pull request so nobody gets caught out.
+Tell the person about each of these, so nobody gets caught out.
 
 ### Renaming from the command line
 
@@ -130,6 +130,18 @@ node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <cur
 ```bash
 # Rename a type everywhere it is used
 node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs components/ui/button/types.ts ButtonProperties ButtonProps
+```
+
+**Many renames at once:** list them in a text file, one per line, and pass it with `--list`. Blank lines and lines starting with `#` are skipped, and the renames run in order:
+
+```text title="renames.txt"
+# Version 3 renames
+components/ui/button/types.ts ButtonProperties ButtonProps
+lib/terminal/tabs.ts surfaceReference surfaceRef
+```
+
+```bash
+node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs --list renames.txt
 ```
 
 - **Give it the file where the name is declared.** It renames that symbol and every use of it, across the whole project, and leaves anything else with the same name alone.
@@ -150,12 +162,8 @@ Copy the eight [standard skill files](/templates#skills) into `.agents/skills/`,
 
 Move the project's existing documentation into the standard [`docs/` folders](/Standards/documentation#-the-folders), rewriting each as a [Decision Doc](/Standards/documentation#-the-doc-format), then add the [`docsSite/` viewer](/Standards/documentation#-setting-it-up) so it shows at `/docs`.
 
-## Stage 8 — Lint before every commit
-
-Add the Husky hook that runs `pnpm lint` before every commit. Add it **last**, once the project passes `pnpm lint`. See [Lint before every commit](/Standards/lint-errors#lint-before-every-commit).
-
 ## Tips
 
-- **Don't mix formatting and logic changes** in the same PR.
+- **Don't mix formatting and logic changes.** Reformat on its own, then change the code.
 - **Exclude generated files** from ESLint with `// eslint-disable-file` or `.eslintignore`-equivalent glob ignores in the config.
 - **Fix new-file compliance first**: agree that all _new_ files must pass the full ruleset even before the migration is complete.
