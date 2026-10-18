@@ -5,7 +5,7 @@ sidebar_label: "Stylelint"
 
 # Stylelint Configuration
 
-Components are styled with [Tailwind CSS](/Standards/styling), and Stylelint lints the CSS that is still written by hand — `globals.css` and any CSS Modules. Start from the config below that matches the project:
+Components are styled with [Tailwind CSS](/docs/Standards/styling), and Stylelint lints the CSS that is still written by hand — `globals.css` and any CSS Modules. Start from the config below that matches the project:
 
 | Config                                  | Use when                                  |
 | --------------------------------------- | ----------------------------------------- |
@@ -151,7 +151,7 @@ Enforces `rgb(255 0 0 / 50%)` instead of `rgba(255, 0, 0, 0.5)`. The modern synt
 
 ### `ignoreFiles`: third-party code is exempt
 
-CSS in a `vendor/` folder is not ours, so it is not linted. See [Third-party code is exempt](/Standards/eslint#third-party-code-is-exempt).
+CSS in a `vendor/` folder is not ours, so it is not linted. See [Third-party code is exempt](/docs/Standards/eslint#third-party-code-is-exempt).
 
 ### Tailwind: `import-notation: "string"` and `at-rule-no-unknown`
 
@@ -159,11 +159,11 @@ CSS in a `vendor/` folder is not ours, so it is not linted. See [Third-party cod
 
 ### Custom properties: kebab-case
 
-`stylelint-config-standard` requires CSS variables to be kebab-case (`--color-brand-primary`). See [CSS Styling](/Standards/styling#css-variables).
+`stylelint-config-standard` requires CSS variables to be kebab-case (`--color-brand-primary`). See [CSS Styling](/docs/Standards/styling#css-variables).
 
 ### CSS Modules: `color-named: never` and `color-no-hex`
 
-Colours come from the [global colour variables](/Standards/styling#-colours-always-come-from-global-variables). A CSS Module may not contain `white` or `#3b82f6` — it references `var(--color-white)` or `var(--color-brand-primary)`. Colour values are only written in `globals.css`.
+Colours come from the [global colour variables](/docs/Standards/styling#-colours-always-come-from-global-variables). A CSS Module may not contain `white` or `#3b82f6` — it references `var(--color-white)` or `var(--color-brand-primary)`. Colour values are only written in `globals.css`.
 
 ### CSS Modules: `selector-class-pattern: camelCase`
 

@@ -1,6 +1,6 @@
 {
 	"name": "@activatus/code-standards",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"description": "The Activatus code standards: the rules as Markdown, and the config files to copy. Install it so an AI agent can read the standards from node_modules.",
 	"repository": {
 		"type": "git",

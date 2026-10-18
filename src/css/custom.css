@@ -1,11 +1,32 @@
-/**
- * Global style overrides.
- * The reference design runs the stock Infima palette, so nothing is overridden
- * here yet. Drop brand colours in below when they're ready, e.g.
- *
- * :root { --ifm-color-primary: #3578e5; }
- * [data-theme='dark'] { --ifm-color-primary: #72a1ed; }
- */
+/* Brand colours, from the Activatus palette. */
+:root {
+	--brand-green: #22c277;
+	--brand-cream: #fcfbf7;
+	--brand-text: #1f2421;
+	--brand-text-secondary: #64748b;
+	--brand-border: #e8e9e4;
+	--ifm-color-primary: #1a9e60;
+	--ifm-color-primary-dark: #178e56;
+	--ifm-color-primary-darker: #168651;
+	--ifm-color-primary-darkest: #126e43;
+	--ifm-color-primary-light: #1dae6a;
+	--ifm-color-primary-lighter: #1eb66f;
+	--ifm-color-primary-lightest: #22c277;
+}
+
+[data-theme="dark"] {
+	--brand-cream: #161917;
+	--brand-text: #f2f2ee;
+	--brand-text-secondary: #a3acb9;
+	--brand-border: #2d322f;
+	--ifm-color-primary: #22c277;
+	--ifm-color-primary-dark: #1fb06d;
+	--ifm-color-primary-darker: #1da667;
+	--ifm-color-primary-darkest: #189458;
+	--ifm-color-primary-light: #34d488;
+	--ifm-color-primary-lighter: #3fd78f;
+	--ifm-color-primary-lightest: #5fdda1;
+}
 
 /* Code is indented with tabs. Show each tab 2 characters wide, as the editors do. */
 pre,

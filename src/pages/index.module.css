@@ -1,0 +1,109 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	min-height: calc(100vh - var(--ifm-navbar-height));
+	padding: 3rem 1rem 2rem;
+	text-align: center;
+	background: var(--brand-cream);
+}
+
+.title {
+	margin: 0;
+	font-size: 2.5rem;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	color: var(--brand-text);
+}
+
+.blurb {
+	max-width: 26rem;
+	margin: 0;
+	font-size: 1.1rem;
+	color: var(--brand-text-secondary);
+}
+
+.card {
+	width: 100%;
+	max-width: 18rem;
+	height: auto;
+	margin: 1rem 0;
+	border-radius: 1.25rem;
+}
+
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	width: 100%;
+	max-width: 22rem;
+}
+
+.installButton,
+.docsButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	min-height: 3rem;
+	padding: 0.75rem 1rem;
+	border-radius: 0.75rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.installButton {
+	border: 1px solid var(--brand-border);
+	background: var(--ifm-background-color);
+	color: var(--brand-text);
+}
+
+.installCommand {
+	padding: 0;
+	border: 0;
+	background: none;
+	font-size: 0.8rem;
+	white-space: nowrap;
+}
+
+.copyLabel {
+	font-size: 0.8rem;
+	color: var(--ifm-color-primary);
+}
+
+.docsButton {
+	border: 1px solid var(--ifm-color-primary);
+	background: var(--ifm-color-primary);
+	color: var(--ifm-color-white);
+}
+
+.docsButton:hover {
+	background: var(--ifm-color-primary-dark);
+	color: var(--ifm-color-white);
+	text-decoration: none;
+}
+
+.version {
+	margin: 0.5rem 0 0;
+	font-size: 0.85rem;
+	color: var(--brand-text-secondary);
+}
+
+.credit {
+	margin-top: auto;
+	font-size: 0.85rem;
+	color: var(--brand-text-secondary);
+}
+
+@media (min-width: 48rem) {
+	.title {
+		font-size: 3.5rem;
+	}
+
+	.actions {
+		flex-direction: row;
+		max-width: none;
+		justify-content: center;
+	}
+}

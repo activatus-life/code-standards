@@ -6,16 +6,16 @@ sidebar_position: 3
 
 Migrating an established codebase to the shared standards is best done in stages, so each change stays small enough to check properly.
 
-**Already following the standards, and just updating to a newer version?** You don't need this whole guide. Read the [Version History](/version-history) from your project's version onward, and do only what it lists.
+**Already following the standards, and just updating to a newer version?** You don't need this whole guide. Read the [Version History](/docs/version-history) from your project's version onward, and do only what it lists.
 
 ## Before you start: third-party code is exempt
 
-The standards apply to **code we write**, not to packages we pull in. Do not lint, reformat, rename or restructure third-party code — see [Third-party code is exempt](/Standards/eslint#third-party-code-is-exempt).
+The standards apply to **code we write**, not to packages we pull in. Do not lint, reformat, rename or restructure third-party code — see [Third-party code is exempt](/docs/Standards/eslint#third-party-code-is-exempt).
 
 - `node_modules/` is ignored automatically.
 - Third-party code copied into the repo belongs in a `vendor/` folder, which the configs ignore.
 - Add `vendor/` to `.prettierignore` too.
-- **shadcn components are not third-party.** They are our code: convert them to the standards rather than moving them to `vendor/`. See [Adding a shadcn component](/Guides/component-library-workflow#adding-a-shadcn-component).
+- **shadcn components are not third-party.** They are our code: convert them to the standards rather than moving them to `vendor/`. See [Adding a shadcn component](/docs/Guides/component-library-workflow#adding-a-shadcn-component).
 
 ## Stage 1 — Prettier (formatting only)
 
@@ -25,7 +25,7 @@ Formatting changes are safe to make all at once because they don't change behavi
 pnpm add -D prettier prettier-plugin-tailwindcss
 ```
 
-Add `prettier.config.mjs` — see the [Prettier page](/Standards/prettier) for the full file contents.
+Add `prettier.config.mjs` — see the [Prettier page](/docs/Standards/prettier) for the full file contents.
 
 Format everything at once:
 
@@ -51,7 +51,7 @@ Add the `.editorconfig` file. No code changes needed — your editor will handle
 
 ## Stage 3 — ESLint
 
-Add the [standard config](/Standards/eslint) for your project type, then start in warn-only mode to see what you're dealing with. Add a block before `prettier`:
+Add the [standard config](/docs/Standards/eslint) for your project type, then start in warn-only mode to see what you're dealing with. Add a block before `prettier`:
 
 ```js
 export default [
@@ -72,19 +72,19 @@ Run `pnpm lint` and triage the output. Fix them one kind at a time (for example,
 
 ## Stage 4 — Names
 
-Renaming is the biggest job in most migrations, and the easiest place to get confused. Every name we write becomes [Human-Readable Names](/Standards/human-readable-names). Work through it in this order.
+Renaming is the biggest job in most migrations, and the easiest place to get confused. Every name we write becomes [Human-Readable Names](/docs/Standards/human-readable-names). Work through it in this order.
 
 ### 1. Decide what stays
 
 Before renaming anything, sort the short names into three piles:
 
-| Pile                                                                                                                   | What to do                | Where to check                                                            |
-| ---------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------- |
-| **A dictionary word** — `id`, `docs`, `app`, `url`, `api`                                                              | Leave it                  | [Dictionary](/Standards/human-readable-names#dictionary)                  |
-| **A third-party name** — React's `ref`, Next.js's `params`, shadcn/ui's `cn`, Linear's `pageInfo`, Node's `cwd` option | Leave it exactly as it is | [Third-party names](/Standards/human-readable-names#third-party-names)    |
-| **Our own shorthand** — `btn`, `lib/`, `helpers/`, `utilities/`                                                        | Rename it                 | The [Never / Always](/Standards/human-readable-names#never--always) table |
+| Pile                                                                                                                   | What to do                | Where to check                                                                 |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------ |
+| **A dictionary word** — `id`, `docs`, `app`, `url`, `api`                                                              | Leave it                  | [Dictionary](/docs/Standards/human-readable-names#dictionary)                  |
+| **A third-party name** — React's `ref`, Next.js's `params`, shadcn/ui's `cn`, Linear's `pageInfo`, Node's `cwd` option | Leave it exactly as it is | [Third-party names](/docs/Standards/human-readable-names#third-party-names)    |
+| **Our own shorthand** — `btn`, `lib/`, `helpers/`, `utilities/`                                                        | Rename it                 | The [Never / Always](/docs/Standards/human-readable-names#never--always) table |
 
-**Not sure which pile?** Don't guess and don't rename it. Ask, and if it is a dictionary word, [add it to the dictionary](/Standards/human-readable-names#adding-a-word-to-the-dictionary) first. Everyone then makes the same call.
+**Not sure which pile?** Don't guess and don't rename it. Ask, and if it is a dictionary word, [add it to the dictionary](/docs/Standards/human-readable-names#adding-a-word-to-the-dictionary) first. Everyone then makes the same call.
 
 ### 2. The common renames
 
@@ -152,15 +152,15 @@ node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs --list rena
 
 ## Stage 5 — AGENTS.md
 
-Copy the [AGENTS.md template](/templates#agents) to the project root and replace every `[placeholder]`. Agree the standards with the person first ([Setup, step 3](/Guides/setup#3-agree-the-standards)), and set the code standards version from the [Version History](/version-history).
+Copy the [AGENTS.md template](/docs/templates#agents) to the project root and replace every `[placeholder]`. Agree the standards with the person first ([Setup, step 3](/docs/Guides/setup#3-agree-the-standards)), and set the code standards version from the [Version History](/docs/version-history).
 
 ## Stage 6 — Agent skills
 
-Copy the eight [standard skill files](/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
+Copy the eight [standard skill files](/docs/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
 
 ## Stage 7 — Docs
 
-Move the project's existing documentation into the standard [`docs/` folders](/Standards/documentation#-the-folders), rewriting each as a [Decision Doc](/Standards/documentation#-the-doc-format), then add the [`docsSite/` viewer](/Standards/documentation#-setting-it-up) so it shows at `/docs`.
+Move the project's existing documentation into the standard [`docs/` folders](/docs/Standards/documentation#-the-folders), rewriting each as a [Decision Doc](/docs/Standards/documentation#-the-doc-format), then add the [`docsSite/` viewer](/docs/Standards/documentation#-setting-it-up) so it shows at `/docs`.
 
 ## Tips
 

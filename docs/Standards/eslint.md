@@ -846,7 +846,7 @@ Third-party code that is copied into the repository lives in a `vendor/` folder,
 
 `vendor/` is only for third-party code we **do not change** — code that is replaced wholesale when the package updates.
 
-Code that is copied into the project and then **owned and edited by us** is our code, and every standard applies to it. The main case is **shadcn/ui**: the CLI copies component source into the project, and from then on it is ours. It is converted to our standards and lives in `components/ui/`, never in `vendor/`. See [Adding a shadcn component](/Guides/component-library-workflow#adding-a-shadcn-component).
+Code that is copied into the project and then **owned and edited by us** is our code, and every standard applies to it. The main case is **shadcn/ui**: the CLI copies component source into the project, and from then on it is ours. It is converted to our standards and lives in `components/ui/`, never in `vendor/`. See [Adding a shadcn component](/docs/Guides/component-library-workflow#adding-a-shadcn-component).
 
 | Code                                                      | Ours?   | Follows the standards?                     |
 | --------------------------------------------------------- | ------- | ------------------------------------------ |
@@ -859,11 +859,11 @@ If a vendored package lives somewhere else and cannot be moved, add its path to 
 
 ## Key rule decisions
 
-Most of these enforce the [Readable Code](/Standards/readable-code) rules. For what each error means and how to fix it, see [Fixing Lint Errors](/Standards/lint-errors).
+Most of these enforce the [Readable Code](/docs/Standards/readable-code) rules. For what each error means and how to fix it, see [Fixing Lint Errors](/docs/Standards/lint-errors).
 
 ### `func-style`, `prefer-arrow-callback`: arrow functions everywhere
 
-Every function is an arrow function. See [Readable Code](/Standards/readable-code#arrow-functions-everywhere).
+Every function is an arrow function. See [Readable Code](/docs/Standards/readable-code#arrow-functions-everywhere).
 
 - `func-style: expression` rejects `function name() {}` declarations.
 - `prefer-arrow-callback` rejects `function` callbacks.
@@ -873,58 +873,58 @@ Every function is an arrow function. See [Readable Code](/Standards/readable-cod
 
 ### `no-restricted-syntax`, `prefer-const`, `no-var`: always `const`
 
-Variables are declared with `const`. `let` is an error unless the line carries a disable comment with a reason; `var` is never allowed. See [Readable Code](/Standards/readable-code#always-const).
+Variables are declared with `const`. `let` is an error unless the line carries a disable comment with a reason; `var` is never allowed. See [Readable Code](/docs/Standards/readable-code#always-const).
 
 ### `@eslint-community/eslint-comments/require-description`
 
-Every `eslint-disable` comment must say why, after `--`. A rule is never switched off silently. See [the only allowed exceptions](/Standards/lint-errors#the-only-allowed-exceptions).
+Every `eslint-disable` comment must say why, after `--`. A rule is never switched off silently. See [the only allowed exceptions](/docs/Standards/lint-errors#the-only-allowed-exceptions).
 
 ### `max-lines: 300`
 
-No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt. See [Readable Code](/Standards/readable-code#no-file-longer-than-300-lines).
+No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt. See [Readable Code](/docs/Standards/readable-code#no-file-longer-than-300-lines).
 
 ### `max-depth: 3`
 
-Blocks nest at most three levels deep. Return early instead. See [Readable Code](/Standards/readable-code#return-early-nest-shallow).
+Blocks nest at most three levels deep. Return early instead. See [Readable Code](/docs/Standards/readable-code#return-early-nest-shallow).
 
 ### `no-nested-ternary`
 
-A ternary inside a ternary is an error. See [Readable Code](/Standards/readable-code#no-nested-ternaries).
+A ternary inside a ternary is an error. See [Readable Code](/docs/Standards/readable-code#no-nested-ternaries).
 
 ### `no-magic-numbers`
 
-Numbers other than `-1`, `0` and `1` must be named constants. Test files are exempt. TypeScript files use `@typescript-eslint/no-magic-numbers`, which understands enums and numeric literal types. See [Readable Code](/Standards/readable-code#no-magic-numbers-or-strings).
+Numbers other than `-1`, `0` and `1` must be named constants. Test files are exempt. TypeScript files use `@typescript-eslint/no-magic-numbers`, which understands enums and numeric literal types. See [Readable Code](/docs/Standards/readable-code#no-magic-numbers-or-strings).
 
 ### `no-restricted-syntax`: no classes, one parameter
 
 These are banned by syntax, along with `function` expressions (above):
 
-- **Class declarations and class expressions.** See [Readable Code](/Standards/readable-code#functions-never-classes).
-- **Functions you define with more than one parameter.** Use a single object parameter. Inline callbacks whose signature is set by someone else — `array.reduce((total, item) => …)`, event handlers — are not affected. See [Readable Code](/Standards/readable-code#one-parameter-always-an-object-for-more).
+- **Class declarations and class expressions.** See [Readable Code](/docs/Standards/readable-code#functions-never-classes).
+- **Functions you define with more than one parameter.** Use a single object parameter. Inline callbacks whose signature is set by someone else — `array.reduce((total, item) => …)`, event handlers — are not affected. See [Readable Code](/docs/Standards/readable-code#one-parameter-always-an-object-for-more).
 
 ### `import-x/no-cycle`: no circular imports
 
-A file may never import a file that imports it back, directly or through a chain of other files. See [Import safety](/Structure/import-organization#import-safety).
+A file may never import a file that imports it back, directly or through a chain of other files. See [Import safety](/docs/Structure/import-organization#import-safety).
 
 ### `no-use-before-define`
 
-A function or variable is defined above the code that uses it. TypeScript files use `@typescript-eslint/no-use-before-define`. See [Import safety](/Structure/import-organization#import-safety).
+A function or variable is defined above the code that uses it. TypeScript files use `@typescript-eslint/no-use-before-define`. See [Import safety](/docs/Structure/import-organization#import-safety).
 
 ### `import-x/no-default-export`
 
-Named exports only. Default exports are allowed where a tool requires them: config files, Storybook stories and Next.js route files. See [Readable Code](/Standards/readable-code#named-exports-only).
+Named exports only. Default exports are allowed where a tool requires them: config files, Storybook stories and Next.js route files. See [Readable Code](/docs/Standards/readable-code#named-exports-only).
 
 ### Import order is not linted
 
-There is deliberately no import-**order** rule (circular imports are a different matter — see above). Follow the [Import Organization](/Structure/import-organization) pattern for consistency, but ESLint will not complain about it.
+There is deliberately no import-**order** rule (circular imports are a different matter — see above). Follow the [Import Organization](/docs/Structure/import-organization) pattern for consistency, but ESLint will not complain about it.
 
 ### `unicorn/filename-case: camelCase or PascalCase`
 
-The plugin's default is kebab-case, which contradicts our [naming conventions](/Structure/naming-conventions). Files are camelCase (`formatDate.ts`), and component files are PascalCase (`UserProfile.tsx`).
+The plugin's default is kebab-case, which contradicts our [naming conventions](/docs/Structure/naming-conventions). Files are camelCase (`formatDate.ts`), and component files are PascalCase (`UserProfile.tsx`).
 
 ### `unicorn/name-replacements: error`
 
-Names are full English words: `btn` must be `button`, `e` must be `error` or `event`, `acc` must be `accumulator`. `docs`, `lib`, `props`, `ref`, `repo` and `utils` are allowed because they are on the [dictionary](/Standards/human-readable-names#dictionary) list. Only three names owned by React and Next.js are allowed exactly as they are — `ref`, `params` and `searchParams` — and our own names built from them are still flagged (`inputRef` must be `inputReference`). See [Human-Readable Names](/Standards/human-readable-names). (Before `eslint-plugin-unicorn` 77 this rule was called `unicorn/prevent-abbreviations`.)
+Names are full English words: `btn` must be `button`, `e` must be `error` or `event`, `acc` must be `accumulator`. `docs`, `lib`, `props`, `ref`, `repo` and `utils` are allowed because they are on the [dictionary](/docs/Standards/human-readable-names#dictionary) list. Only three names owned by React and Next.js are allowed exactly as they are — `ref`, `params` and `searchParams` — and our own names built from them are still flagged (`inputRef` must be `inputReference`). See [Human-Readable Names](/docs/Standards/human-readable-names). (Before `eslint-plugin-unicorn` 77 this rule was called `unicorn/prevent-abbreviations`.)
 
 ### `@typescript-eslint/no-explicit-any: error`
 
@@ -936,11 +936,11 @@ The `!` operator tells the compiler a value exists without checking. Check it in
 
 ### `no-restricted-syntax`: type first, never `satisfies`
 
-A value gets its type where it is declared: `const config: ConfigType = { … }`. `satisfies` attaches the type afterwards, so it is an error in the TypeScript, React and Next.js configs, except in story files (`*.stories.{ts,tsx}`), which follow Storybook's docs. The rule lists live in `RESTRICTED_SYNTAX` and `NO_SATISFIES` at the top of each config, so story files use every other restriction without repeating it. See [Type first, never `satisfies`](/Standards/readable-code#type-first-never-satisfies).
+A value gets its type where it is declared: `const config: ConfigType = { … }`. `satisfies` attaches the type afterwards, so it is an error in the TypeScript, React and Next.js configs, except in story files (`*.stories.{ts,tsx}`), which follow Storybook's docs. The rule lists live in `RESTRICTED_SYNTAX` and `NO_SATISFIES` at the top of each config, so story files use every other restriction without repeating it. See [Type first, never `satisfies`](/docs/Standards/readable-code#type-first-never-satisfies).
 
 ### `@typescript-eslint/consistent-type-assertions: never`
 
-`as` casts are errors (`as const` is still allowed). When a cast is genuinely needed, disable the rule on that line **with the reason** — which is exactly the comment the [standard](/Standards/readable-code#no-any-no--no-unexplained-as) requires:
+`as` casts are errors (`as const` is still allowed). When a cast is genuinely needed, disable the rule on that line **with the reason** — which is exactly the comment the [standard](/docs/Standards/readable-code#no-any-no--no-unexplained-as) requires:
 
 ```ts
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- the API returns untyped JSON; validated by parseUser below
@@ -949,7 +949,7 @@ const user = response.data as UserType;
 
 ### `@typescript-eslint/naming-convention`: `Props` or `Type` suffix
 
-Every interface and type alias ends in `Props` or `Type`. See [Naming Conventions](/Structure/naming-conventions#types--interfaces).
+Every interface and type alias ends in `Props` or `Type`. See [Naming Conventions](/docs/Structure/naming-conventions#types--interfaces).
 
 ### `@typescript-eslint/consistent-type-imports: error`
 
@@ -957,8 +957,8 @@ Type-only imports use `import type { Foo }` or inline `import { type Foo }`. Thi
 
 ### `react/jsx-no-bind: error`
 
-No inline functions in render. A function passed as a JSX prop must be wrapped in `useCallback`, so it is not recreated on every render. See [Writing a component](/Structure/component-organization#-writing-a-component).
+No inline functions in render. A function passed as a JSX prop must be wrapped in `useCallback`, so it is not recreated on every render. See [Writing a component](/docs/Structure/component-organization#-writing-a-component).
 
 ### `react/no-multi-comp: error`
 
-One component per file. See [Readable Code](/Standards/readable-code#one-component-per-file).
+One component per file. See [Readable Code](/docs/Standards/readable-code#one-component-per-file).

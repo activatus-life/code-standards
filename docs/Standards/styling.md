@@ -10,7 +10,7 @@ Standards for styling React components and applications.
 
 ## 🎨 Tailwind CSS
 
-Use Tailwind CSS utility classes for all component styling. Tailwind is compatible with React Server Components and is the foundation [shadcn/ui](/Guides/component-library-workflow) is built on.
+Use Tailwind CSS utility classes for all component styling. Tailwind is compatible with React Server Components and is the foundation [shadcn/ui](/docs/Guides/component-library-workflow) is built on.
 
 ```tsx
 // Button.tsx
@@ -94,7 +94,7 @@ export const PageHeader = () => {
 
 - **Flex first.** `flex`, `flex-col`, `gap-*`, `items-*` and `justify-*` cover almost every layout.
 - **The parent positions, the child styles itself.** A parent sets direction, spacing and alignment. Each child component owns its own padding, colour and typography.
-- **Split into child components** rather than growing one long `className` or a deep tree of `div`s. Each child gets [its own folder](/Structure/component-organization#nested-components).
+- **Split into child components** rather than growing one long `className` or a deep tree of `div`s. Each child gets [its own folder](/docs/Structure/component-organization#nested-components).
 - **Space with `gap`**, not margins on the children.
 - **Grid only when asked.** Do not choose CSS grid on your own — use it only when the task specifically asks for a grid.
 
@@ -149,7 +149,7 @@ Each project defines its colours once, in its global stylesheet:
 
 Tailwind turns every `--color-*` variable in `@theme` into utility classes: `--color-brand-primary` becomes `bg-brand-primary`, `text-brand-primary`, `border-brand-primary` and so on.
 
-The project's design decisions — what each colour is for, the fonts, the spacing — are recorded in its `docs/design/design-system.md` [Decision Doc](/Standards/documentation).
+The project's design decisions — what each colour is for, the fonts, the spacing — are recorded in its `docs/design/design-system.md` [Decision Doc](/docs/Standards/documentation).
 
 ### ✅ Use the colours
 
@@ -192,7 +192,7 @@ Tailwind's built-in colours are variables too — `white` is `var(--color-white)
 - **Colours**: Global palette only — Tailwind colours and project colours from `@theme` — never arbitrary values
 - **Long class lists**: Extract a component, not a CSS class
 - **Conditional classes**: Use `clsx`
-- **Class order**: Sorted automatically by [Prettier](/Standards/prettier#tailwind-class-sorting) — do not sort by hand
+- **Class order**: Sorted automatically by [Prettier](/docs/Standards/prettier#tailwind-class-sorting) — do not sort by hand
 
 ### Global CSS
 
@@ -284,7 +284,7 @@ Name colours by **role**, not by value: `--color-brand-primary`, not `--color-bl
 
 ## 📚 Related Documentation
 
-- [Stylelint](/Standards/stylelint) - Linting for hand-written CSS
-- [Component Organization](/Structure/component-organization) - How to organize component files
-- [Folder Structure](/Structure/folder-structure) - Overall project structure
-- [Naming Conventions](/Structure/naming-conventions) - File and folder naming rules
+- [Stylelint](/docs/Standards/stylelint) - Linting for hand-written CSS
+- [Component Organization](/docs/Structure/component-organization) - How to organize component files
+- [Folder Structure](/docs/Structure/folder-structure) - Overall project structure
+- [Naming Conventions](/docs/Structure/naming-conventions) - File and folder naming rules

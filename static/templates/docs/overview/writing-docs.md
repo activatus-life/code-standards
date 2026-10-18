@@ -6,7 +6,7 @@
 
 ## Decision
 
-This project's docs follow the Activatus documentation standard: https://activatus-code-standards.vercel.app/Standards/documentation
+This project's docs follow the Activatus documentation standard: https://activatus-code-standards.vercel.app/docs/Standards/documentation
 
 Every file in `docs/` is a Decision Doc. Read the standard before adding or editing one.
 

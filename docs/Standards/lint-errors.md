@@ -29,12 +29,12 @@ This applies to everyone, **including AI agents**. An agent's work is not finish
 
 ## Imports
 
-| Rule                                         | What you will see                                                        | What it means                                                                                         | How to fix it                                                                                                                                                                                                      |
-| -------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `import-x/no-cycle`                          | `Dependency cycle detected`                                              | Two files import each other, directly or through other files. One will load before the other is ready | Move the part both files need into a **third file** that both import. If the cycle goes through an `index.ts`, import the file directly instead. See [Import safety](/Structure/import-organization#import-safety) |
-| `import-x/no-unresolved`                     | `Unable to resolve path to module '…'`                                   | The file being imported does not exist at that path                                                   | Check the spelling and the path. If the file was renamed or moved, update the import                                                                                                                               |
-| `import-x/no-default-export`                 | `Prefer named exports`                                                   | The file uses `export default`                                                                        | Change to a named export: `export const formatCurrency = …`                                                                                                                                                        |
-| `@typescript-eslint/consistent-type-imports` | `All imports in the declaration are only used as types. Use import type` | A type is imported like a value                                                                       | Change `import { UserType }` to `import type { UserType }`                                                                                                                                                         |
+| Rule                                         | What you will see                                                        | What it means                                                                                         | How to fix it                                                                                                                                                                                                           |
+| -------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `import-x/no-cycle`                          | `Dependency cycle detected`                                              | Two files import each other, directly or through other files. One will load before the other is ready | Move the part both files need into a **third file** that both import. If the cycle goes through an `index.ts`, import the file directly instead. See [Import safety](/docs/Structure/import-organization#import-safety) |
+| `import-x/no-unresolved`                     | `Unable to resolve path to module '…'`                                   | The file being imported does not exist at that path                                                   | Check the spelling and the path. If the file was renamed or moved, update the import                                                                                                                                    |
+| `import-x/no-default-export`                 | `Prefer named exports`                                                   | The file uses `export default`                                                                        | Change to a named export: `export const formatCurrency = …`                                                                                                                                                             |
+| `@typescript-eslint/consistent-type-imports` | `All imports in the declaration are only used as types. Use import type` | A type is imported like a value                                                                       | Change `import { UserType }` to `import type { UserType }`                                                                                                                                                              |
 
 ## Order and variables
 
@@ -121,11 +121,11 @@ Nothing else is switched off. If another rule seems impossible to satisfy, the c
 
 ## Errors that stop ESLint running
 
-| What you will see                                 | What it means                                    | How to fix it                                                                     |
-| ------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------- |
-| `typescript-eslint does not support TS 7.0`       | The linter cannot run against TypeScript 7 yet   | See the [TypeScript 7 note](/Standards/eslint#installation) on the ESLint page    |
-| `contextOrFilename.getFilename is not a function` | The React plugin cannot detect the React version | Set `settings.react.version` to the project's React version instead of `"detect"` |
-| `Cannot find module '…'`                          | A lint package is not installed                  | Run the install commands on the [ESLint page](/Standards/eslint#installation)     |
+| What you will see                                 | What it means                                    | How to fix it                                                                       |
+| ------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| `typescript-eslint does not support TS 7.0`       | The linter cannot run against TypeScript 7 yet   | See the [TypeScript 7 note](/docs/Standards/eslint#installation) on the ESLint page |
+| `contextOrFilename.getFilename is not a function` | The React plugin cannot detect the React version | Set `settings.react.version` to the project's React version instead of `"detect"`   |
+| `Cannot find module '…'`                          | A lint package is not installed                  | Run the install commands on the [ESLint page](/docs/Standards/eslint#installation)  |
 
 ---
 
@@ -133,4 +133,4 @@ Nothing else is switched off. If another rule seems impossible to satisfy, the c
 
 **Work is not finished until `pnpm lint` passes.** That goes for people and AI agents alike: an agent fixes every lint error before it says a task is done.
 
-Most projects check it automatically on every change, with a CI job that runs `pnpm lint` (often with `pnpm test` and the build) or with a git hook. Which one, if any, is the project's own choice. See [Project workflow](/Standards/agent-specs#project-workflow).
+Most projects check it automatically on every change, with a CI job that runs `pnpm lint` (often with `pnpm test` and the build) or with a git hook. Which one, if any, is the project's own choice. See [Project workflow](/docs/Standards/agent-specs#project-workflow).

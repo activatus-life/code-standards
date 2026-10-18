@@ -57,7 +57,7 @@
 
 Activatus uses a fixed vocabulary, the ontology, in two parts:
 
-- **Code words** — component, utils, Decision Doc and the rest — are defined in the code standards: https://activatus-code-standards.vercel.app/ontology
+- **Code words** — component, utils, Decision Doc and the rest — are defined in the code standards: https://activatus-code-standards.vercel.app/docs/ontology
 - **Product words** — what this project builds and how its work is planned — are defined in `docs/product/ontology.md`.
 
 - **Read both before starting work.** If the project's ontology gives a code word a different meaning, the code standards win — point the difference out.
@@ -89,7 +89,7 @@ Follow these rules in every change:
 
 - **Every function and component has a test file**, created in the same change. One test file tests one function or one component.
 - **No file longer than 300 lines** (test files are exempt).
-- **Every name is made of whole, human-readable words.** Variables, parameters, props, types, constants, form fields, files, folders, routes, database columns, scripts and environment variables — everything. No shortened words, no single letters, no numbered names, not even for a loop counter or an event handler. Full rule: Human-Readable Names in the code standards (https://activatus-code-standards.vercel.app/Standards/human-readable-names).
+- **Every name is made of whole, human-readable words.** Variables, parameters, props, types, constants, form fields, files, folders, routes, database columns, scripts and environment variables — everything. No shortened words, no single letters (except `r` and `s`, below), no numbered names, not even for a loop counter or an event handler. Full rule: Human-Readable Names in the code standards (https://activatus-code-standards.vercel.app/docs/Standards/human-readable-names).
 
   | Never | Always |
   | --- | --- |
@@ -100,7 +100,7 @@ Follow these rules in every change:
   | `helpers/`, `utilities/`, `helpers.ts` | `utils/`, a file named after what it does |
 
 - **`id` is a word.** Write `id`, `userId`, `user_id` — never `identifier` and never `userID`. `identifier` is only for an outside system's separate field of that name (Linear's readable `ACT-73`).
-- **Dictionary words stay short:** `id`, `docs`, `lib`, `props`, `ref`, `repo`, `utils`, `app`, `url`, `api`, `uat`, `pdf`, `html`, `css`, `json`, `readme`. Case them as words: `imageUrl`, not `imageURL`. Any other short name is written in full. A new dictionary word is added to the Dictionary in the Human-Readable Names standard first (https://activatus-code-standards.vercel.app/Standards/human-readable-names#dictionary), never just used.
+- **Dictionary words stay short:** `id`, `docs`, `lib`, `props`, `ref`, `repo`, `utils`, `app`, `url`, `api`, `uat`, `pdf`, `html`, `css`, `json`, `readme`. Case them as words: `imageUrl`, not `imageURL`. Any other short name is written in full. A new dictionary word is added to the Dictionary in the Human-Readable Names standard first (https://activatus-code-standards.vercel.app/docs/Standards/human-readable-names#dictionary), never just used.
 - **Names owned by someone else stay exactly as they are** — Linear's `id` and `pageInfo`, Node's `cwd` option and `process.env`, React's `ref` and `children`, shadcn/ui's `cn` helper, Next.js's `params`, `searchParams` and `LayoutProps`, HTML attributes, Tailwind classes. The rule is for names we write, not names from someone else's code. Renaming them breaks the code. Give the value a full-word name as soon as it comes into our code: `const workingDirectory = process.cwd();`, then pass `{ cwd: workingDirectory }`.
 - **When a name clashes with a third-party import, rename our own thing first**, to a more specific full-word name: our `createProjectDatabaseClient`, next to Supabase's `createClient`. Rename the import only when both names are third-party, or ours is fixed by a framework (a Next.js route's `GET`). Then use the owner plus the original name, `Link as LucideLinkIcon`. Never rename an import for taste, and never shorten it.
 - **Form fields especially.** A field has one name everywhere it goes: the input's `name` and `id`, the form schema, the API request, the type and the database column (`emailAddress` / `email_address`). Every field has a visible `<label>` in plain English — never a placeholder instead. Option values are words (`"monthly"`), not numbers. Validation messages name the field and say what to do.
@@ -114,6 +114,7 @@ Follow these rules in every change:
 - **One parameter per function.** Use a single object when more than one value is needed.
 - **Return early.** Never nest more than three levels deep.
 - **No magic numbers or strings.** Use named constants.
+- **Links, text and stand-in data live in `lib/constants/`**, never written straight into a component. `r` holds every link (pages, outside sites, `mailto:`, `tel:`, `sms:`). `s` holds every piece of static text, and its keys become the translation keys when the site gets more languages. `noData.ts` holds stand-in data named `NO_DATA_` plus the thing it replaces (`NO_DATA_INSIGHTS`), used only in local development when the real source can't be reached, never in production. Dummy values sit at the top of `noData.ts`, never in `s`. Import them all in one line, `import { NO_DATA_INSIGHTS, r, s } from "@/lib/constants";`. `r` and `s` are the only single-letter names allowed anywhere. Full rule: https://activatus-code-standards.vercel.app/docs/Structure/folder-structure#constants
 - **No nested ternaries. No boolean flag parameters.**
 - **No `any`, no non-null `!`, no `as` cast without a comment saying why.**
 - **Named exports only**, except where a tool requires a default export.

@@ -1,0 +1,39 @@
+{
+	"redirects": [
+		{
+			"source": "/Standards/:path*",
+			"destination": "/docs/Standards/:path*",
+			"permanent": true
+		},
+		{
+			"source": "/Structure/:path*",
+			"destination": "/docs/Structure/:path*",
+			"permanent": true
+		},
+		{
+			"source": "/Guides/:path*",
+			"destination": "/docs/Guides/:path*",
+			"permanent": true
+		},
+		{
+			"source": "/ontology",
+			"destination": "/docs/ontology",
+			"permanent": true
+		},
+		{
+			"source": "/templates",
+			"destination": "/docs/templates",
+			"permanent": true
+		},
+		{
+			"source": "/design-system-components",
+			"destination": "/docs/design-system-components",
+			"permanent": true
+		},
+		{
+			"source": "/version-history",
+			"destination": "/docs/version-history",
+			"permanent": true
+		}
+	]
+}

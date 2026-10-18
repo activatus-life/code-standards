@@ -32,7 +32,7 @@ Then tell your agent: **"Follow the Activatus Code Standards. Start with `node_m
 
 The package version is the standards version: `2.0.0` is version 2.
 
-> 🔢 **Updating a project to newer standards?** Run `pnpm update @activatus/code-standards --latest`, then point the agent at the **[Version History](https://activatus-code-standards.vercel.app/version-history)**: it reads only the versions newer than the project's, does exactly what each one says, and bumps the number. Cheaper than shouting the whole pub a round.
+> 🔢 **Updating a project to newer standards?** Run `pnpm update @activatus/code-standards --latest`, then point the agent at the **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**: it reads only the versions newer than the project's, does exactly what each one says, and bumps the number. Cheaper than shouting the whole pub a round.
 
 ---
 
@@ -66,15 +66,15 @@ The live site is at **[activatus-code-standards.vercel.app](https://activatus-co
 
 ## 📚 What's in the box
 
-| Section                                                                                                 | What you'll find                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 📋 **Templates**                                                                                        | Ready-to-copy `AGENTS.md`, ESLint, Prettier, Stylelint and friends                                                                                    |
-| 📖 **Ontology**                                                                                         | The code words we use and what each one means                                                                                                         |
-| 🔢 **[Version History](https://activatus-code-standards.vercel.app/version-history)**                   | What changed in each version, and what a project has to do about it. Updating a project? Read only the versions newer than the one in its `AGENTS.md` |
-| 🧭 **Guides**                                                                                           | Setting up a new project, dragging an old one up to scratch, and how design becomes code                                                              |
-| 📏 **Standards**                                                                                        | Readable code, linting, formatting, styling, commits, the tech stack and AI agent rules                                                               |
-| 🏗️ **Structure**                                                                                        | Folders, components, naming, imports and API routes                                                                                                   |
-| 🧩 **[Design System Components](https://activatus-code-standards.vercel.app/design-system-components)** | Every standard component and its props, so each project builds them the same way                                                                      |
+| Section                                                                                                      | What you'll find                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 📋 **Templates**                                                                                             | Ready-to-copy `AGENTS.md`, ESLint, Prettier, Stylelint and friends                                                                                    |
+| 📖 **Ontology**                                                                                              | The code words we use and what each one means                                                                                                         |
+| 🔢 **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**                   | What changed in each version, and what a project has to do about it. Updating a project? Read only the versions newer than the one in its `AGENTS.md` |
+| 🧭 **Guides**                                                                                                | Setting up a new project, dragging an old one up to scratch, and how design becomes code                                                              |
+| 📏 **Standards**                                                                                             | Readable code, linting, formatting, styling, commits, the tech stack and AI agent rules                                                               |
+| 🏗️ **Structure**                                                                                             | Folders, components, naming, imports and API routes                                                                                                   |
+| 🧩 **[Design System Components](https://activatus-code-standards.vercel.app/docs/design-system-components)** | Every standard component and its props, so each project builds them the same way                                                                      |
 
 ---
 

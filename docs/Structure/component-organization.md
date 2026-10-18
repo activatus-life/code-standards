@@ -103,7 +103,7 @@ describe('Button', () => {
 
 ### 📖 `Component.stories.tsx`
 
-Storybook stories for documentation and visual testing. Written the way [Storybook's docs](https://storybook.js.org/docs/writing-stories) write them, with `satisfies Meta<typeof Component>`: it is the one place `satisfies` is allowed. See [Type first, never `satisfies`](/Standards/readable-code#type-first-never-satisfies).
+Storybook stories for documentation and visual testing. Written the way [Storybook's docs](https://storybook.js.org/docs/writing-stories) write them, with `satisfies Meta<typeof Component>`: it is the one place `satisfies` is allowed. See [Type first, never `satisfies`](/docs/Standards/readable-code#type-first-never-satisfies).
 
 ```typescript
 // Button.stories.tsx
@@ -157,16 +157,16 @@ export type { ButtonProps } from "./types";
 
 Every component file is laid out in the same order, so a reader always knows where to look.
 
-| #   | Section               | Rule                                                                                                                                                                                                                |
-| --- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Imports               | Ordered per [Import Organization](/Structure/import-organization)                                                                                                                                                   |
-| 2   | Component             | The component is the first thing in the file after the imports. Always an [arrow function](/Standards/readable-code#arrow-functions-everywhere) — [never a class](/Standards/readable-code#functions-never-classes) |
-| 3   | Variable declarations | Plain values worked out from props                                                                                                                                                                                  |
-| 4   | State declarations    | `useState`, `useReducer`, `useRef`                                                                                                                                                                                  |
-| 5   | Calculated values     | Wrapped in `useMemo`                                                                                                                                                                                                |
-| 6   | Nested functions      | Only functions that need the component's state or props, wrapped in `useCallback`                                                                                                                                   |
-| 7   | Effects               | `useEffect`                                                                                                                                                                                                         |
-| 8   | Render logic          | The `return`. No inline functions                                                                                                                                                                                   |
+| #   | Section               | Rule                                                                                                                                                                                                                          |
+| --- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Imports               | Ordered per [Import Organization](/docs/Structure/import-organization)                                                                                                                                                        |
+| 2   | Component             | The component is the first thing in the file after the imports. Always an [arrow function](/docs/Standards/readable-code#arrow-functions-everywhere) — [never a class](/docs/Standards/readable-code#functions-never-classes) |
+| 3   | Variable declarations | Plain values worked out from props                                                                                                                                                                                            |
+| 4   | State declarations    | `useState`, `useReducer`, `useRef`                                                                                                                                                                                            |
+| 5   | Calculated values     | Wrapped in `useMemo`                                                                                                                                                                                                          |
+| 6   | Nested functions      | Only functions that need the component's state or props, wrapped in `useCallback`                                                                                                                                             |
+| 7   | Effects               | `useEffect`                                                                                                                                                                                                                   |
+| 8   | Render logic          | The `return`. No inline functions                                                                                                                                                                                             |
 
 ### Example
 
@@ -231,7 +231,7 @@ export const UserListClient = ({
 
 ### Keep the UI file clean
 
-**If a function can be written in another file, move it out of the UI file.** A function that does not need the component's state or props is not a nested function — it belongs in a [utils folder](/Structure/folder-structure#-utils).
+**If a function can be written in another file, move it out of the UI file.** A function that does not need the component's state or props is not a nested function — it belongs in a [utils folder](/docs/Structure/folder-structure#-utils).
 
 `filterUsersByName` above only needs its arguments, so it lives in the component's `utils/` folder, in its own folder beside its test file:
 
@@ -327,7 +327,7 @@ export const UserListItem = ({
 - **`useMemo`** for any value calculated from props or state (filtering, sorting, totals)
 - **`useCallback`** for every function passed to a child component or a JSX prop
 
-ESLint enforces the function half of this with `react/jsx-no-bind` — see the [ESLint configuration](/Standards/eslint#reactjsx-no-bind-error).
+ESLint enforces the function half of this with `react/jsx-no-bind` — see the [ESLint configuration](/docs/Standards/eslint#reactjsx-no-bind-error).
 
 ---
 
@@ -382,13 +382,13 @@ export const UserListClient = ({ users }: UserListClientProps) => {
 
 ## Reusable by design
 
-Every component in `components/ui/` is built so it can be copied into another project unchanged: everything comes in through props, and it imports nothing from the project's features, services, stores or `app/` folder. Before building one, [look before you build](/Guides/component-library-workflow#1-look-before-you-build), and build it to the props in the [Design System Components](/design-system-components). See [Future-proofing](/Guides/component-library-workflow#future-proofing).
+Every component in `components/ui/` is built so it can be copied into another project unchanged: everything comes in through props, and it imports nothing from the project's features, services, stores or `app/` folder. Before building one, [look before you build](/docs/Guides/component-library-workflow#1-look-before-you-build), and build it to the props in the [Design System Components](/docs/design-system-components). See [Future-proofing](/docs/Guides/component-library-workflow#future-proofing).
 
 ---
 
 ## Components from shadcn
 
-A component added with the shadcn CLI is **our code** and follows everything on this page. Convert it when it is added: its own camelCase folder, one component per file, `types.ts`, `index.ts` and a test file. See [Adding a shadcn component](/Guides/component-library-workflow#adding-a-shadcn-component).
+A component added with the shadcn CLI is **our code** and follows everything on this page. Convert it when it is added: its own camelCase folder, one component per file, `types.ts`, `index.ts` and a test file. See [Adding a shadcn component](/docs/Guides/component-library-workflow#adding-a-shadcn-component).
 
 ---
 
@@ -459,7 +459,7 @@ export type { CardProps } from "./types";
 
 ### Within the Same Folder
 
-Inside a component's folder, import files directly. **Never import through the folder's own `index.ts`**, and never import the parent component from a sub-component — both create a [circular import](/Structure/import-organization#import-safety).
+Inside a component's folder, import files directly. **Never import through the folder's own `index.ts`**, and never import the parent component from a sub-component — both create a [circular import](/docs/Structure/import-organization#import-safety).
 
 ```typescript
 // card/Card.tsx — the parent imports its sub-components
@@ -515,7 +515,7 @@ app/
     └── page.tsx
 ```
 
-See [Where components live](/Structure/folder-structure#-where-components-live) for every location.
+See [Where components live](/docs/Structure/folder-structure#-where-components-live) for every location.
 
 ---
 

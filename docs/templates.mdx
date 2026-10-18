@@ -67,7 +67,7 @@ Each file is also served as a plain file, so a person or an AI agent can fetch i
 
 **Copy to:** `AGENTS.md` in the project root
 
-Replace every `[placeholder]`. See [AGENTS.md Specifications](/Standards/agent-specs).
+Replace every `[placeholder]`. See [AGENTS.md Specifications](/docs/Standards/agent-specs).
 
 <CodeBlock language="markdown" title="AGENTS.md">
   {agents}
@@ -79,7 +79,7 @@ Replace every `[placeholder]`. See [AGENTS.md Specifications](/Standards/agent-s
 
 **Copy to:** `eslint.config.mjs` in the project root
 
-For TypeScript projects. Install commands are on the [ESLint page](/Standards/eslint#installation).
+For TypeScript projects. Install commands are on the [ESLint page](/docs/Standards/eslint#installation).
 
 <CodeBlock language="js" title="eslint.config.mjs">
   {eslintTypescript}
@@ -127,7 +127,7 @@ For plain JavaScript and Node.js projects.
 
 **Copy to:** `prettier.config.mjs` in the project root
 
-See the [Prettier page](/Standards/prettier).
+See the [Prettier page](/docs/Standards/prettier).
 
 <CodeBlock language="js" title="prettier.config.mjs">
   {prettier}
@@ -139,7 +139,7 @@ See the [Prettier page](/Standards/prettier).
 
 **Copy to:** `stylelint.config.mjs` in the project root
 
-See the [Stylelint page](/Standards/stylelint).
+See the [Stylelint page](/docs/Standards/stylelint).
 
 <CodeBlock language="js" title="stylelint.config.mjs">
   {stylelintCss}
@@ -163,7 +163,7 @@ For projects that use SCSS.
 
 **Copy to:** `app/globals.css`
 
-Replace the example colours with the project's palette. See [CSS Styling](/Standards/styling).
+Replace the example colours with the project's palette. See [CSS Styling](/docs/Standards/styling).
 
 <CodeBlock language="css" title="globals.css">
   {globalsCss}
@@ -175,7 +175,7 @@ Replace the example colours with the project's palette. See [CSS Styling](/Stand
 
 **Copy to:** `.editorconfig` in the project root
 
-See the [EditorConfig page](/Standards/editorconfig).
+See the [EditorConfig page](/docs/Standards/editorconfig).
 
 <CodeBlock language="ini" title=".editorconfig">
   {editorconfig}
@@ -187,7 +187,7 @@ See the [EditorConfig page](/Standards/editorconfig).
 
 **Copy to:** `.nvmrc` in the project root
 
-Set it to the project's Node major version. See [direnv + nvm](/Standards/direnv).
+Set it to the project's Node major version. See [direnv + nvm](/docs/Standards/direnv).
 
 <CodeBlock language="text" title=".nvmrc">
   {nvmrc}
@@ -199,7 +199,7 @@ Set it to the project's Node major version. See [direnv + nvm](/Standards/direnv
 
 **Copy to:** `.envrc` in the project root
 
-Run `direnv allow` after adding it. See [direnv + nvm](/Standards/direnv).
+Run `direnv allow` after adding it. See [direnv + nvm](/docs/Standards/direnv).
 
 <CodeBlock language="bash" title=".envrc">
   {envrc}
@@ -211,7 +211,7 @@ Run `direnv allow` after adding it. See [direnv + nvm](/Standards/direnv).
 
 **Copy to:** `.agents/skills/` in the project root, and again to `.claude/commands/` so Claude Code picks them up as slash commands.
 
-The eight standard skills. Copy all of them into every project. See [Agent Skills](/Standards/agent-skills) for how they are written.
+The eight standard skills. Copy all of them into every project. See [Agent Skills](/docs/Standards/agent-skills) for how they are written.
 
 | Skill                                  | Invocation                             | Plain file                                                                            |
 | -------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -294,7 +294,7 @@ Runs the test suite; reports failures grouped by cause, tests that never ran, an
 
 **Copy to:** a `docsSite/` folder in the project root
 
-The Docusaurus viewer that shows the project's `docs/` folder at `/docs`. Copy every file, keeping the folder layout. See [Documentation](/Standards/documentation#-setting-it-up).
+The Docusaurus viewer that shows the project's `docs/` folder at `/docs`. Copy every file, keeping the folder layout. See [Documentation](/docs/Standards/documentation#-setting-it-up).
 
 | File                     | Plain file                                                                                                                            |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -360,7 +360,7 @@ Plain file: [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs
 
 **Copy to:** the `docs/` folder in the project root, keeping the folder layout
 
-The full set of Decision Docs for a new project: every [reusable folder](/Standards/documentation#-the-folders) with every standard file, each marked `Status: Not started`. Copy the whole [`static/templates/docs/`](https://github.com/activatus-life/code-standards/tree/main/static/templates/docs) folder from this repository.
+The full set of Decision Docs for a new project: every [reusable folder](/docs/Standards/documentation#-the-folders) with every standard file, each marked `Status: Not started`. Copy the whole [`static/templates/docs/`](https://github.com/activatus-life/code-standards/tree/main/static/templates/docs) folder from this repository.
 
 | Folder          | Example file                                                                                  |
 | --------------- | --------------------------------------------------------------------------------------------- |
@@ -375,7 +375,7 @@ After copying, rename `overview/what-is-it.md` after the project and update its 
 
 **Copy to:** any new doc that has no template file
 
-The shape every doc follows. See [The doc format](/Standards/documentation#-the-doc-format). Plain file: [`/templates/decision-doc.md`](pathname:///templates/decision-doc.md)
+The shape every doc follows. See [The doc format](/docs/Standards/documentation#-the-doc-format). Plain file: [`/templates/decision-doc.md`](pathname:///templates/decision-doc.md)
 
 <CodeBlock language="markdown" title="decision-doc.md">
   {decisionDoc}

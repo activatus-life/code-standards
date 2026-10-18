@@ -5,7 +5,7 @@ sidebar_label: "Human-Readable Names"
 
 # Human-Readable Names
 
-**Every name we write is made of whole words a person can read out loud.** Variables, function parameters, props, types, constants, form fields, files, folders, routes, database columns, scripts and environment variables — everything. No shortened words, no single letters, no numbered names — not even for a loop counter or an event handler.
+**Every name we write is made of whole words a person can read out loud.** Variables, function parameters, props, types, constants, form fields, files, folders, routes, database columns, scripts and environment variables — everything. No shortened words, no single letters, no numbered names — not even for a loop counter or an event handler. The one exception is [`r` and `s`](#r-and-s).
 
 Anyone reading the code should never have to guess what a name stands for.
 
@@ -59,7 +59,7 @@ Everything that has a name:
 | **Doc files**                   | `architecture/background-jobs.md`                    | `arch/bg.md`, `notes2.md`                         |
 | **Error messages**              | `"Enter an email address"`                           | `"Invalid input"`, `"Error 42"`                   |
 
-The words come from the [Ontology](/ontology) wherever it has a term: reusable functions are in `utils/`, never `helpers/` or `utilities/`. A project's own ontology adds its product words: in Launchpad, a Draft Ticket is `draftTicket`, never `pendingTicket`. The casing comes from [Naming Conventions](/Structure/naming-conventions).
+The words come from the [Ontology](/docs/ontology) wherever it has a term: reusable functions are in `utils/`, never `helpers/` or `utilities/`. A project's own ontology adds its product words: in Launchpad, a Draft Ticket is `draftTicket`, never `pendingTicket`. The casing comes from [Naming Conventions](/docs/Structure/naming-conventions).
 
 ---
 
@@ -151,9 +151,19 @@ When a short name feels like a dictionary word, don't just use it — add it her
 
 1. **Ask:** is this the word people actually say, so the long form would only be harder to read? `docs`, `repo`: yes. `env`, `btn`, `msg`: no.
 2. **Add a row** to the table above, before or alongside the code that uses it.
-3. **If ESLint flags the word**, add it to `replacements` in the `unicorn/name-replacements` rule of the [ESLint config](/Standards/eslint), so the linter agrees: `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }`.
+3. **If ESLint flags the word**, add it to `replacements` in the `unicorn/name-replacements` rule of the [ESLint config](/docs/Standards/eslint), so the linter agrees: `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }`.
 
 The list is the record. If a word is not on it, it is not a dictionary word yet.
+
+## `r` and `s`: the only single letters {#r-and-s}
+
+**Two names are allowed to be a single letter:** `r`, the object of every route, and `s`, the object of every piece of static text. Both live in `lib/constants/`. See [Constants](/docs/Structure/folder-structure#constants).
+
+They are used so often that the short form is easier to read: `href={r.contact}` and `{s.contact}` read cleanly in a component, where `routes.contact` and `strings.contact` crowd it.
+
+- **Only these two.** No other single letter is allowed anywhere: not `e`, `i`, `x` or `T`, and not another constants object.
+- **Only as those two objects.** `r` is never a request or a result, and `s` is never a string or a second.
+- **Their keys are full words:** `r.linkedIn`, `s.pageNotFound`.
 
 ---
 
@@ -272,3 +282,5 @@ users.map((u) => u.name);
 | **Everything else** — folders, props, form fields, union values, database columns, routes, environment variables, test names | **Code review and AI agents.** The linter cannot read these, so every agent and reviewer checks them |
 
 ESLint allows the [dictionary](#dictionary) words it would otherwise flag (`docs`, `lib`, `props`, `ref`, `repo`, `utils`), and exactly two third-party names as they are: `params` and `searchParams`. It still flags any of our own names built from an third-party name, such as `inputRef`.
+
+ESLint does not flag `r` or `s`. Reviewers check that they are only ever the two constants objects.

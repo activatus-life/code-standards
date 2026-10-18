@@ -8,28 +8,28 @@ Every file must be readable by a person who has never seen it before. Code is re
 
 ## The rules
 
-| Rule                                                                                                | Enforced by                                                   |
-| --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| [No file longer than 300 lines](#no-file-longer-than-300-lines)                                     | ESLint `max-lines` (test files exempt)                        |
-| [Names are full English words](/Standards/human-readable-names) — everywhere, including form fields | ESLint for code names; code review and AI agents for the rest |
-| [Arrow functions everywhere](#arrow-functions-everywhere)                                           | ESLint `func-style`, `prefer-arrow-callback`                  |
-| [Always `const`](#always-const)                                                                     | ESLint `no-restricted-syntax`, `prefer-const`, `no-var`       |
-| [A function does one thing](#a-function-does-one-thing)                                             | Code review                                                   |
-| [Every function and component has a test file](#every-function-and-component-has-a-test-file)       | Developers and AI agents — not linted                         |
-| [Functions, never classes](#functions-never-classes)                                                | ESLint `no-restricted-syntax`                                 |
-| [Return early, nest shallow](#return-early-nest-shallow)                                            | ESLint `max-depth`                                            |
-| [No magic numbers or strings](#no-magic-numbers-or-strings)                                         | ESLint `no-magic-numbers` (numbers), code review (strings)    |
-| [One parameter; always an object for more](#one-parameter-always-an-object-for-more)                | ESLint `no-restricted-syntax`                                 |
-| [No nested ternaries](#no-nested-ternaries)                                                         | ESLint `no-nested-ternary`                                    |
-| [No boolean flag parameters](#no-boolean-flag-parameters)                                           | Code review                                                   |
-| [Comments explain why, not what](#comments-explain-why-not-what)                                    | Code review                                                   |
-| [No `any`, no `!`, no unexplained `as`](#no-any-no--no-unexplained-as)                              | ESLint `@typescript-eslint` rules                             |
-| [One component per file](#one-component-per-file)                                                   | ESLint `react/no-multi-comp`                                  |
-| [Named exports only](#named-exports-only)                                                           | ESLint `import-x/no-default-export`                           |
-| [Type names say what they are](#type-names-say-what-they-are)                                       | ESLint `@typescript-eslint/naming-convention`                 |
-| [Error messages say what happened and what to do](#error-messages-say-what-happened-and-what-to-do) | Code review                                                   |
+| Rule                                                                                                     | Enforced by                                                   |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| [No file longer than 300 lines](#no-file-longer-than-300-lines)                                          | ESLint `max-lines` (test files exempt)                        |
+| [Names are full English words](/docs/Standards/human-readable-names) — everywhere, including form fields | ESLint for code names; code review and AI agents for the rest |
+| [Arrow functions everywhere](#arrow-functions-everywhere)                                                | ESLint `func-style`, `prefer-arrow-callback`                  |
+| [Always `const`](#always-const)                                                                          | ESLint `no-restricted-syntax`, `prefer-const`, `no-var`       |
+| [A function does one thing](#a-function-does-one-thing)                                                  | Code review                                                   |
+| [Every function and component has a test file](#every-function-and-component-has-a-test-file)            | Developers and AI agents — not linted                         |
+| [Functions, never classes](#functions-never-classes)                                                     | ESLint `no-restricted-syntax`                                 |
+| [Return early, nest shallow](#return-early-nest-shallow)                                                 | ESLint `max-depth`                                            |
+| [No magic numbers or strings](#no-magic-numbers-or-strings)                                              | ESLint `no-magic-numbers` (numbers), code review (strings)    |
+| [One parameter; always an object for more](#one-parameter-always-an-object-for-more)                     | ESLint `no-restricted-syntax`                                 |
+| [No nested ternaries](#no-nested-ternaries)                                                              | ESLint `no-nested-ternary`                                    |
+| [No boolean flag parameters](#no-boolean-flag-parameters)                                                | Code review                                                   |
+| [Comments explain why, not what](#comments-explain-why-not-what)                                         | Code review                                                   |
+| [No `any`, no `!`, no unexplained `as`](#no-any-no--no-unexplained-as)                                   | ESLint `@typescript-eslint` rules                             |
+| [One component per file](#one-component-per-file)                                                        | ESLint `react/no-multi-comp`                                  |
+| [Named exports only](#named-exports-only)                                                                | ESLint `import-x/no-default-export`                           |
+| [Type names say what they are](#type-names-say-what-they-are)                                            | ESLint `@typescript-eslint/naming-convention`                 |
+| [Error messages say what happened and what to do](#error-messages-say-what-happened-and-what-to-do)      | Code review                                                   |
 
-See the [ESLint configuration](/Standards/eslint) for the rule setup, and [Fixing Lint Errors](/Standards/lint-errors) for what each error means and how to fix it.
+See the [ESLint configuration](/docs/Standards/eslint) for the rule setup, and [Fixing Lint Errors](/docs/Standards/lint-errors) for what each error means and how to fix it.
 
 ---
 
@@ -37,8 +37,8 @@ See the [ESLint configuration](/Standards/eslint) for the rule setup, and [Fixin
 
 A file over 300 lines is doing more than one job. Split it before it gets there:
 
-- Move reusable functions into a [utils folder](/Structure/folder-structure#-utils)
-- Move sub-components into [their own folders](/Structure/component-organization#nested-components)
+- Move reusable functions into a [utils folder](/docs/Structure/folder-structure#-utils)
+- Move sub-components into [their own folders](/docs/Structure/component-organization#nested-components)
 - Move types into `types.ts`
 
 Blank lines and comments do not count towards the limit. **Test files are exempt** — a thorough test file can run long.
@@ -49,7 +49,7 @@ Blank lines and comments do not count towards the limit. **Test files are exempt
 
 **Every name in the project is made of whole, human-readable words** — not just variables, but folders, files, props, form fields, types, database columns, environment variables, everything.
 
-This rule has its own page, because it applies everywhere: **[Human-Readable Names](/Standards/human-readable-names)**. Read it in full.
+This rule has its own page, because it applies everywhere: **[Human-Readable Names](/docs/Standards/human-readable-names)**. Read it in full.
 
 ---
 
@@ -87,7 +87,7 @@ export const formatCurrency = function (amount: number) {
 
 Three things to know:
 
-- **Define before use.** An arrow function is written above the code that uses it. This is [enforced](/Structure/import-organization#3-define-before-use), and it means a mistake fails straight away instead of being hidden.
+- **Define before use.** An arrow function is written above the code that uses it. This is [enforced](/docs/Structure/import-organization#3-define-before-use), and it means a mistake fails straight away instead of being hidden.
 - **Generic components need a trailing comma** in `.tsx` files, so the type parameter is not read as JSX: `const List = <ItemType,>({ items }: ListProps<ItemType>) => { … }`.
 - **Next.js files that need a default export** take two lines:
 
@@ -194,7 +194,7 @@ utils/
 └── index.ts
 ```
 
-See [Utils](/Structure/folder-structure#-utils) for the folder layout and the `index.ts` files.
+See [Utils](/docs/Structure/folder-structure#-utils) for the folder layout and the `index.ts` files.
 
 ```ts title="utils/formatCurrency/formatCurrency.test.ts"
 import { describe, expect, it } from "vitest";
@@ -212,7 +212,7 @@ describe("formatCurrency", () => {
 });
 ```
 
-Components keep their test beside the component file (`button/Button.tsx` and `button/Button.test.tsx`) — see [Component Organization](/Structure/component-organization).
+Components keep their test beside the component file (`button/Button.tsx` and `button/Button.test.tsx`) — see [Component Organization](/docs/Structure/component-organization).
 
 ---
 
@@ -309,7 +309,7 @@ if (order.status === "shipped") {
 }
 ```
 
-`-1`, `0` and `1` are allowed. See [Naming Conventions](/Structure/naming-conventions#constants) for how to name constants.
+`-1`, `0` and `1` are allowed. See [Naming Conventions](/docs/Structure/naming-conventions#constants) for how to name constants.
 
 ---
 
@@ -451,13 +451,13 @@ const getUserName = (user: any) => {
 };
 ```
 
-`as const` is fine. See the [ESLint configuration](/Standards/eslint#typescript-eslintconsistent-type-assertions-never) for how to record the reason for a cast.
+`as const` is fine. See the [ESLint configuration](/docs/Standards/eslint#typescript-eslintconsistent-type-assertions-never) for how to record the reason for a cast.
 
 ---
 
 ## One component per file
 
-A file holds one component. A second component — however small — gets [its own folder](/Structure/component-organization#nested-components).
+A file holds one component. A second component — however small — gets [its own folder](/docs/Structure/component-organization#nested-components).
 
 ---
 
@@ -586,7 +586,7 @@ const config = {
 
 ESLint reports `satisfies` as an error.
 
-**Story files are the one exception.** Storybook's own docs type stories with `satisfies Meta<typeof Component>`, because it lets Storybook see which props are already set for every story, so each story only sets the props that change. Story files (`*.stories.tsx`) follow Storybook's docs as they are, and ESLint allows `satisfies` there. See [Storybook stories](/Structure/component-organization#-componentstoriestsx).
+**Story files are the one exception.** Storybook's own docs type stories with `satisfies Meta<typeof Component>`, because it lets Storybook see which props are already set for every story, so each story only sets the props that change. Story files (`*.stories.tsx`) follow Storybook's docs as they are, and ESLint allows `satisfies` there. See [Storybook stories](/docs/Structure/component-organization#-componentstoriestsx).
 
 ---
 

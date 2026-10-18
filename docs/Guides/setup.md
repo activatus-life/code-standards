@@ -64,6 +64,7 @@ Tell me the numbers to skip or change, or say "all good".
 10. Node version set by .nvmrc and direnv
 11. Styling: Tailwind, flexbox first, colours only from the global palette
 12. Folder structure: folders at the project root; reusable helper functions in utils/ (no business rules, no outside calls)
+12.1. Constants: r for every link, s for every piece of text, noData for local stand-in data, all in lib/constants/
 13. Components live where they are used: components/ui/, components/shared/, or beside their page
 14. Component files in a fixed order, with index.ts exports, and server and client code in separate files
 15. Design System Components: every project builds the standard components with the same props
@@ -95,7 +96,7 @@ Then wait for the answer.
 
 **Record the answer** in `docs/development/coding-standards.md`, under "Details". For each skipped or changed standard, write its number, its name, what is different, and the reason the person gave. If nothing is different, write "No differences". Copy the file from `static/templates/docs/development/coding-standards.md` if it does not exist.
 
-The list has nothing about branches, commit messages or whether agents may commit. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/Standards/agent-specs#project-workflow).
+The list has nothing about branches, commit messages or whether agents may commit. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/docs/Standards/agent-specs#project-workflow).
 
 ## 4. Apply the standards
 
@@ -103,17 +104,18 @@ Do only the standards the person agreed to. Copy every file from `node_modules/@
 
 **Every config file is `.mjs`, even in a TypeScript project.** Never convert one to `.ts` or `.mts`. `.mjs` works in both, so every project looks the same. If the project has a config as `.js`, `.ts` or `.mts`, such as `next.config.ts` from `create-next-app` or `vitest.config.mts`, rename it to `.mjs`, removing any TypeScript-only syntax: a type annotation becomes a JSDoc comment, for example `/** @type {import("next").NextConfig} */`. A tool that cannot read `.mjs` keeps its own format.
 
-**An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/Guides/migrating), one stage at a time, after the config files below are in place.
+**An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/docs/Guides/migrating), one stage at a time, after the config files below are in place.
 
 | Standard                 | What to set up                                                                                                                                                                                                                                                                                                       |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 6. ESLint                | Copy the config for the project's framework from `static/templates/eslint/`: `base`, `typescript`, `react` or `nextjs`. Install the packages listed on the [ESLint page](/Standards/eslint). Add the scripts `"lint": "eslint ."` and `"lint:fix": "eslint . --fix"`                                                 |
+| 6. ESLint                | Copy the config for the project's framework from `static/templates/eslint/`: `base`, `typescript`, `react` or `nextjs`. Install the packages listed on the [ESLint page](/docs/Standards/eslint). Add the scripts `"lint": "eslint ."` and `"lint:fix": "eslint . --fix"`                                            |
 | 7. Prettier              | `pnpm add -D prettier prettier-plugin-tailwindcss`. Copy `static/templates/prettier.config.mjs`. Add the scripts `"format": "prettier --write ."` and `"format:check": "prettier --check ."`                                                                                                                         |
-| 8. Stylelint             | Only if the project has hand-written CSS or SCSS. Copy the config from `static/templates/stylelint/css/` or `scss/`. See [Stylelint](/Standards/stylelint)                                                                                                                                                           |
+| 8. Stylelint             | Only if the project has hand-written CSS or SCSS. Copy the config from `static/templates/stylelint/css/` or `scss/`. See [Stylelint](/docs/Standards/stylelint)                                                                                                                                                      |
 | 9. EditorConfig          | Copy `static/templates/.editorconfig`                                                                                                                                                                                                                                                                                |
-| 10. Node version         | Copy `static/templates/.nvmrc` and `static/templates/.envrc`. See [direnv + nvm](/Standards/direnv)                                                                                                                                                                                                                  |
+| 10. Node version         | Copy `static/templates/.nvmrc` and `static/templates/.envrc`. See [direnv + nvm](/docs/Standards/direnv)                                                                                                                                                                                                             |
 | 11. Styling              | Copy `static/templates/globals.css` to `app/globals.css`. Ask the person for the project's colours, and replace the example palette                                                                                                                                                                                  |
-| 18. Docs                 | Copy `static/templates/docs/` to `docs/` and `static/templates/docsSite/` to `docsSite/`. Add the `/docs` route from `static/templates/next.config.mjs`. See [Setting it up](/Standards/documentation#-setting-it-up)                                                                                                |
+| 12.1. Constants          | Create `lib/constants/` with `routes.ts` (`r`), `strings.ts` (`s`), `noData.ts` and an `index.ts` that exports them. If the project keeps them somewhere else, such as `app/constants/`, move them. See [Constants](/docs/Structure/folder-structure#constants)                                                      |
+| 18. Docs                 | Copy `static/templates/docs/` to `docs/` and `static/templates/docsSite/` to `docsSite/`. Add the `/docs` route from `static/templates/next.config.mjs`. See [Setting it up](/docs/Standards/documentation#-setting-it-up)                                                                                           |
 | 21. AGENTS.md and skills | Copy `static/templates/AGENTS.md` to the project root and fill in every `[placeholder]`. If the framework wrote its own `AGENTS.md` (Next.js does), keep any instruction it gives about reading the framework's own docs. Copy `static/templates/skills/` into `.agents/skills/`, and again into `.claude/commands/` |
 
 The other standards are rules for how code is written. There is nothing to install for them: follow them in every change.
@@ -146,7 +148,7 @@ The project already follows the standards, and a newer version is out.
 5. **Do every other change** as its "What to do" says, and run its "How to check" search.
 6. **Set `**Code standards version:**`** in `AGENTS.md` to the new version, and tell the person what changed. If a change is being finished later, record it first: see [Finishing a change later](#finishing-a-change-later).
 
-See the [Version History](/version-history) for the full update rules.
+See the [Version History](/docs/version-history) for the full update rules.
 
 ---
 

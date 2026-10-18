@@ -17,7 +17,7 @@ sidebar_label: "Version History"
 
 **Read only the versions newer than the project's.** A project on version 1 that is updating to version 3 reads version 2 and version 3 on this page, and nothing else. Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
 
-1. **Find the project's version** in its `AGENTS.md`. If there is none, the project has never followed the standards: follow [Setup](/Guides/setup) instead.
+1. **Find the project's version** in its `AGENTS.md`. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
 2. **Update the package:** `pnpm update @activatus/code-standards --latest`. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
 3. **Read each version newer than the project's**, oldest first. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
 4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished.
@@ -44,9 +44,14 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.3
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.4
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.4`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.0.4.** If the project already applied 3.0.3, do these:
+
+- New standard 12.1: links, text and stand-in data live in `lib/constants/`, as `r`, `s` and noData. `r` and `s` are the only single-letter names allowed. Do change 11.
+- The standards site has a home page, and the docs moved to `/docs/...`. Old links redirect, so nothing breaks. Update any link to the standards site in the project's `AGENTS.md` or docs to the `/docs/` address, such as `https://activatus-code-standards.vercel.app/docs/ontology`.
 
 **Fixes in 3.0.3.** Change 8 now says how to type a function inside an object that is built somewhere else: give the function its own `Props` type, such as `LaunchSessionProps`, and use it. If the project wrote those parameter types out inline, such as `({ worktreePath }: { worktreePath: string })`, replace each with the function's `Props` type. Also new: type first, never `satisfies`. It is an ESLint error now, so copy the new ESLint config and replace each `satisfies` with a type on the declaration, except in Storybook story files.
 
@@ -54,7 +59,7 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first
 
 - The update steps say how to pick up a patch: the version number in `AGENTS.md` stays the same, so always read the version's Fixes list after updating the package.
 - A removed decimal standard keeps its number, such as `11.2. Removed in version N`.
-- [When lint must pass](/Standards/lint-errors#when-lint-must-pass) names the usual ways projects check it: a CI job or a git hook.
+- [When lint must pass](/docs/Standards/lint-errors#when-lint-must-pass) names the usual ways projects check it: a CI job or a git hook.
 
 **Fixes in 3.0.1.** If the project already applied 3.0.0, check these:
 
@@ -71,9 +76,9 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first
 
 - The Branch Naming and Commit Messages standards are gone, along with standards 19, 20 and 22 from the setup list. Keep whatever the project already does, and make sure it is written up in the project's own docs, usually `docs/development/`.
 - **Standards 19, 20 and 22 keep their numbers, marked as removed.** No other number changes. If `docs/development/coding-standards.md` records a choice for 19, 20 or 22, move that rule into Project workflow and take it off the list.
-- In `AGENTS.md`, replace the "Development workflow" section with a **Project workflow** section, copied from the [template](/templates#agents). Fill it in with the project's own rules: who commits, branches, commit messages, Pull Requests, merging and releases. Put the most important rule for agents, usually whether they may commit, at the very top: one line, or a short section if it needs more.
+- In `AGENTS.md`, replace the "Development workflow" section with a **Project workflow** section, copied from the [template](/docs/templates#agents). Fill it in with the project's own rules: who commits, branches, commit messages, Pull Requests, merging and releases. Put the most important rule for agents, usually whether they may commit, at the very top: one line, or a short section if it needs more.
 - Remove the "Never commit code" and "Do not create, switch or delete branches" lines from "Out of scope for AI agents", unless they are the project's own rule. If they are, they belong in Project workflow.
-- Commitlint and the Husky hooks (`.husky/commit-msg` and `.husky/pre-commit`) are no longer templates. Keep them if the project wants them: they are now the project's choice. The standard is only that `pnpm lint` passes before work is finished. See [When lint must pass](/Standards/lint-errors#when-lint-must-pass).
+- Commitlint and the Husky hooks (`.husky/commit-msg` and `.husky/pre-commit`) are no longer templates. Keep them if the project wants them: they are now the project's choice. The standard is only that `pnpm lint` passes before work is finished. See [When lint must pass](/docs/Standards/lint-errors#when-lint-must-pass).
 
 **How to check:** `AGENTS.md` has a Project workflow section, and every rule in it is written up in the project's docs.
 
@@ -84,15 +89,15 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first
 **What to do:**
 
 - Rename the `library/` folder to `lib/` with `git mv`, and fix the imports: `@/library/` → `@/lib/`.
-- Rename every name ending in `Reference` to end in `Ref`, whatever it refers to: `inputReference` → `inputRef`, `surfaceReference` → `surfaceRef`. Rename `repository` back to `repo` where it is short for a Git repository, such as `repositoryName` → `repoName`. Use the editor's Rename Symbol (F2), or the [rename script](/Guides/migrating#renaming-from-the-command-line).
-- Copy the new [ESLint config](/Standards/eslint). The naming rule now has `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }` and `allowList: { params: true, searchParams: true }`.
-- Update the "Dictionary words stay short" line in `AGENTS.md` from the [template](/templates#agents), and remove `lib/` → `library/` and `repo` → `repository` from its Never / Always table.
+- Rename every name ending in `Reference` to end in `Ref`, whatever it refers to: `inputReference` → `inputRef`, `surfaceReference` → `surfaceRef`. Rename `repository` back to `repo` where it is short for a Git repository, such as `repositoryName` → `repoName`. Use the editor's Rename Symbol (F2), or the [rename script](/docs/Guides/migrating#renaming-from-the-command-line).
+- Copy the new [ESLint config](/docs/Standards/eslint). The naming rule now has `replacements: { docs: false, lib: false, props: false, ref: false, repo: false, utils: false }` and `allowList: { params: true, searchParams: true }`.
+- Update the "Dictionary words stay short" line in `AGENTS.md` from the [template](/docs/templates#agents), and remove `lib/` → `library/` and `repo` → `repository` from its Never / Always table.
 
 **How to check:** There is no `library/` folder, `grep -rn "@/library" --exclude-dir=node_modules .` finds nothing, and `pnpm lint` passes.
 
 ### 3. utils, services and lib are defined
 
-**Why:** It wasn't clear which functions go in `utils/`, `services/` or `lib/`. See [utils, services and lib](/Structure/folder-structure#utils-services-and-lib).
+**Why:** It wasn't clear which functions go in `utils/`, `services/` or `lib/`. See [utils, services and lib](/docs/Structure/folder-structure#utils-services-and-lib).
 
 **What to do:** Check each function in those three folders against the definitions, and move any that are in the wrong one. The common one: a function in `utils/` that calls a database or an API belongs in `services/` or `lib/`. Shared constants and types live in `lib/constants/` and `lib/types/`; a component's own types stay in its `types.ts`. Move any root-level `constants/` or `types/` folder into `lib/`.
 
@@ -102,7 +107,7 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first
 
 **Why:** Project-management words mean different things in different projects. Launchpad's "project" is a product made of several MVPs, and its Pull Requests go through `feature → dev → uat → main`.
 
-**What to do:** The code [Ontology](/ontology) no longer defines `project`, `repository`, `branch`, `commit`, `pull_request`, `pull_request_review` or `production`, and `human`, `developer` and `agent` no longer say who may commit. If the project uses those words, define them in its own `docs/product/ontology.md`, the way the project actually works.
+**What to do:** The code [Ontology](/docs/ontology) no longer defines `project`, `repository`, `branch`, `commit`, `pull_request`, `pull_request_review` or `production`, and `human`, `developer` and `agent` no longer say who may commit. If the project uses those words, define them in its own `docs/product/ontology.md`, the way the project actually works.
 
 **How to check:** The project's ontology defines every project-management word it uses.
 
@@ -113,7 +118,7 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first
 **What to do:**
 
 - Rename each config file that is `.js`, `.ts` or `.mts` to `.mjs`, even in a TypeScript project, wherever the tool can read `.mjs`: `prettier.config.mjs`, `next.config.mjs`, `eslint.config.mjs`, `docsSite/docusaurus.config.mjs`, `docsSite/sidebars.mjs` and so on. Use `git mv`. Never convert a config to `.ts` or `.mts`.
-- Remove any TypeScript-only syntax as you go. A type annotation becomes a JSDoc comment: `const config: NextConfig = {` becomes `/** @type {import("next").NextConfig} */ const config = {`. Copy the [`docsSite/` templates](/templates#docs-site), which are already `.mjs`.
+- Remove any TypeScript-only syntax as you go. A type annotation becomes a JSDoc comment: `const config: NextConfig = {` becomes `/** @type {import("next").NextConfig} */ const config = {`. Copy the [`docsSite/` templates](/docs/templates#docs-site), which are already `.mjs`.
 - Update anything that names the old file, such as `sidebarPath: './sidebars.mjs'` in the docs site config.
 
 **How to check:** `ls *.config.* docsSite/*.config.* docsSite/sidebars.*` shows only `.mjs` files, and `pnpm lint`, `pnpm format:check`, the build and `pnpm docs:build` still run.
@@ -124,9 +129,9 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first
 
 **What to do:**
 
-- Copy the new [`prettier.config.mjs`](/templates#prettier) and [`.editorconfig`](/templates#editorconfig). Prettier now has `printWidth: 70` and `useTabs: true`, and keeps spaces for Markdown and YAML. EditorConfig indents with tabs, except Markdown, YAML and Python.
+- Copy the new [`prettier.config.mjs`](/docs/templates#prettier) and [`.editorconfig`](/docs/templates#editorconfig). Prettier now has `printWidth: 70` and `useTabs: true`, and keeps spaces for Markdown and YAML. EditorConfig indents with tabs, except Markdown, YAML and Python.
 - Run `pnpm format` once, on its own, with no other changes mixed in. It touches nearly every file, so keep it apart from real changes.
-- If the project shows code on a web page, such as its docs site, add `pre, code { tab-size: 2; }` to its CSS, so tabs are not shown 8 characters wide. The [`docsSite/` template](/templates#docs-site) already has it.
+- If the project shows code on a web page, such as its docs site, add `pre, code { tab-size: 2; }` to its CSS, so tabs are not shown 8 characters wide. The [`docsSite/` template](/docs/templates#docs-site) already has it.
 
 **How to check:** `pnpm format:check` passes.
 
@@ -137,10 +142,10 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.3`. Do change 1 first
 **What to do:** Search for renamed imports: `grep -rn "import {[^}]* as " --include=*.ts --include=*.tsx --exclude-dir=node_modules .`. For each one:
 
 - **If nothing in the file clashes with the original name**, undo the rename and use the original name.
-- **If our own thing clashes**, rename ours to a more specific full-word name, with the editor's Rename Symbol or the [rename script](/Guides/migrating#renaming-from-the-command-line). Then undo the import rename. For example, our `createClient` becomes `createProjectDatabaseClient`, and Supabase's `createClient` keeps its name.
+- **If our own thing clashes**, rename ours to a more specific full-word name, with the editor's Rename Symbol or the [rename script](/docs/Guides/migrating#renaming-from-the-command-line). Then undo the import rename. For example, our `createClient` becomes `createProjectDatabaseClient`, and Supabase's `createClient` keeps its name.
 - **If both names are third-party, or ours is fixed by a framework** (such as a Next.js route's `GET`), keep the import renamed, as the owner plus the original name, never shortened: `Link as LucideLinkIcon`.
 
-See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
+See [When a name clashes](/docs/Standards/human-readable-names#when-a-name-clashes).
 
 **How to check:** Every renamed import that is left clashes with another third-party name or a framework-fixed name, and starts with its owner's name.
 
@@ -150,7 +155,7 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 **What to do:** Find types used for only one field of one `Props` type. Move each one inside that `Props` and delete the separate type. Where the object is built somewhere else, don't just delete its type: the functions inside lose their parameter types and the type check fails. Give each function its own `Props` type for its single object parameter, named after the function, and use it there: `launchSession: async ({ worktreePath }: LaunchSessionProps) =>`. Don't write the type out inline, such as `({ worktreePath }: { worktreePath: string })`.
 
-**Type first, never `satisfies`.** A value gets its type where it is declared, and `satisfies` is now an ESLint error. Replace each `{ … } satisfies SomeType` with a type on the declaration: `const config: ConfigType = { … }`. **Leave story files alone**: they follow Storybook's docs, `satisfies Meta<typeof Component>` with `StoryObj<typeof meta>`, and ESLint allows it there. Copy the new [ESLint config](/Standards/eslint) to switch the check on.
+**Type first, never `satisfies`.** A value gets its type where it is declared, and `satisfies` is now an ESLint error. Replace each `{ … } satisfies SomeType` with a type on the declaration: `const config: ConfigType = { … }`. **Leave story files alone**: they follow Storybook's docs, `satisfies Meta<typeof Component>` with `StoryObj<typeof meta>`, and ESLint allows it there. Copy the new [ESLint config](/docs/Standards/eslint) to switch the check on.
 
 **How to check:** No type is used only as the type of one field of one `Props`, `grep -rn " satisfies " --include=*.ts --include=*.tsx --exclude=*.stories.* --exclude-dir=node_modules .` finds nothing, and the type check and `pnpm lint` pass.
 
@@ -158,7 +163,7 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 **Why:** People often send just "go" to nudge an agent along, for example when their connection drops and the agent looks stuck. An agent must never read it as permission to commit.
 
-**What to do:** Copy the line that starts **"go" means carry on** from the top of the [`AGENTS.md` template](/templates#agents) into the top of the project's `AGENTS.md`.
+**What to do:** Copy the line that starts **"go" means carry on** from the top of the [`AGENTS.md` template](/docs/templates#agents) into the top of the project's `AGENTS.md`.
 
 **How to check:** The project's `AGENTS.md` has the line near the top.
 
@@ -166,17 +171,34 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 **Why:** A big change, such as switching on the standard ESLint config, may be finished later. The version number has to stay honest about that.
 
-**What to do:** Add an "Unfinished changes" section to `docs/development/coding-standards.md`, from the [template](/templates#document-templates). List any change from any version that is not done yet, with what is left and where it is being done, or write "None". See [Finishing a change later](/Guides/setup#finishing-a-change-later).
+**What to do:** Add an "Unfinished changes" section to `docs/development/coding-standards.md`, from the [template](/docs/templates#document-templates). List any change from any version that is not done yet, with what is left and where it is being done, or write "None". See [Finishing a change later](/docs/Guides/setup#finishing-a-change-later).
 
 **How to check:** `docs/development/coding-standards.md` has an "Unfinished changes" section.
 
+### 11. Links, text and stand-in data live in `lib/constants/`
+
+**Why:** One place for every link and every piece of text means nothing is hard-coded in a component, and the keys of `s` become the translation keys when a site gets more languages. noData lets every page render while working locally with no internet.
+
+**What to do:**
+
+- Create `lib/constants/` with `routes.ts`, `strings.ts`, `noData.ts` and `index.ts`, as in [Constants](/docs/Structure/folder-structure#constants). If the project already has them somewhere else, such as `app/constants/`, move the folder with `git mv` and fix the imports: `@/app/constants` → `@/lib/constants`.
+- `routes.ts` exports `r`, with every link: the app's own pages, outside sites, and `mailto:`, `tel:` and `sms:` links. `strings.ts` exports `s`, with every piece of static text. Use named exports, `export const r = { … }`, never `export default`.
+- Move links and text written straight into components into `r` and `s`.
+- Rename each noData export to `NO_DATA_` plus the thing it stands in for: `noDataInsights` → `NO_DATA_INSIGHTS`. Move dummy values, such as `dummyHeading`, out of `s` to the top of `noData.ts` as `DUMMY_HEADING` and the rest. Move anything in `noData.ts` that is real copy, such as a page's metadata, into `s`.
+- Use noData only in local development: `query?.insights ?? (IS_LOCAL_DEVELOPMENT ? NO_DATA_INSIGHTS : [])`.
+- Inside `lib/constants/`, files import each other directly, `import { s } from "./strings";`, never through `@/lib/constants`.
+- Copy the new **Links, text and stand-in data** line and the `r` and `s` exception from the [`AGENTS.md` template](/docs/templates#agents).
+- Add `12.1` to the project's standards: it is a new standard, so ask the person whether the project follows it. Record a no in `docs/development/coding-standards.md`.
+
+**How to check:** `grep -rn "export default" lib/constants` and `grep -rn "noData[A-Z]\|dummy" lib/constants/strings.ts` find nothing, and the type check, `pnpm lint` and the build pass.
+
 ### No action needed
 
-- The [Ontology](/ontology) defines `dependency`: something the code relies on but does not define itself. Ticket relationships are not dependencies; each project names those itself.
-- The package now ships a rename script for agents working from the command line, using TypeScript's own rename: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. Pass `--list renames.txt` to do many renames in one run, one per line. It can't reach keys in untyped object literals, such as the expected value in a test's `toEqual({ … })`: search the tests for old names and fix those by hand. See [Renaming from the command line](/Guides/migrating#renaming-from-the-command-line).
-- The [Setup](/Guides/setup) guide says the standards are a base for code only, and explains how to get past pnpm's `minimumReleaseAge` when a new version is too fresh to install.
-- [Folder Structure](/Structure/folder-structure) explains each `lib/` folder in one line.
-- The [ESLint page](/Standards/eslint#installation) says the config needs ESLint 10.4 or later, and the React configs explain why they set `settings.react.version`.
+- The [Ontology](/docs/ontology) defines `dependency`: something the code relies on but does not define itself. Ticket relationships are not dependencies; each project names those itself.
+- The package now ships a rename script for agents working from the command line, using TypeScript's own rename: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. Pass `--list renames.txt` to do many renames in one run, one per line. It can't reach keys in untyped object literals, such as the expected value in a test's `toEqual({ … })`: search the tests for old names and fix those by hand. See [Renaming from the command line](/docs/Guides/migrating#renaming-from-the-command-line).
+- The [Setup](/docs/Guides/setup) guide says the standards are a base for code only, and explains how to get past pnpm's `minimumReleaseAge` when a new version is too fresh to install.
+- [Folder Structure](/docs/Structure/folder-structure) explains each `lib/` folder in one line.
+- The [ESLint page](/docs/Standards/eslint#installation) says the config needs ESLint 10.4 or later, and the React configs explain why they set `settings.react.version`.
 
 ---
 
@@ -192,7 +214,7 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 - `pnpm add -D @activatus/code-standards`
 - Read the rest of this update from `node_modules/@activatus/code-standards/docs/version-history.md`. The templates to copy are in `node_modules/@activatus/code-standards/static/templates/`.
-- In `AGENTS.md`, under "Code standards", say the standards are installed as `@activatus/code-standards`, and that agents read them from `node_modules/@activatus/code-standards/docs/`. Copy the wording from the [`AGENTS.md` template](/templates#agents).
+- In `AGENTS.md`, under "Code standards", say the standards are installed as `@activatus/code-standards`, and that agents read them from `node_modules/@activatus/code-standards/docs/`. Copy the wording from the [`AGENTS.md` template](/docs/templates#agents).
 
 **How to check:** `@activatus/code-standards` is in the project's `devDependencies`.
 
@@ -202,7 +224,7 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 **What to do:**
 
-- Print the numbered list in [Setup, step 3](/Guides/setup#3-agree-the-standards) to the person, exactly as written, and record their answer in `docs/development/coding-standards.md`.
+- Print the numbered list in [Setup, step 3](/docs/Guides/setup#3-agree-the-standards) to the person, exactly as written, and record their answer in `docs/development/coding-standards.md`.
 - For the rest of this update, **skip any change to a standard the person opted out of.**
 
 **How to check:** `docs/development/coding-standards.md` lists the opted-out standards by number, or says "No differences".
@@ -217,10 +239,10 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 - **If both `docsSite/` and `documentationSite/` exist**, merge them into `docsSite/`: move each tracked file from `documentationSite/` with `git mv`, keeping whichever copy is newer, then delete `documentationSite/`. Ask the person before deleting a file that exists in only one of them.
 - Rename `docs/overview/writing-documentation.md` → `docs/overview/writing-docs.md`, and fix every link to it.
 - Rename the environment variable `DOCUMENTATION_URL` → `DOCS_URL` in `next.config.mjs`, `.env.local`, `.env.example` and the hosting provider's settings.
-- Rename the route `/documentation` → `/docs`. Copy the new rewrite from the [`next.config.mjs` template](/templates#docs-route).
-- **Re-copy `docsSite/docusaurus.config.ts`** from the [`docsSite/` template](/templates#docs-site), keeping the project's name and theme. Version 2 changed it: `baseUrl: '/docs/'`, `path: '../docs'`, full-word variable names (`rest` → `remainingArguments`, `doc` → `page`), and `static/img` → `static/images`. Rename the project's `docsSite/static/img/` to `static/images/` to match.
+- Rename the route `/documentation` → `/docs`. Copy the new rewrite from the [`next.config.mjs` template](/docs/templates#docs-route).
+- **Re-copy `docsSite/docusaurus.config.ts`** from the [`docsSite/` template](/docs/templates#docs-site), keeping the project's name and theme. Version 2 changed it: `baseUrl: '/docs/'`, `path: '../docs'`, full-word variable names (`rest` → `remainingArguments`, `doc` → `page`), and `static/img` → `static/images`. Rename the project's `docsSite/static/img/` to `static/images/` to match.
 - Rename the scripts in `package.json`: `documentation:install` → `docs:install`, `documentation:dev` → `docs:dev`, `documentation:build` → `docs:build`.
-- If the docs site's generated folders were ever committed, stop tracking them: `git rm -r --cached docsSite/.docusaurus docsSite/build`. They are in the [`docsSite/` template's](/templates#docs-site) `.gitignore`.
+- If the docs site's generated folders were ever committed, stop tracking them: `git rm -r --cached docsSite/.docusaurus docsSite/build`. They are in the [`docsSite/` template's](/docs/templates#docs-site) `.gitignore`.
 - Update every mention in `AGENTS.md`, `README.md` and the docs themselves.
 - **Update every ignore list** that names the old folders: ESLint, Prettier, `tsconfig.json`, Vitest or Jest, and `.gitignore`. A leftover docs site with its own `node_modules` makes test runners and linters run its files too.
 
@@ -234,10 +256,10 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 - Rename every type ending in `Properties` to end in `Props`: `ButtonProperties` → `ButtonProps`. Never use find-and-replace. Use the editor's Rename Symbol (F2) or, for an agent working from the command line, the rename script in version 3 and later of the package: `node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs <file> <currentName> <newName>`. Both use TypeScript's own rename, so they change every use and nothing else.
 - Rename variables and parameters called `properties` to `props`, including spreads: `...buttonProperties` → `...buttonProps`.
-- **If the project already uses the standard ESLint config**, copy the new [ESLint config](/Standards/eslint). It needs ESLint 10.4 or later. Two things changed in it:
+- **If the project already uses the standard ESLint config**, copy the new [ESLint config](/docs/Standards/eslint). It needs ESLint 10.4 or later. Two things changed in it:
   - The type-name rule is now `(Props|Type)$`.
   - `unicorn/name-replacements` now has `replacements: { docs: false, props: false, utils: false }`.
-- **If the project never had the standard ESLint config**, do only the renames in this change. Switching the config on can find hundreds of problems, so do it separately with [Migrating an Existing Project](/Guides/migrating), one stage per Pull Request, and record it as unfinished: see [Finishing a change later](/Guides/setup#finishing-a-change-later).
+- **If the project never had the standard ESLint config**, do only the renames in this change. Switching the config on can find hundreds of problems, so do it separately with [Migrating an Existing Project](/docs/Guides/migrating), one stage per Pull Request, and record it as unfinished: see [Finishing a change later](/docs/Guides/setup#finishing-a-change-later).
 
 **How to check:** `grep -rn "Properties\b" --include=*.ts --include=*.tsx --exclude-dir=node_modules .` finds nothing of ours, and `pnpm lint` passes.
 
@@ -255,7 +277,7 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 ### 6. Components live where they are used: no feature folders
 
-**Why:** Grouping by feature and grouping by page meant two places for the same component. Now there is one rule. See [Where components live](/Structure/folder-structure#-where-components-live).
+**Why:** Grouping by feature and grouping by page meant two places for the same component. Now there is one rule. See [Where components live](/docs/Structure/folder-structure#-where-components-live).
 
 | Used by                                                  | Lives in                    |
 | -------------------------------------------------------- | --------------------------- |
@@ -286,13 +308,13 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 ### 8. The Dictionary: short names that are words
 
-**Why:** Some short names are words, not abbreviations. The [Dictionary](/Standards/human-readable-names#dictionary) is the one list of them, so nobody has to guess.
+**Why:** Some short names are words, not abbreviations. The [Dictionary](/docs/Standards/human-readable-names#dictionary) is the one list of them, so nobody has to guess.
 
 **What to do:**
 
 - The Dictionary has: `id`, `docs`, `props`, `utils`, `app`, `url`, `api`, `uat`, `pdf`, `html`, `css`, `json`, `readme`.
 - Any other short name in the project's own code is written out in full. If one seems like a word, ask for it to be added to the Dictionary; do not just use it.
-- Copy the new "Dictionary words stay short" bullet into `AGENTS.md` from the [template](/templates#agents).
+- Copy the new "Dictionary words stay short" bullet into `AGENTS.md` from the [template](/docs/templates#agents).
 
 **How to check:** `pnpm lint` passes with the new ESLint config.
 
@@ -314,17 +336,17 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 **What to do:**
 
 - Keep the project's product words in `docs/product/ontology.md`.
-- Check every word in it against the [Ontology](/ontology). If the project gives a code word a different meaning, remove that entry and use the code standards' meaning. Tell a person what changed.
+- Check every word in it against the [Ontology](/docs/ontology). If the project gives a code word a different meaning, remove that entry and use the code standards' meaning. Tell a person what changed.
 - Make the project's ontology say that it adds to the code standards' ontology.
-- Update the "Ontology" section of `AGENTS.md` from the [template](/templates#agents). It now points to both ontologies.
+- Update the "Ontology" section of `AGENTS.md` from the [template](/docs/templates#agents). It now points to both ontologies.
 
-**How to check:** No term in `docs/product/ontology.md` is also defined in the code standards' [Ontology](/ontology).
+**How to check:** No term in `docs/product/ontology.md` is also defined in the code standards' [Ontology](/docs/ontology).
 
 ### 11. Whether agents may commit is the project's choice
 
 **Why:** Strict no commit is right for most projects, but a tool built to ship code with AI, such as Launchpad, needs agents to commit.
 
-**What to do:** This is standard 22 in the list from change 2. If the person kept it, keep the template's "NEVER COMMIT CODE" lines for strict no commit. Otherwise, replace them with the project's own rule, saying exactly which agents may commit, push and open Pull Requests, and when. See [A project can choose otherwise](/Standards/agent-specs#project-workflow).
+**What to do:** This is standard 22 in the list from change 2. If the person kept it, keep the template's "NEVER COMMIT CODE" lines for strict no commit. Otherwise, replace them with the project's own rule, saying exactly which agents may commit, push and open Pull Requests, and when. See [A project can choose otherwise](/docs/Standards/agent-specs#project-workflow).
 
 **How to check:** The top of `AGENTS.md` states the project's commit rule.
 
@@ -342,8 +364,8 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 ### No action needed
 
-- The [Setup](/Guides/setup) guide is written for the agent: install the package, check the version, agree the standards, apply them. It never asks which framework the project uses, and never creates the app: the person does that.
-- The [migration guide](/Guides/migrating#stage-4--names) has a Names stage.
+- The [Setup](/docs/Guides/setup) guide is written for the agent: install the package, check the version, agree the standards, apply them. It never asks which framework the project uses, and never creates the app: the person does that.
+- The [migration guide](/docs/Guides/migrating#stage-4--names) has a Names stage.
 
 ---
 
@@ -353,4 +375,4 @@ See [When a name clashes](/Standards/human-readable-names#when-a-name-clashes).
 
 The first numbered version: everything in the standards on this date. It included `documentation/` for the docs folder, `Properties` at the end of prop types, `utilities/` for reusable functions, `components/features/`, and the Component Reference. Version 2 replaced all five.
 
-**What to do in a project:** follow the [migration guide](/Guides/migrating) for everything.
+**What to do in a project:** follow the [migration guide](/docs/Guides/migrating) for everything.

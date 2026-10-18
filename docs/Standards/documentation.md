@@ -32,7 +32,7 @@ A design system is a decision. A scope is a decision. A database choice is a dec
 - **Tickets own the _what_.** "Build GitHub authentication."
 - **Decision Docs own the _why_.** "Developers are our audience and we must sync directly to their repositories."
 
-See the [Ontology](/ontology#key-distinctions) for the terms.
+See the [Ontology](/docs/ontology#key-distinctions) for the terms.
 
 ---
 
@@ -88,7 +88,7 @@ Keep these pairs distinct:
 
 ### Every file exists from the start
 
-**A new project starts with every reusable file already in place**, each marked `Status: Not started`. Copy the [doc templates](/templates#document-templates).
+**A new project starts with every reusable file already in place**, each marked `Status: Not started`. Copy the [doc templates](/docs/templates#document-templates).
 
 - When a decision is made, **write it into the matching file**.
 - **Create a new file** only when a topic has no home.
@@ -165,7 +165,7 @@ The docs menu is built straight from the `docs/` folder, so every doc is in the 
 
 - **Overview comes first** in the menu. Every other group is in alphabetical order, and items are alphabetical within their group.
 - **Link between docs with relative `.md` paths** — `[Future](../scope/future.md)`. The link works in the file and on the site.
-- **Folder and file names are kebab-case**, because they become the route. See [Naming Conventions](/Structure/naming-conventions#when-to-use-kebab-case).
+- **Folder and file names are kebab-case**, because they become the route. See [Naming Conventions](/docs/Structure/naming-conventions#when-to-use-kebab-case).
 
 The viewer does this automatically. There is no menu file to maintain.
 
@@ -173,7 +173,7 @@ The viewer does this automatically. There is no menu file to maintain.
 
 ## ✍️ Rules for writing
 
-- **Use the [Ontology](/ontology).** Use its terms for code, and the project's own ontology for product words.
+- **Use the [Ontology](/docs/ontology).** Use its terms for code, and the project's own ontology for product words.
 - **One decision per file.**
 - **Plain Markdown (`.md`).** No JSX or imports, so every file reads the same for an agent as it does on the page.
 - **One `# Heading` per file**, at the top, in the form `# Group — Menu item`.
@@ -182,7 +182,7 @@ The viewer does this automatically. There is no menu file to maintain.
 
 ### Not finished until the docs are updated
 
-**A change is not finished until the docs match it.** If a change makes a doc wrong, the doc is fixed in the same change — the same rule as [test files](/Standards/readable-code#every-function-and-component-has-a-test-file).
+**A change is not finished until the docs match it.** If a change makes a doc wrong, the doc is fixed in the same change — the same rule as [test files](/docs/Standards/readable-code#every-function-and-component-has-a-test-file).
 
 This applies to everyone writing code, **including AI agents**. An agent that changes how something works updates the Decision Doc that describes it.
 
@@ -262,9 +262,9 @@ export default nextConfig;
 
 ## 🚀 Setting it up
 
-1. **Copy the docs.** Copy the [`docs/` templates](/templates#document-templates) into the project's `docs/` folder. Rename `overview/what-is-it.md` after the project (`what-is-launchpad.md`) and update its title.
+1. **Copy the docs.** Copy the [`docs/` templates](/docs/templates#document-templates) into the project's `docs/` folder. Rename `overview/what-is-it.md` after the project (`what-is-launchpad.md`) and update its title.
 
-2. **Copy the viewer.** Copy the [`docsSite/` template](/templates#docs-site) into the project root. Rename `package.json.txt` to `package.json` and `gitignore.txt` to `.gitignore`, set `PROJECT_NAME` in `docusaurus.config.mjs`, and point the home redirect in `src/pages/index.tsx` at the renamed overview file.
+2. **Copy the viewer.** Copy the [`docsSite/` template](/docs/templates#docs-site) into the project root. Rename `package.json.txt` to `package.json` and `gitignore.txt` to `.gitignore`, set `PROJECT_NAME` in `docusaurus.config.mjs`, and point the home redirect in `src/pages/index.tsx` at the renamed overview file.
 
 3. **Add the route.** Add the rewrite above to `next.config.mjs`.
 

@@ -41,7 +41,7 @@ Our projects are different products, so a shared library is not worth its upkeep
 A `Button` in one Activatus project takes the same props and behaves the same way as a `Button` in any other. A developer or an AI agent who knows one project's components knows them all.
 
 - **Keep shadcn's props exactly as they ship.** Do not rename, remove or repurpose a prop.
-- **Style through the [global colour palette](/Standards/styling#-colours-always-come-from-global-variables)** and Tailwind classes. Per-project branding is a palette change, not a component rewrite.
+- **Style through the [global colour palette](/docs/Standards/styling#-colours-always-come-from-global-variables)** and Tailwind classes. Per-project branding is a palette change, not a component rewrite.
 - **Need different behaviour?** Build a new component that wraps the base one. Do not change the base component.
 
 Keeping the components identical is also what makes a shared library possible later — see [Future-proofing](#future-proofing).
@@ -83,24 +83,24 @@ components/ui/
 
 1. **Add it** with the shadcn CLI.
 2. **Keep only the parts the project uses.** A shadcn file often exports many components. Delete the ones that are not used — if one is needed later, add it again and convert it the same way.
-3. **Give each component its own folder and file**: a camelCase folder with a PascalCase file (`button/Button.tsx`). One component per file — sub-components get [their own folders](/Structure/component-organization#nested-components) inside the parent.
-4. **Add the standard files** to each folder: `types.ts`, `index.ts` and a test file. See [Component Organization](/Structure/component-organization).
+3. **Give each component its own folder and file**: a camelCase folder with a PascalCase file (`button/Button.tsx`). One component per file — sub-components get [their own folders](/docs/Structure/component-organization#nested-components) inside the parent.
+4. **Add the standard files** to each folder: `types.ts`, `index.ts` and a test file. See [Component Organization](/docs/Structure/component-organization).
 5. **Apply the code standards**: named exports, type names ending in `Props` or `Type`, full English names for our own variables.
 6. **Leave the props and behaviour alone.** Converting changes the file layout and the styling, never [how the component works](#same-component-different-paint).
-7. **Use the global colour palette.** Replace shadcn's colour classes with colours from [the palette](/Standards/styling#-colours-always-come-from-global-variables).
-8. **Move shared helpers to `utils/`.** shadcn's `cn` helper lives in the [global `utils/` folder](/Structure/folder-structure#-utils), not in `lib/utilities.ts`.
+7. **Use the global colour palette.** Replace shadcn's colour classes with colours from [the palette](/docs/Standards/styling#-colours-always-come-from-global-variables).
+8. **Move shared helpers to `utils/`.** shadcn's `cn` helper lives in the [global `utils/` folder](/docs/Structure/folder-structure#-utils), not in `lib/utilities.ts`.
 9. **Run `pnpm lint` and `pnpm test`.** The converted component must pass both.
 
 ### What is still third-party
 
-The packages a shadcn component imports — Radix UI and the like — stay in `node_modules/` and are [exempt from the standards](/Standards/eslint#third-party-code-is-exempt). Only the component source that the CLI copies into the project becomes ours.
+The packages a shadcn component imports — Radix UI and the like — stay in `node_modules/` and are [exempt from the standards](/docs/Standards/eslint#third-party-code-is-exempt). Only the component source that the CLI copies into the project becomes ours.
 
 ## The design → code loop
 
 1. **Design in Claude Design** using shadcn components and the project's palette.
 2. **A new component is needed** → [look before you build](#1-look-before-you-build), then add it from shadcn and [convert it](#converting-a-component).
 3. **A new look is needed** → change the palette or the component's classes. The props stay as they are.
-4. **Something shadcn does not provide** → build it in `components/ui/` from existing components, following [Component Organization](/Structure/component-organization).
+4. **Something shadcn does not provide** → build it in `components/ui/` from existing components, following [Component Organization](/docs/Structure/component-organization).
 
 :::caution[Design and code are decoupled]
 
@@ -132,13 +132,13 @@ That refactor is **planned, but not now**. Until then, two things stop each proj
 
 Before building any component, check these in order and stop at the first match:
 
-| #   | Look in                                                   | If it is there                                                                                                                   |
-| --- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | The project's own `components/ui/`                        | Use it                                                                                                                           |
-| 2   | The [Design System Components](/design-system-components) | Build it to the listed variants and props                                                                                        |
-| 3   | Another Activatus project                                 | Copy the component's whole folder — code, types and tests — then restyle it                                                      |
-| 4   | shadcn                                                    | Add it and [convert it](#converting-a-component)                                                                                 |
-| 5   | Nowhere                                                   | Build it, and **add it to the [Design System Components](/design-system-components)** so the next project builds it the same way |
+| #   | Look in                                                        | If it is there                                                                                                                        |
+| --- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The project's own `components/ui/`                             | Use it                                                                                                                                |
+| 2   | The [Design System Components](/docs/design-system-components) | Build it to the listed variants and props                                                                                             |
+| 3   | Another Activatus project                                      | Copy the component's whole folder — code, types and tests — then restyle it                                                           |
+| 4   | shadcn                                                         | Add it and [convert it](#converting-a-component)                                                                                      |
+| 5   | Nowhere                                                        | Build it, and **add it to the [Design System Components](/docs/design-system-components)** so the next project builds it the same way |
 
 **Copying a finished component from another Activatus project is encouraged.** Rebuilding one from memory is how two projects end up with two different buttons.
 
@@ -153,9 +153,9 @@ A component in `components/ui/` must be able to move to another project — or t
 | **It may import only** other `components/ui/` components, the global `utils/` folder and installed packages | These travel with it                              |
 | **No project names, client names or business rules inside it**                                              | A `Button` knows nothing about invoices           |
 | **Its types and tests live in its folder**                                                                  | They move when the folder moves                   |
-| **Its props match the [Design System Components](/design-system-components)**                               | Every project's copy is interchangeable           |
+| **Its props match the [Design System Components](/docs/design-system-components)**                          | Every project's copy is interchangeable           |
 
-Logic that belongs to one project goes in a **page or shared component** (in the page's `components/` folder, or `components/shared/`) that wraps the base component and passes it props. See [Where components live](/Structure/folder-structure#-where-components-live). The base component stays clean.
+Logic that belongs to one project goes in a **page or shared component** (in the page's `components/` folder, or `components/shared/`) that wraps the base component and passes it props. See [Where components live](/docs/Structure/folder-structure#-where-components-live). The base component stays clean.
 
 ```tsx
 // ✅ Good — the base component takes props; the page component knows about invoices

@@ -6,9 +6,9 @@ sidebar_position: 5
 
 Consistent naming conventions make codebases easier to navigate, understand, and maintain.
 
-**Every name must be human-readable** — folders, files, props, form fields, types, database columns, everything. See [Human-Readable Names](/Standards/human-readable-names).
+**Every name must be human-readable** — folders, files, props, form fields, types, database columns, everything. See [Human-Readable Names](/docs/Standards/human-readable-names).
 
-This page covers **how** a name is written. **Which words** to use comes from the [Ontology](/ontology): a Decision Doc is `decisionDoc` in code and `decision_doc` in the database, never `docDecision` or `decisionFile`.
+This page covers **how** a name is written. **Which words** to use comes from the [Ontology](/docs/ontology): a Decision Doc is `decisionDoc` in code and `decision_doc` in the database, never `docDecision` or `decisionFile`.
 
 ## File Naming
 
@@ -154,6 +154,8 @@ const apiTimeout = 5000;
 const cookieDays = 30;
 ```
 
+**`r` and `s` are the exception:** the routes and strings objects are lowercase single letters, with camelCase keys, `r.myStory` and `s.pageNotFound`. Stand-in data follows the normal rule: `NO_DATA_INSIGHTS`. See [Constants](/docs/Structure/folder-structure#constants).
+
 ### CSS Modules
 
 **Use camelCase** with `.module.css` suffix:
@@ -184,11 +186,11 @@ form-components.module.css
 --spacing_unit: 0.25rem;
 ```
 
-See [CSS Styling](/Standards/styling#css-variables).
+See [CSS Styling](/docs/Standards/styling#css-variables).
 
 ### Documentation
 
-**Use kebab-case** for documentation files. The [docs site](/Standards/documentation) turns each file name into the page's URL, so a doc file is named the way a URL is written:
+**Use kebab-case** for documentation files. The [docs site](/docs/Standards/documentation) turns each file name into the page's URL, so a doc file is named the way a URL is written:
 
 ```tsx
 ✅ Good
@@ -208,7 +210,7 @@ ProductMarketFit.md
 
 ### Variables
 
-**Use camelCase**, and [full English words](/Standards/readable-code#names-are-full-english-words) — no shorthand:
+**Use camelCase**, and [full English words](/docs/Standards/readable-code#names-are-full-english-words) — no shorthand:
 
 ```ts
 ✅ Good
@@ -226,7 +228,7 @@ const item_count = 10;
 
 ### Functions
 
-Every function is an [arrow function](/Standards/readable-code#arrow-functions-everywhere).
+Every function is an [arrow function](/docs/Standards/readable-code#arrow-functions-everywhere).
 
 **Use camelCase** with descriptive verbs:
 
@@ -282,7 +284,7 @@ interface api_response { }
 interface UserCardData { }
 ```
 
-See [Readable Code](/Standards/readable-code#type-names-say-what-they-are).
+See [Readable Code](/docs/Standards/readable-code#type-names-say-what-they-are).
 
 ---
 
@@ -331,4 +333,4 @@ Use ESLint and Prettier to enforce these conventions automatically:
 - **simple-import-sort** - Import ordering
 - **@typescript-eslint** - TypeScript naming rules
 
-See [ESLint](/Standards/eslint) and [Prettier](/Standards/prettier) configuration for setup.
+See [ESLint](/docs/Standards/eslint) and [Prettier](/docs/Standards/prettier) configuration for setup.

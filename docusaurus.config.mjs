@@ -31,10 +31,9 @@ const config = {
 				docs: {
 					path: "docs",
 					sidebarPath: "./sidebars.mjs",
-					routeBasePath: "/",
+					routeBasePath: "docs",
 				},
 				blog: false,
-				pages: false,
 				theme: {
 					customCss: "./src/css/custom.css",
 				},
@@ -73,7 +72,7 @@ const config = {
 					alt: "Activatus Logo",
 					src: "images/logo.svg",
 				},
-				items: [],
+				items: [{ to: "/docs", label: "Docs", position: "left" }],
 			},
 			prism: {
 				theme: prismThemes.oneLight,

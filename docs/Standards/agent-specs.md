@@ -15,7 +15,7 @@ Each project writes them up in its own docs, usually in `docs/development/`, and
 
 ## Template
 
-Start from the [AGENTS.md template](/templates#agents) and replace every `[placeholder]`.
+Start from the [AGENTS.md template](/docs/templates#agents) and replace every `[placeholder]`.
 
 ## Required sections
 
@@ -29,7 +29,7 @@ Every `AGENTS.md` must include these sections. Monorepos (`pnpm-workspace.yaml`,
 | Essential commands         | Install, dev, build, test, lint, type-check                                                                                                  |
 | Project workflow           | The project's own rules for branches, commits, Pull Requests and merging, and whether agents may commit. Points to where they are written up |
 | Environment variables      | All required and optional env vars with descriptions                                                                                         |
-| Ontology                   | Link to the [ontology](/ontology), and the instruction to read it and use its terms                                                          |
+| Ontology                   | Link to the [ontology](/docs/ontology), and the instruction to read it and use its terms                                                     |
 | Documentation              | Where the project's docs are, and the instruction to read them before starting work                                                          |
 | Code standards             | Link to these standards and the rules agents must follow in every change                                                                     |
 | Available skills           | Table of the agent skills the project provides                                                                                               |
@@ -37,7 +37,7 @@ Every `AGENTS.md` must include these sections. Monorepos (`pnpm-workspace.yaml`,
 
 ## Standard skills
 
-Every project provides these eight skills. **The files are ready to copy from the [Templates page](/templates#skills)** — copy them into `.agents/skills/`, and again into `.claude/commands/` for Claude Code. They are written to the [agent skills standard](/Standards/agent-skills).
+Every project provides these eight skills. **The files are ready to copy from the [Templates page](/docs/templates#skills)** — copy them into `.agents/skills/`, and again into `.claude/commands/` for Claude Code. They are written to the [agent skills standard](/docs/Standards/agent-skills).
 
 | Skill          | Invocation                             | What it does                                                                                                   |
 | -------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------- |

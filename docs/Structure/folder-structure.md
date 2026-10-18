@@ -65,7 +65,11 @@ project-root/
 │   │   ├── rateLimit.ts
 │   │   └── session.ts
 │   ├── validation/                                  # Schemas that check input
-│   ├── constants/                                   # Constants shared across the app
+│   ├── constants/                                   # Constants shared across the app: see Constants below
+│   │   ├── routes.ts                                # r: every link
+│   │   ├── strings.ts                               # s: every piece of static text
+│   │   ├── noData.ts                                # Stand-in data for local development
+│   │   └── index.ts
 │   ├── errors/                                      # Error types and handlers shared across the app
 │   └── types/                                       # Types shared across the app; a component's own types stay in its types.ts
 ├── utils/                                           # Reusable functions used across the app
@@ -131,12 +135,12 @@ project-root/
 
 **A component lives where it is used.** There are no feature folders: a component either belongs to one page, to one section, or is shared.
 
-| Used by                                                                                    | Lives in                                             | Example                                        |
-| ------------------------------------------------------------------------------------------ | ---------------------------------------------------- | ---------------------------------------------- |
-| **Every project the same way** — the [Design System Components](/design-system-components) | `components/ui/`                                     | `components/ui/button/`                        |
-| **More than one page** of this project                                                     | `components/shared/`                                 | `components/shared/siteHeader/`                |
-| **A few pages in one section**                                                             | A `components/` folder in that section's route group | `app/(billing)/components/invoiceTable/`       |
-| **One page only**                                                                          | A `components/` folder in that page's route folder   | `app/account-settings/components/accountForm/` |
+| Used by                                                                                         | Lives in                                             | Example                                        |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------- |
+| **Every project the same way** — the [Design System Components](/docs/design-system-components) | `components/ui/`                                     | `components/ui/button/`                        |
+| **More than one page** of this project                                                          | `components/shared/`                                 | `components/shared/siteHeader/`                |
+| **A few pages in one section**                                                                  | A `components/` folder in that section's route group | `app/(billing)/components/invoiceTable/`       |
+| **One page only**                                                                               | A `components/` folder in that page's route folder   | `app/account-settings/components/accountForm/` |
 
 A route group is a folder in brackets, such as `(billing)`. It groups pages without changing their URLs: `app/(billing)/invoices/page.tsx` is served at `/invoices`.
 
@@ -168,7 +172,7 @@ project-root/
 ### Rules
 
 - **Start where it is used, and move it when it is shared.** A new component goes in its page's `components/` folder. When a second page in the same section needs it, move it to the section's `components/` folder. When a page in another section needs it, move it to `components/shared/`.
-- **`components/ui/` is only for [Design System Components](/design-system-components).** They take everything through props and import nothing from the project, so they can be copied into another project unchanged. See [Reusable by design](/Structure/component-organization#reusable-by-design).
+- **`components/ui/` is only for [Design System Components](/docs/design-system-components).** They take everything through props and import nothing from the project, so they can be copied into another project unchanged. See [Reusable by design](/docs/Structure/component-organization#reusable-by-design).
 - **A page or shared component wraps Design System Components.** It holds this project's logic and data, and passes props down.
 - **Never group by type** (`atoms/`, `molecules/`, `organisms/`). Group by where a component is used.
 
@@ -262,9 +266,103 @@ Add the export to `utils/index.ts` whenever you add a function.
 
 - **Start local, promote when shared.** A function begins in the component's `utils/`. When another component in the same section needs it, move its folder to the section's `utils/`. When anything outside the section needs it, move it to the global `utils/`.
 - **One function per folder**, with the folder and file named after the function (`formatCurrency/formatCurrency.ts`), plus its test file and an `index.ts`.
-- **Every function has a test file** in the same folder. See [Readable Code](/Standards/readable-code#every-function-and-component-has-a-test-file).
+- **Every function has a test file** in the same folder. See [Readable Code](/docs/Standards/readable-code#every-function-and-component-has-a-test-file).
 - **Import from the `utils` folder**, never from the files inside it.
-- **Keep UI files clean.** If a function could be written in another file, it does not belong in the component file. See [Writing a component](/Structure/component-organization#-writing-a-component).
+- **Keep UI files clean.** If a function could be written in another file, it does not belong in the component file. See [Writing a component](/docs/Structure/component-organization#-writing-a-component).
+
+---
+
+## 🔤 Constants: `r`, `s` and noData {#constants}
+
+Every link, every piece of text on screen and every piece of stand-in data lives in `lib/constants/`, never written straight into a component:
+
+```text
+lib/constants/
+├── routes.ts      # r: every link
+├── strings.ts     # s: every piece of static text
+├── noData.ts      # Stand-in data for local development
+└── index.ts       # Exports all of them
+```
+
+A file outside the folder imports everything it needs in one line:
+
+```tsx
+import { NO_DATA_INSIGHTS, r, s } from "@/lib/constants";
+
+<a href={r.contact}>{s.contact}</a>;
+```
+
+### `r`: routes
+
+**`r` holds every link the app uses**: its own pages, outside sites, and `mailto:`, `tel:` and `sms:` links.
+
+```ts title="lib/constants/routes.ts"
+export const r = {
+	contact: "/contact",
+	email: "mailto:mail@example.com",
+	insights: "/insights",
+	linkedIn: "https://www.linkedin.com/in/example",
+	sms: "sms:+61400000000",
+};
+```
+
+- **A dynamic route starts from its `r` route.** Build the changing part where it is used: `` `${r.insights}/${insight.slug}` ``.
+- **Name each key after the place it goes**, in camelCase: `r.myStory`, `r.linkedIn`.
+
+### `s`: strings
+
+**`s` holds every piece of static text** shown on screen: headings, buttons, labels, aria-labels, page titles and descriptions, and longer Markdown copy.
+
+```ts title="lib/constants/strings.ts"
+export const s = {
+	contact: "CONTACT",
+	emailAriaLabel: "Email Tom",
+	pageNotFound: "PAGE NOT FOUND",
+	pageNotFoundDescription:
+		"The page you are looking for does not exist",
+};
+```
+
+- **The keys of `s` are the site's translation keys.** When a site gets more languages, each key is translated into each language. Name each key after what the text says or does, and never use one key for two different jobs.
+- **Only real copy goes in `s`.** Dummy text belongs in `noData.ts`.
+
+### noData: stand-in data for local development
+
+**`noData.ts` stands in for outside data while you work locally**, when the CMS, database or API can't be reached, such as when you have no internet. Every page still renders with something that looks real.
+
+```ts title="lib/constants/noData.ts"
+const DUMMY_HEADING = "A heading for local development";
+const DUMMY_SLUG = "/insights";
+
+export const NO_DATA_INSIGHT = {
+	heading: DUMMY_HEADING,
+	slug: DUMMY_SLUG,
+};
+
+export const NO_DATA_INSIGHTS = [NO_DATA_INSIGHT];
+```
+
+```ts
+const insights =
+	query?.insights ??
+	(IS_LOCAL_DEVELOPMENT ? NO_DATA_INSIGHTS : []);
+```
+
+`IS_LOCAL_DEVELOPMENT` is a constant in `lib/constants/`: `export const IS_LOCAL_DEVELOPMENT = process.env.NODE_ENV === "development";`.
+
+- **Local development only.** noData is never shown in production. Where the real data is missing in production, show the page's empty state.
+- **Name each export `NO_DATA_` plus the exact thing it stands in for**: singular for one item, plural for a list. `NO_DATA_INSIGHT` and `NO_DATA_INSIGHTS`, `NO_DATA_EVENT`, `NO_DATA_TOPICS`.
+- **Shape it exactly like the real response**, so the code using it cannot tell the difference.
+- **Dummy values sit at the top of `noData.ts`** as their own constants, `DUMMY_HEADING` and the rest. They are never added to `s`.
+- **noData is for the whole site.** All of it lives in this one file.
+
+### Rules
+
+- **Named exports only:** `export const r`, `export const s`. No default exports.
+- **Files outside `lib/constants/` import from `@/lib/constants`**, all in one import line.
+- **Files inside `lib/constants/` import each other directly**, `import { s } from "./strings";`, never through `index.ts`. See [Inside a folder, import files directly](/docs/Structure/import-organization#2-inside-a-folder-import-files-directly).
+- **`r` and `s` are the only single-letter names allowed anywhere.** See [Human-Readable Names](/docs/Standards/human-readable-names#r-and-s).
+- **Other constants** that hold a single value, such as `MAXIMUM_RETRY_ATTEMPTS`, follow [Naming Conventions](/docs/Structure/naming-conventions#constants).
 
 ---
 
@@ -310,7 +408,7 @@ project-root/
 └── docsSite/                # The viewer: Docusaurus config, no content
 ```
 
-See [Documentation](/Standards/documentation) for the full list of folders, the doc format, and how docs are displayed and kept up to date.
+See [Documentation](/docs/Standards/documentation) for the full list of folders, the doc format, and how docs are displayed and kept up to date.
 
 Name documentation folders and files in **kebab-case** (`background-jobs.md`), not camelCase (`backgroundJobs.md`). The name becomes the page's URL on the docs site.
 
@@ -345,7 +443,7 @@ Avoid these anti-patterns:
 
 ## 📚 Naming Conventions
 
-See [Naming Conventions](/Structure/naming-conventions) for detailed file and folder naming rules.
+See [Naming Conventions](/docs/Structure/naming-conventions) for detailed file and folder naming rules.
 
 **Quick reference:**
 
