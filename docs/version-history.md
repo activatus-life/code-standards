@@ -44,9 +44,18 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.4
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.5
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.4`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.5`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.0.5.** The ESLint configs now pass their own rules. Copied in as they were, they gave three problems on the config file itself: `No magic number: 3` (`no-magic-numbers`), and in Next.js projects two warnings, `import/no-anonymous-default-export` and `import-x/no-named-as-default-member`. Copy the new [ESLint config](/docs/Standards/eslint) for the project's framework over `eslint.config.mjs`, keeping any project-specific block. Then run `pnpm lint`: the config file itself has no problems. If the project already fixed these three by hand, there is nothing to do.
+
+- `max-depth` uses a named constant, `MAXIMUM_NESTING_DEPTH`.
+- The array is assigned to `config` before `export default config`.
+- The eslint-comments preset is imported by name: `import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";`.
+- Numbers have a home: [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic). A number used in one file is named at the top of that file, and one shared across the app goes in `lib/constants/`, in a file named after its topic, such as `durations.ts`. There is no `n` object and no `numbers.ts`. If the project has a file of unrelated numbers, split it by topic. Copy the updated **No magic numbers** line from the [`AGENTS.md` template](/docs/templates#agents).
+- `docsSite/` is ignored. It is the standard docs viewer, with its own packages and build, and without the ignore ESLint lints its built files. If the project already ignores it, nothing changes.
+- The one-parameter selectors moved into their own `SINGLE_OBJECT_PARAMETER` list. **Next.js:** route handlers in `app/**/route.ts` may now take `(request, context)`. If the project switched the rule off for them some other way, such as an override block or `eslint-disable` comments, remove it.
 
 **Fixes in 3.0.4.** If the project already applied 3.0.3, do these:
 

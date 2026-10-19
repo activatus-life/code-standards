@@ -1,11 +1,15 @@
 import Link from "@docusaurus/Link";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
+import MDXContent from "@theme/MDXContent";
 import { useState } from "react";
 
+import ReadmeContent from "../../README.md";
 import packageJson from "../../package.json";
 import styles from "./index.module.css";
 
+const DESCRIPTION =
+	"A copy and paste config for humans and AI to follow, so code is human-readable, easy to debug and maintains strong industry standards.";
 const INSTALL_COMMAND = "pnpm add -D @activatus/code-standards";
 const COPIED_MESSAGE_MILLISECONDS = 2000;
 const ACTIVATUS_URL = "https://github.com/activatus-life";
@@ -35,27 +39,24 @@ const CopyInstallButton = () => {
 };
 
 const HomePage = () => {
-	const cardImageUrl = useBaseUrl("/images/code-standards-card.png");
+	const cardImageUrl = useBaseUrl("/images/code-standards-card.jpg");
 
 	return (
-		<Layout
-			title="Code Standards"
-			description="Practical frameworks, boilerplates and best practices for building with clarity."
-		>
+		<Layout title="Code Standards" description={DESCRIPTION}>
 			<main className={styles.page}>
-				<h1 className={styles.title}>Code Standards</h1>
-				<p className={styles.blurb}>
-					Practical frameworks, boilerplates and best practices for
-					building with clarity.
-				</p>
-
-				<img
-					className={styles.card}
-					src={cardImageUrl}
-					alt="A code editor next to a checklist with every item ticked"
-					width={560}
-					height={429}
-				/>
+				<section className={styles.card}>
+					<div className={styles.cardText}>
+						<h1 className={styles.title}>Code Standards</h1>
+						<p className={styles.description}>{DESCRIPTION}</p>
+					</div>
+					<img
+						className={styles.cardImage}
+						src={cardImageUrl}
+						alt="A code editor next to a checklist with every item ticked"
+						width={920}
+						height={760}
+					/>
+				</section>
 
 				<div className={styles.actions}>
 					<CopyInstallButton />
@@ -64,13 +65,17 @@ const HomePage = () => {
 					</Link>
 				</div>
 
-				<p className={styles.version}>
+				<article className={`markdown ${styles.readme}`}>
+					<MDXContent>
+						<ReadmeContent />
+					</MDXContent>
+				</article>
+
+				<p className={styles.footer}>
+					<a href={ACTIVATUS_URL}>Made by Activatus</a>
+					<span aria-hidden="true"> | </span>
 					Version {packageJson.version}
 				</p>
-
-				<a className={styles.credit} href={ACTIVATUS_URL}>
-					Made by Activatus
-				</a>
 			</main>
 		</Layout>
 	);

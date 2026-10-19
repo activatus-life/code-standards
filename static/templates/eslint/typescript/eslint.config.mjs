@@ -1,5 +1,5 @@
 import js from "@eslint/js";
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
@@ -26,6 +26,10 @@ const RESTRICTED_SYNTAX = [
 		message:
 			"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
 	},
+];
+
+// Functions take one parameter: a single object when they need more than one value.
+const SINGLE_OBJECT_PARAMETER = [
 	{
 		selector: "FunctionDeclaration[params.length>1]",
 		message:
@@ -39,6 +43,9 @@ const RESTRICTED_SYNTAX = [
 	},
 ];
 
+// Deeper than this, return early instead.
+const MAXIMUM_NESTING_DEPTH = 3;
+
 // Type a value where it is declared. Story files are the exception: see below.
 const NO_SATISFIES = {
 	selector: "TSSatisfiesExpression",
@@ -46,10 +53,19 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
-export default [
-	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
+const config = [
+	{
+		ignores: [
+			"dist/",
+			"build/",
+			"coverage/",
+			// The docs viewer is the standard template, with its own packages and build.
+			"docsSite/",
+			"**/vendor/**",
+		],
+	},
 	js.configs.recommended,
-	comments.recommended,
+	eslintCommentsRecommended,
 	importX.recommended,
 	importX.typescript,
 	unicorn.configs.recommended,
@@ -63,7 +79,7 @@ export default [
 			"@eslint-community/eslint-comments/require-description":
 				"error",
 			"func-style": ["error", "expression"],
-			"max-depth": ["error", 3],
+			"max-depth": ["error", MAXIMUM_NESTING_DEPTH],
 			"max-lines": [
 				"error",
 				{ max: 300, skipBlankLines: true, skipComments: true },
@@ -85,6 +101,7 @@ export default [
 				"error",
 				NO_SATISFIES,
 				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
 			],
 			"import-x/no-cycle": "error",
 			"import-x/no-default-export": "error",
@@ -167,8 +184,14 @@ export default [
 		// Storybook's own docs type stories with `satisfies Meta<typeof Component>`, so story files may use it.
 		files: ["**/*.stories.{ts,tsx}"],
 		rules: {
-			"no-restricted-syntax": ["error", ...RESTRICTED_SYNTAX],
+			"no-restricted-syntax": [
+				"error",
+				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
+			],
 		},
 	},
 	prettier,
 ];
+
+export default config;

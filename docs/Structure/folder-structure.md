@@ -272,7 +272,7 @@ Add the export to `utils/index.ts` whenever you add a function.
 
 ---
 
-## 🔤 Constants: `r`, `s` and noData {#constants}
+## 🔤 Constants: `r`, `s`, noData and numbers {#constants}
 
 Every link, every piece of text on screen and every piece of stand-in data lives in `lib/constants/`, never written straight into a component:
 
@@ -281,6 +281,7 @@ lib/constants/
 ├── routes.ts      # r: every link
 ├── strings.ts     # s: every piece of static text
 ├── noData.ts      # Stand-in data for local development
+├── durations.ts   # Shared numbers, one file per topic
 └── index.ts       # Exports all of them
 ```
 
@@ -356,13 +357,33 @@ const insights =
 - **Dummy values sit at the top of `noData.ts`** as their own constants, `DUMMY_HEADING` and the rest. They are never added to `s`.
 - **noData is for the whole site.** All of it lives in this one file.
 
+### Numbers: named, and kept by topic
+
+**A number other than `-1`, `0` or `1` gets a name**, such as `MAXIMUM_RETRY_ATTEMPTS`. Those three mean "nothing", "one more" and "not found", so they read clearly as they are. Any other number was chosen by someone, and its name says what it controls. ESLint checks this with `no-magic-numbers`.
+
+There is no `n` object. Text and links are one kind of thing each, but numbers are not: a retry limit, a cookie lifetime and a page size have nothing in common. Put each number where its meaning lives:
+
+| Used by            | Where it goes                                     | Example                                                                                |
+| ------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| One file           | At the top of that file                           | `const MAXIMUM_NESTING_DEPTH = 3;` in `eslint.config.mjs`                              |
+| More than one file | `lib/constants/`, in a file named after its topic | `lib/constants/durations.ts`, `lib/constants/limits.ts`, `lib/constants/httpStatus.ts` |
+
+```ts title="lib/constants/durations.ts"
+export const COOKIE_DURATION_DAYS = 30;
+export const SESSION_TIMEOUT_MILLISECONDS = 900_000;
+```
+
+- **Start in the file that uses it**, and move it to `lib/constants/` when a second file needs it.
+- **Never a `numbers.ts`** or any other file of unrelated values. Name the file after the topic.
+- **Put the unit in the name**: `_MILLISECONDS`, `_DAYS`, `_PIXELS`.
+
 ### Rules
 
 - **Named exports only:** `export const r`, `export const s`. No default exports.
 - **Files outside `lib/constants/` import from `@/lib/constants`**, all in one import line.
 - **Files inside `lib/constants/` import each other directly**, `import { s } from "./strings";`, never through `index.ts`. See [Inside a folder, import files directly](/docs/Structure/import-organization#2-inside-a-folder-import-files-directly).
 - **`r` and `s` are the only single-letter names allowed anywhere.** See [Human-Readable Names](/docs/Standards/human-readable-names#r-and-s).
-- **Other constants** that hold a single value, such as `MAXIMUM_RETRY_ATTEMPTS`, follow [Naming Conventions](/docs/Structure/naming-conventions#constants).
+- **Other constants**, such as numbers, are `SCREAMING_SNAKE_CASE`: see [Naming Conventions](/docs/Structure/naming-conventions#constants).
 
 ---
 

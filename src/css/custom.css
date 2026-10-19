@@ -5,6 +5,10 @@
 	--brand-text: #1f2421;
 	--brand-text-secondary: #64748b;
 	--brand-border: #e8e9e4;
+	/* The home page card matches its illustration, so it stays light in both themes. */
+	--brand-card: #eef4fb;
+	--brand-card-text: #0b0d12;
+	--brand-card-text-secondary: #5b6787;
 	--ifm-color-primary: #1a9e60;
 	--ifm-color-primary-dark: #178e56;
 	--ifm-color-primary-darker: #168651;

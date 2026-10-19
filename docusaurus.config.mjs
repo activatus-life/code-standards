@@ -1,5 +1,7 @@
 import { themes as prismThemes } from "prism-react-renderer";
 
+import { readmeLoader } from "./plugins/readmeLoader.mjs";
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
 	title: "Activatus Code Standards",
@@ -41,6 +43,8 @@ const config = {
 		],
 	],
 
+	plugins: [readmeLoader],
+
 	themes: [
 		["@getcanary/docusaurus-theme-search-pagefind", {}],
 		"@docusaurus/theme-mermaid",
@@ -71,6 +75,8 @@ const config = {
 				logo: {
 					alt: "Activatus Logo",
 					src: "images/logo.svg",
+					// Matches --ifm-color-primary, which is lighter in dark mode.
+					srcDark: "images/logo-dark.svg",
 				},
 				items: [{ to: "/docs", label: "Docs", position: "left" }],
 			},

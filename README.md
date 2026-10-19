@@ -1,5 +1,7 @@
 # 🦘 Activatus Code Standards
 
+## 👋 About Code Standards
+
 **One way of doing things, written down, so nobody has to guess.**
 
 This is the rulebook for how we write code at Activatus. It's a docs site, a pile of copy-paste config files, and a set of lint rules that'll dob you in before your reviewer has to.
@@ -30,7 +32,7 @@ pnpm add -D @activatus/code-standards
 
 Then tell your agent: **"Follow the Activatus Code Standards. Start with `node_modules/@activatus/code-standards/docs/Guides/setup.md`."** It prints a numbered list of the standards, you say which ones you don't want, and it sets up the rest. You never touch the terminal.
 
-The package version is the standards version: `2.0.0` is version 2.
+The package version is the standards version: `3.0.0` is version 3.
 
 > 🔢 **Updating a project to newer standards?** Run `pnpm update @activatus/code-standards --latest`, then point the agent at the **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**: it reads only the versions newer than the project's, does exactly what each one says, and bumps the number. Cheaper than shouting the whole pub a round.
 
@@ -72,7 +74,7 @@ The live site is at **[activatus-code-standards.vercel.app](https://activatus-co
 | 📖 **Ontology**                                                                                              | The code words we use and what each one means                                                                                                         |
 | 🔢 **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**                   | What changed in each version, and what a project has to do about it. Updating a project? Read only the versions newer than the one in its `AGENTS.md` |
 | 🧭 **Guides**                                                                                                | Setting up a new project, dragging an old one up to scratch, and how design becomes code                                                              |
-| 📏 **Standards**                                                                                             | Readable code, linting, formatting, styling, commits, the tech stack and AI agent rules                                                               |
+| 📏 **Standards**                                                                                             | Readable code, linting, formatting, styling, the tech stack and AI agent rules                                                                        |
 | 🏗️ **Structure**                                                                                             | Folders, components, naming, imports and API routes                                                                                                   |
 | 🧩 **[Design System Components](https://activatus-code-standards.vercel.app/docs/design-system-components)** | Every standard component and its props, so each project builds them the same way                                                                      |
 
@@ -131,7 +133,7 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 
 ## 📋 Just want the files?
 
-Fair enough. Head to the **Templates** page on the site, or grab them straight from [`static/templates/`](static/templates):
+Fair enough. Head to the **Templates** page on the site, or grab them straight from [`static/templates/`](https://github.com/activatus-life/code-standards/tree/main/static/templates):
 
 ```text
 static/templates/
@@ -177,7 +179,7 @@ Reckon a rule's wrong, or there's one missing? Good. Standards that never change
 
 1. 🌿 **Branch off `main`**, named after the ticket (`ACT-14-update-eslint-page`), or `type/short-description` if there's no ticket (`docs/update-eslint-page`).
 2. 📝 **Edit or add a Markdown file in `docs/`.** Name it in kebab-case (`naming-conventions.md`, not `namingConventions.md`), because the file name becomes the page's URL. Yes, we follow our own rules here.
-3. 📋 **Changing a config?** Edit the file in `static/templates/` and the matching page in `docs/Standards/` so the two don't drift apart.
+3. 📋 **Changing a config?** Edit the file in `static/templates/` and the matching page in `docs/Standards/` so the two don't drift apart. For an ESLint config, run `pnpm check:eslint-templates`: it lints each config against itself and fails if the ESLint page shows an old copy. Add `--update-docs` to copy the configs onto the page.
 4. 🔢 **Add a version** to `docs/version-history.md`: what changed, and what a project has to do about it. Bump the major version in `package.json` to match (version 3 is `3.0.0`), and publish it to npm (npmjs.com) once it's merged. We use pnpm for everything, so that's `pnpm publish`, which lands in the same npm registry as `npm publish`. Projects read only the new versions, so if it's not in there, nobody hears about it.
 5. 🔨 **Run `pnpm build`.** It fails on broken links, so you'll know quick smart if you've stuffed one.
 6. 🚀 **Open a pull request** and say why the change makes life better.

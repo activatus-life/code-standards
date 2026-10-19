@@ -68,22 +68,70 @@ pnpm add -D eslint-config-next
 
 ## Usage
 
-Create `eslint.config.mjs` in your project root.
+Create `eslint.config.mjs` in your project root. Each config passes its own rules, so it lints clean the moment it is copied in. The code standards repo checks this with `pnpm check:eslint-templates` whenever a config changes.
 
 ### Base (JavaScript / Node.js)
 
 ```js title="eslint.config.mjs"
 import js from "@eslint/js";
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
-export default [
-	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
+// Code patterns that are errors in every file.
+const RESTRICTED_SYNTAX = [
+	{
+		selector: "ClassDeclaration",
+		message: "Use functions, not classes.",
+	},
+	{
+		selector: "ClassExpression",
+		message: "Use functions, not classes.",
+	},
+	{
+		selector: "VariableDeclarator > FunctionExpression",
+		message: "Use an arrow function.",
+	},
+	{
+		selector: "VariableDeclaration[kind='let']",
+		message:
+			"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
+	},
+];
+
+// Functions take one parameter: a single object when they need more than one value.
+const SINGLE_OBJECT_PARAMETER = [
+	{
+		selector: "FunctionDeclaration[params.length>1]",
+		message:
+			"Use a single object parameter when a function needs more than one value.",
+	},
+	{
+		selector:
+			"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
+		message:
+			"Use a single object parameter when a function needs more than one value.",
+	},
+];
+
+// Deeper than this, return early instead.
+const MAXIMUM_NESTING_DEPTH = 3;
+
+const config = [
+	{
+		ignores: [
+			"dist/",
+			"build/",
+			"coverage/",
+			// The docs viewer is the standard template, with its own packages and build.
+			"docsSite/",
+			"**/vendor/**",
+		],
+	},
 	js.configs.recommended,
-	comments.recommended,
+	eslintCommentsRecommended,
 	importX.recommended,
 	unicorn.configs.recommended,
 	{
@@ -92,7 +140,7 @@ export default [
 			"@eslint-community/eslint-comments/require-description":
 				"error",
 			"func-style": ["error", "expression"],
-			"max-depth": ["error", 3],
+			"max-depth": ["error", MAXIMUM_NESTING_DEPTH],
 			"max-lines": [
 				"error",
 				{ max: 300, skipBlankLines: true, skipComments: true },
@@ -112,34 +160,8 @@ export default [
 			],
 			"no-restricted-syntax": [
 				"error",
-				{
-					selector: "ClassDeclaration",
-					message: "Use functions, not classes.",
-				},
-				{
-					selector: "ClassExpression",
-					message: "Use functions, not classes.",
-				},
-				{
-					selector: "VariableDeclarator > FunctionExpression",
-					message: "Use an arrow function.",
-				},
-				{
-					selector: "VariableDeclaration[kind='let']",
-					message:
-						"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
-				},
-				{
-					selector: "FunctionDeclaration[params.length>1]",
-					message:
-						"Use a single object parameter when a function needs more than one value.",
-				},
-				{
-					selector:
-						"VariableDeclarator > :matches(ArrowFunctionExpression, FunctionExpression)[params.length>1]",
-					message:
-						"Use a single object parameter when a function needs more than one value.",
-				},
+				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
 			],
 			"import-x/no-cycle": "error",
 			"import-x/no-default-export": "error",
@@ -177,13 +199,15 @@ export default [
 	},
 	prettier,
 ];
+
+export default config;
 ```
 
 ### TypeScript
 
 ```js title="eslint.config.mjs"
 import js from "@eslint/js";
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
@@ -210,6 +234,10 @@ const RESTRICTED_SYNTAX = [
 		message:
 			"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
 	},
+];
+
+// Functions take one parameter: a single object when they need more than one value.
+const SINGLE_OBJECT_PARAMETER = [
 	{
 		selector: "FunctionDeclaration[params.length>1]",
 		message:
@@ -223,6 +251,9 @@ const RESTRICTED_SYNTAX = [
 	},
 ];
 
+// Deeper than this, return early instead.
+const MAXIMUM_NESTING_DEPTH = 3;
+
 // Type a value where it is declared. Story files are the exception: see below.
 const NO_SATISFIES = {
 	selector: "TSSatisfiesExpression",
@@ -230,10 +261,19 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
-export default [
-	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
+const config = [
+	{
+		ignores: [
+			"dist/",
+			"build/",
+			"coverage/",
+			// The docs viewer is the standard template, with its own packages and build.
+			"docsSite/",
+			"**/vendor/**",
+		],
+	},
 	js.configs.recommended,
-	comments.recommended,
+	eslintCommentsRecommended,
 	importX.recommended,
 	importX.typescript,
 	unicorn.configs.recommended,
@@ -247,7 +287,7 @@ export default [
 			"@eslint-community/eslint-comments/require-description":
 				"error",
 			"func-style": ["error", "expression"],
-			"max-depth": ["error", 3],
+			"max-depth": ["error", MAXIMUM_NESTING_DEPTH],
 			"max-lines": [
 				"error",
 				{ max: 300, skipBlankLines: true, skipComments: true },
@@ -269,6 +309,7 @@ export default [
 				"error",
 				NO_SATISFIES,
 				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
 			],
 			"import-x/no-cycle": "error",
 			"import-x/no-default-export": "error",
@@ -351,11 +392,17 @@ export default [
 		// Storybook's own docs type stories with `satisfies Meta<typeof Component>`, so story files may use it.
 		files: ["**/*.stories.{ts,tsx}"],
 		rules: {
-			"no-restricted-syntax": ["error", ...RESTRICTED_SYNTAX],
+			"no-restricted-syntax": [
+				"error",
+				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
+			],
 		},
 	},
 	prettier,
 ];
+
+export default config;
 ```
 
 TypeScript files are checked by the compiler, so `no-undef` is off for them. The Node globals still earn their place: your `eslint.config.mjs`, build scripts and any remaining `.js` files are linted with `no-undef` on.
@@ -366,7 +413,7 @@ Start from the [TypeScript](#typescript) config and make five changes:
 
 ```js title="eslint.config.mjs"
 import js from "@eslint/js";
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
@@ -395,6 +442,10 @@ const RESTRICTED_SYNTAX = [
 		message:
 			"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
 	},
+];
+
+// Functions take one parameter: a single object when they need more than one value.
+const SINGLE_OBJECT_PARAMETER = [
 	{
 		selector: "FunctionDeclaration[params.length>1]",
 		message:
@@ -408,6 +459,9 @@ const RESTRICTED_SYNTAX = [
 	},
 ];
 
+// Deeper than this, return early instead.
+const MAXIMUM_NESTING_DEPTH = 3;
+
 // Type a value where it is declared. Story files are the exception: see below.
 const NO_SATISFIES = {
 	selector: "TSSatisfiesExpression",
@@ -415,10 +469,19 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
-export default [
-	{ ignores: ["dist/", "build/", "coverage/", "**/vendor/**"] },
+const config = [
+	{
+		ignores: [
+			"dist/",
+			"build/",
+			"coverage/",
+			// The docs viewer is the standard template, with its own packages and build.
+			"docsSite/",
+			"**/vendor/**",
+		],
+	},
 	js.configs.recommended,
-	comments.recommended,
+	eslintCommentsRecommended,
 	importX.recommended,
 	importX.typescript,
 	unicorn.configs.recommended,
@@ -440,7 +503,7 @@ export default [
 			"@eslint-community/eslint-comments/require-description":
 				"error",
 			"func-style": ["error", "expression"],
-			"max-depth": ["error", 3],
+			"max-depth": ["error", MAXIMUM_NESTING_DEPTH],
 			"max-lines": [
 				"error",
 				{ max: 300, skipBlankLines: true, skipComments: true },
@@ -462,6 +525,7 @@ export default [
 				"error",
 				NO_SATISFIES,
 				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
 			],
 			"import-x/no-cycle": "error",
 			"import-x/no-default-export": "error",
@@ -553,11 +617,17 @@ export default [
 		// Storybook's own docs type stories with `satisfies Meta<typeof Component>`, so story files may use it.
 		files: ["**/*.stories.{ts,tsx}"],
 		rules: {
-			"no-restricted-syntax": ["error", ...RESTRICTED_SYNTAX],
+			"no-restricted-syntax": [
+				"error",
+				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
+			],
 		},
 	},
 	prettier,
 ];
+
+export default config;
 ```
 
 :::caution[Pin the React version]
@@ -568,10 +638,10 @@ Set `settings.react.version` to the project's React version rather than `"detect
 
 ### Next.js
 
-`eslint-config-next` already brings the React, React Hooks and TypeScript rules, so it replaces the `js` and `typescript-eslint` presets rather than adding to them. Default exports are allowed in the files where Next.js requires them (`page.tsx`, `layout.tsx` and so on):
+`eslint-config-next` already brings the React, React Hooks and TypeScript rules, so it replaces the `js` and `typescript-eslint` presets rather than adding to them. Default exports are allowed in the files where Next.js requires them (`page.tsx`, `layout.tsx` and so on). Route handlers in `app/**/route.ts` may take two parameters, because Next.js calls them as `(request, context)`:
 
 ```js title="eslint.config.mjs"
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import nextVitals from "eslint-config-next/core-web-vitals";
@@ -599,6 +669,11 @@ const RESTRICTED_SYNTAX = [
 		message:
 			"Use const. If this value really must be reassigned, disable this rule on this line with a comment saying why.",
 	},
+];
+
+// Functions take one parameter: a single object when they need more than one value.
+// Route handlers are the exception: see below.
+const SINGLE_OBJECT_PARAMETER = [
 	{
 		selector: "FunctionDeclaration[params.length>1]",
 		message:
@@ -612,6 +687,9 @@ const RESTRICTED_SYNTAX = [
 	},
 ];
 
+// Deeper than this, return early instead.
+const MAXIMUM_NESTING_DEPTH = 3;
+
 // Type a value where it is declared. Story files are the exception: see below.
 const NO_SATISFIES = {
 	selector: "TSSatisfiesExpression",
@@ -619,7 +697,7 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
-export default [
+const config = [
 	{
 		ignores: [
 			".next/",
@@ -627,12 +705,14 @@ export default [
 			"build/",
 			"coverage/",
 			"next-env.d.ts",
+			// The docs viewer is the standard template, with its own packages and build.
+			"docsSite/",
 			"**/vendor/**",
 		],
 	},
 	...nextVitals,
 	...nextTypescript,
-	comments.recommended,
+	eslintCommentsRecommended,
 	importX.recommended,
 	importX.typescript,
 	unicorn.configs.recommended,
@@ -650,7 +730,7 @@ export default [
 			"@eslint-community/eslint-comments/require-description":
 				"error",
 			"func-style": ["error", "expression"],
-			"max-depth": ["error", 3],
+			"max-depth": ["error", MAXIMUM_NESTING_DEPTH],
 			"max-lines": [
 				"error",
 				{ max: 300, skipBlankLines: true, skipComments: true },
@@ -672,6 +752,7 @@ export default [
 				"error",
 				NO_SATISFIES,
 				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
 			],
 			"import-x/no-cycle": "error",
 			"import-x/no-default-export": "error",
@@ -767,11 +848,28 @@ export default [
 		// Storybook's own docs type stories with `satisfies Meta<typeof Component>`, so story files may use it.
 		files: ["**/*.stories.{ts,tsx}"],
 		rules: {
-			"no-restricted-syntax": ["error", ...RESTRICTED_SYNTAX],
+			"no-restricted-syntax": [
+				"error",
+				...RESTRICTED_SYNTAX,
+				...SINGLE_OBJECT_PARAMETER,
+			],
+		},
+	},
+	{
+		// Next.js calls a route handler with two values, (request, context), so route.ts files may take two parameters.
+		files: ["app/**/route.ts"],
+		rules: {
+			"no-restricted-syntax": [
+				"error",
+				NO_SATISFIES,
+				...RESTRICTED_SYNTAX,
+			],
 		},
 	},
 	prettier,
 ];
+
+export default config;
 ```
 
 Next.js genuinely runs in both environments — client components in the browser, route handlers, server components and `next.config.js` in Node — so both sets of globals apply.
@@ -787,7 +885,7 @@ Use the `globals` package rather than turning `no-undef` off or hand-writing a g
 Add a block before `prettier` to add or override rules:
 
 ```js
-export default [
+const config = [
   // ...
   {
     rules: {
@@ -797,6 +895,8 @@ export default [
   },
   prettier,
 ];
+
+export default config;
 ```
 
 Keep `prettier` last — it switches off every rule that would fight the formatter.
@@ -885,7 +985,7 @@ No file is longer than 300 lines, not counting blank lines and comments. Test fi
 
 ### `max-depth: 3`
 
-Blocks nest at most three levels deep. Return early instead. See [Readable Code](/docs/Standards/readable-code#return-early-nest-shallow).
+Blocks nest at most three levels deep. Return early instead. The configs name it `MAXIMUM_NESTING_DEPTH`, because they follow their own `no-magic-numbers` rule. See [Readable Code](/docs/Standards/readable-code#return-early-nest-shallow).
 
 ### `no-nested-ternary`
 
@@ -901,6 +1001,8 @@ These are banned by syntax, along with `function` expressions (above):
 
 - **Class declarations and class expressions.** See [Readable Code](/docs/Standards/readable-code#functions-never-classes).
 - **Functions you define with more than one parameter.** Use a single object parameter. Inline callbacks whose signature is set by someone else — `array.reduce((total, item) => …)`, event handlers — are not affected. See [Readable Code](/docs/Standards/readable-code#one-parameter-always-an-object-for-more).
+
+The configs keep the one-parameter selectors in their own `SINGLE_OBJECT_PARAMETER` list, so a file that must take more than one parameter can switch off just those. The Next.js config does this for route handlers in `app/**/route.ts`, which Next.js calls as `(request, context)`.
 
 ### `import-x/no-cycle`: no circular imports
 

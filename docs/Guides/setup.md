@@ -64,7 +64,7 @@ Tell me the numbers to skip or change, or say "all good".
 10. Node version set by .nvmrc and direnv
 11. Styling: Tailwind, flexbox first, colours only from the global palette
 12. Folder structure: folders at the project root; reusable helper functions in utils/ (no business rules, no outside calls)
-12.1. Constants: r for every link, s for every piece of text, noData for local stand-in data, all in lib/constants/
+12.1. Constants: r for every link, s for every piece of text, noData for local stand-in data, shared numbers by topic, all in lib/constants/
 13. Components live where they are used: components/ui/, components/shared/, or beside their page
 14. Component files in a fixed order, with index.ts exports, and server and client code in separate files
 15. Design System Components: every project builds the standard components with the same props

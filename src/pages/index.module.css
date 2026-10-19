@@ -2,34 +2,52 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 1rem;
+	gap: 2rem;
 	min-height: calc(100vh - var(--ifm-navbar-height));
 	padding: 3rem 1rem 2rem;
 	text-align: center;
 	background: var(--brand-cream);
 }
 
-.title {
-	margin: 0;
-	font-size: 2.5rem;
-	line-height: 1.1;
-	letter-spacing: -0.02em;
-	color: var(--brand-text);
+.card {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 100%;
+	max-width: 44rem;
+	overflow: hidden;
+	border-radius: 2rem;
+	background: var(--brand-card);
+	text-align: left;
 }
 
-.blurb {
-	max-width: 26rem;
+.cardText {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 2rem 1.5rem 0;
+}
+
+.title {
+	max-width: 10ch;
+	margin: 0;
+	font-size: 3rem;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	color: var(--brand-card-text);
+}
+
+.description {
+	max-width: 28rem;
 	margin: 0;
 	font-size: 1.1rem;
-	color: var(--brand-text-secondary);
+	color: var(--brand-card-text-secondary);
 }
 
-.card {
+.cardImage {
+	display: block;
 	width: 100%;
-	max-width: 18rem;
 	height: auto;
-	margin: 1rem 0;
-	border-radius: 1.25rem;
 }
 
 .actions {
@@ -84,21 +102,46 @@
 	text-decoration: none;
 }
 
-.version {
-	margin: 0.5rem 0 0;
+.readme {
+	width: 100%;
+	max-width: 48rem;
+	margin-top: 2rem;
+	padding-top: 2rem;
+	border-top: 1px solid var(--brand-border);
+	text-align: left;
+}
+
+/* The page already has the title, so the README's own is hidden. */
+.readme > header:first-child {
+	display: none;
+}
+
+.footer {
+	margin: auto 0 0;
+	padding-top: 2rem;
 	font-size: 0.85rem;
 	color: var(--brand-text-secondary);
 }
 
-.credit {
-	margin-top: auto;
-	font-size: 0.85rem;
-	color: var(--brand-text-secondary);
+.footer a {
+	color: inherit;
 }
 
 @media (min-width: 48rem) {
+	.card {
+		min-height: 60rem;
+	}
+
+	.cardText {
+		padding: 3rem 3rem 0;
+	}
+
 	.title {
-		font-size: 3.5rem;
+		font-size: 4.5rem;
+	}
+
+	.description {
+		font-size: 1.35rem;
 	}
 
 	.actions {

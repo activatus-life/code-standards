@@ -113,7 +113,7 @@ Follow these rules in every change:
 - **Functions, never classes.**
 - **One parameter per function.** Use a single object when more than one value is needed.
 - **Return early.** Never nest more than three levels deep.
-- **No magic numbers or strings.** Use named constants.
+- **No magic numbers or strings.** Use named constants. Only `-1`, `0` and `1` stay bare. A number used in one file is named at the top of that file; one shared across the app goes in `lib/constants/`, in a file named after its topic (`durations.ts`, `limits.ts`), never a `numbers.ts`. Put the unit in the name: `SESSION_TIMEOUT_MILLISECONDS`.
 - **Links, text and stand-in data live in `lib/constants/`**, never written straight into a component. `r` holds every link (pages, outside sites, `mailto:`, `tel:`, `sms:`). `s` holds every piece of static text, and its keys become the translation keys when the site gets more languages. `noData.ts` holds stand-in data named `NO_DATA_` plus the thing it replaces (`NO_DATA_INSIGHTS`), used only in local development when the real source can't be reached, never in production. Dummy values sit at the top of `noData.ts`, never in `s`. Import them all in one line, `import { NO_DATA_INSIGHTS, r, s } from "@/lib/constants";`. `r` and `s` are the only single-letter names allowed anywhere. Full rule: https://activatus-code-standards.vercel.app/docs/Structure/folder-structure#constants
 - **No nested ternaries. No boolean flag parameters.**
 - **No `any`, no non-null `!`, no `as` cast without a comment saying why.**

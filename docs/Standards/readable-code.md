@@ -309,7 +309,9 @@ if (order.status === "shipped") {
 }
 ```
 
-`-1`, `0` and `1` are allowed. See [Naming Conventions](/docs/Structure/naming-conventions#constants) for how to name constants.
+**`-1`, `0` and `1` are allowed**, because they are part of how code works rather than a choice anyone makes: `0` is the start or nothing (`items[0]`, `length === 0`), `1` is one more or one less (`index + 1`), and `-1` is "not found" (`indexOf`). Any other number was chosen by someone, so its name says what it controls. Even `2` gets a name.
+
+A number used in one file is named at the top of that file. One shared across the app goes in `lib/constants/`, in a file named after its topic. See [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic) for where they go, and [Naming Conventions](/docs/Structure/naming-conventions#constants) for how to name them.
 
 ---
 

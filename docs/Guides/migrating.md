@@ -54,7 +54,7 @@ Add the `.editorconfig` file. No code changes needed — your editor will handle
 Add the [standard config](/docs/Standards/eslint) for your project type, then start in warn-only mode to see what you're dealing with. Add a block before `prettier`:
 
 ```js
-export default [
+const config = [
   // ...
   {
     rules: {
@@ -66,6 +66,8 @@ export default [
   },
   prettier,
 ];
+
+export default config;
 ```
 
 Run `pnpm lint` and triage the output. Fix them one kind at a time (for example, all `any` removals together). Once clean, remove the overrides.
