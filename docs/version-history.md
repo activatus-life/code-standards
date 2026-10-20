@@ -20,9 +20,10 @@ sidebar_label: "Version History"
 1. **Find the project's version** in its `AGENTS.md`. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
 2. **Update the package:** `pnpm update @activatus/code-standards --latest`. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
 3. **Read each version newer than the project's**, oldest first. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
-4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished.
-5. **Run `pnpm lint`, `pnpm test` and the build** after each change.
-6. **Update the version number** in `AGENTS.md` once every change is done.
+4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished. When a change says to copy a line from the `AGENTS.md` template, and the project's `AGENTS.md` records the standards in its own words instead, write the updated rule there in the project's own shape.
+5. **Strike out what the standard now covers.** After the changes, re-read the project's list of opted-out and changed standards in `docs/development/coding-standards.md`. Take off the list any exception the new version has made part of the standard, and update any rule it records for an old shape of the standard. A differences list that still describes the old standard sends the next agent wrong.
+6. **Run `pnpm lint`, `pnpm test` and the build** after each change.
+7. **Update the version number** in `AGENTS.md` once every change is done.
 
 **A patch keeps the same version number.** When only the last number changes, such as 3.0.0 → 3.0.1, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
 
@@ -37,23 +38,27 @@ Anyone changing the standards adds a version, alongside the change:
 - **For every change, write:** what changed, why, what to do in a project, and how to check it is done. Write it for an agent that has not read the rest of the standards.
 - **If a project has nothing to do, say so.**
 - **Newest version at the top.**
-- **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
+- **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: pilot it (below), drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
+- **Pilot a version in a real project before releasing it.** Once the work-in-progress version is written, have one real project apply it exactly as written, reading only what the page says. Every judgement call the agent has to make, and every instruction that does not fit the project, is a missing sentence: fold it back into the version before publishing. Release only when the pilot runs without the agent asking a question the page does not answer.
 - **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`. Write each fix so a project already on that version knows what to do.
+- **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
 
 ---
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.5
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.6
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.5`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.6`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
 
-**Fixes in 3.0.5.** The ESLint configs now pass their own rules. Copied in as they were, they gave three problems on the config file itself: `No magic number: 3` (`no-magic-numbers`), and in Next.js projects two warnings, `import/no-anonymous-default-export` and `import-x/no-named-as-default-member`. Copy the new [ESLint config](/docs/Standards/eslint) for the project's framework over `eslint.config.mjs`, keeping any project-specific block. Then run `pnpm lint`: the config file itself has no problems. If the project already fixed these three by hand, there is nothing to do.
+**Fixes in 3.0.6.** Nothing to do in a project. The update steps gained two rules: when the project's `AGENTS.md` records the standards in its own words, an update writes the changed line in that shape; and after an update the project's list of opted-out and changed standards is re-read, taking off it anything the new version now covers. The 3.0.5 numbers change has its check spelled out: `pnpm lint` reporting a `no-magic-numbers` finding means it is not finished. A project-specific block in an ESLint config is now defined: it is recorded in the project's `docs/development/coding-standards.md`, or `pnpm lint` fails without it.
+
+**Fixes in 3.0.5.** The ESLint configs now pass their own rules. Copied in as they were, they gave three problems on the config file itself: `No magic number: 3` (`no-magic-numbers`), and in Next.js projects two warnings, `import/no-anonymous-default-export` and `import-x/no-named-as-default-member`. Copy the new [ESLint config](/docs/Standards/eslint) for the project's framework over `eslint.config.mjs`, keeping any project-specific block: one that is recorded in the project's `docs/development/coding-standards.md`, or without which `pnpm lint` fails. A block that is neither, and the lint passes without it, is a leftover: ask before removing it. Then run `pnpm lint`: the config file itself has no problems. If the project already fixed these three by hand, there is nothing to do.
 
 - `max-depth` uses a named constant, `MAXIMUM_NESTING_DEPTH`.
 - The array is assigned to `config` before `export default config`.
 - The eslint-comments preset is imported by name: `import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";`.
-- Numbers have a home: [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic). A number used in one file is named at the top of that file, and one shared across the app goes in `lib/constants/`, in a file named after its topic, such as `durations.ts`. There is no `n` object and no `numbers.ts`. If the project has a file of unrelated numbers, split it by topic. Copy the updated **No magic numbers** line from the [`AGENTS.md` template](/docs/templates#agents).
+- Numbers have a home: [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic). A number used in one file is named at the top of that file, and one shared across the app goes in `lib/constants/`, in a file named after its topic, such as `durations.ts`. There is no `n` object and no `numbers.ts`. If the project has a file of unrelated numbers, split it by topic. Copy the updated **No magic numbers** line from the [`AGENTS.md` template](/docs/templates#agents). Run `pnpm lint`: a `no-magic-numbers` finding means the change is not finished.
 - `docsSite/` is ignored. It is the standard docs viewer, with its own packages and build, and without the ignore ESLint lints its built files. If the project already ignores it, nothing changes.
 - The one-parameter selectors moved into their own `SINGLE_OBJECT_PARAMETER` list. **Next.js:** route handlers in `app/**/route.ts` may now take `(request, context)`. If the project switched the rule off for them some other way, such as an override block or `eslint-disable` comments, remove it.
 
