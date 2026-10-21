@@ -47,9 +47,16 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.6
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.7
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.6`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.7`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.0.7.** New, optional: [Working with Agents](/docs/Standards/working-with-agents). Setup now offers two ways of working with the agent, A. status circles and B. ask before every commit and push, and asks for the project's GitHub repo and Linear project. If the project already applied 3.0.6:
+
+- Add **GitHub repo** and **Linear project** to the Project workflow section of `AGENTS.md`, from the [template](/docs/templates#agents). Read the repo from `git remote get-url origin` and confirm it with the person. Always ask for the Linear project; never copy it from another project.
+- Print the [Working with the agent](/docs/Guides/setup#working-with-the-agent) question to the person. Copy the sections they choose from the template into Project workflow, and write their answer in `docs/development/coding-standards.md`, under "Details". If `AGENTS.md` already covers a choice in the project's own words, keep that and only fill in what is missing.
+
+**How to check:** Project workflow in `AGENTS.md` names the GitHub repo and the Linear project, and `docs/development/coding-standards.md` records which options the project took.
 
 **Fixes in 3.0.6.** Nothing to do in a project. The update steps gained two rules: when the project's `AGENTS.md` records the standards in its own words, an update writes the changed line in that shape; and after an update the project's list of opted-out and changed standards is re-read, taking off it anything the new version now covers. The 3.0.5 numbers change has its check spelled out: `pnpm lint` reporting a `no-magic-numbers` finding means it is not finished. A project-specific block in an ESLint config is now defined: it is recorded in the project's `docs/development/coding-standards.md`, or `pnpm lint` fails without it.
 

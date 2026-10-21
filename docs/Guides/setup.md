@@ -9,7 +9,7 @@ sidebar_label: "Setup"
 
 The person creates the app themselves — with `create-next-app`, Expo or anything else — and tells you to follow the standards. **Do not ask which framework the project uses.** Look at the project: its `package.json` and files tell you. The person only answers the questions below and checks your work. They never run a command.
 
-**These standards are the base, for code only.** A project builds on top of them: it can add its own folders and conventions, and it makes its own project-management decisions (tickets, statuses, releases, who commits). Those go in the project's own docs, not here.
+**These standards are the base for code, plus optional ways of working with the agent.** A project builds on top of them: it can add its own folders and conventions, and it makes its own project-management decisions (tickets, releases, branches, commit messages). Those go in the project's own docs, not here. The [Working with Agents](/docs/Standards/working-with-agents) options, status circles and asking before every commit, are offered in step 3, and the project takes them or leaves them.
 
 ## 1. Install the standards
 
@@ -96,7 +96,29 @@ Then wait for the answer.
 
 **Record the answer** in `docs/development/coding-standards.md`, under "Details". For each skipped or changed standard, write its number, its name, what is different, and the reason the person gave. If nothing is different, write "No differences". Copy the file from `static/templates/docs/development/coding-standards.md` if it does not exist.
 
-The list has nothing about branches, commit messages or whether agents may commit. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/docs/Standards/agent-specs#project-workflow).
+The list has nothing about branches or commit messages. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/docs/Standards/agent-specs#project-workflow).
+
+### Working with the agent
+
+Once the standards are agreed, **print this to the person exactly as it is written**:
+
+```text
+Working with the agent (optional). Want either of these?
+Answer A, B, both or neither.
+
+ A. Status circles: report each ticket as one line
+    ✅ done  🟢 Pull Request to review  🟣 working on it
+    🟡 ready to commit  🟠 waiting  🔴 blocked or you act
+    ⚪ not started
+ B. Ask before every commit and push, every time
+```
+
+Then ask for the **project links**, whatever the answer:
+
+- **GitHub repo:** read it with `git remote get-url origin` and ask the person to confirm it. If there is no remote, ask for it.
+- **Linear project:** always ask, never guess: the workspace, the project and the ticket prefix, or "None" if the project does not use Linear.
+
+**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: the project links, the status circles if they said A, and the commit rule at the top of the file and under "Who commits" if they said B. Delete the parts they did not take. Write which options they took in `docs/development/coding-standards.md`, under "Details", so a later update knows not to offer them again. See [Working with Agents](/docs/Standards/working-with-agents).
 
 ## 4. Apply the standards
 

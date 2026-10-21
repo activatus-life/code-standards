@@ -13,6 +13,8 @@ Every Activatus repository must have an `AGENTS.md` in its root. This file gives
 
 Each project writes them up in its own docs, usually in `docs/development/`, and its `AGENTS.md` has a **Project workflow** section that points to them and states the rules an agent must follow. The most important one goes first: whether an agent may commit.
 
+Project workflow also records the project's **GitHub repo** and **Linear project**, and any [Working with Agents](/docs/Standards/working-with-agents) options the project chose during setup: status circles, and asking before every commit and push.
+
 ## Template
 
 Start from the [AGENTS.md template](/docs/templates#agents) and replace every `[placeholder]`.

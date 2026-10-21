@@ -46,6 +46,38 @@
 - **Commit messages**: [the commit message format]
 - **Pull requests**: [review and CI requirements, and where Pull Requests merge to]
 - **Merging and releases**: [merge strategy, and how work reaches production]
+- **GitHub repo**: [https://github.com/organisation/repo, read from the git remote and confirmed with the person]
+- **Linear project**: [workspace, project and ticket prefix, such as `activatus-life`, Launchpad, `ACT`. Or "None"]
+
+**Never copy a Linear workspace or ticket prefix from another project.** If the Linear project above is missing, ask before creating, linking or citing any ticket.
+
+### Status circles
+
+[Only if the person chose status circles during setup. Otherwise delete this section.]
+
+Report every ticket or piece of work as one line: a status circle, the ticket ID as a link, a short title and, where there is one, its Pull Request as a link. The colour alone says whether the person needs to act.
+
+| Circle | Means |
+| --- | --- |
+| ✅ | Merged, In UAT or Done. Nothing to do |
+| 🟢 | Pull Request ready for the person to review and merge. The link is the Pull Request |
+| 🟣 | Working on it |
+| 🟡 | Ready to commit: done, checked, left uncommitted. Say the branch and where it is. The person commits it, or tells the agent to |
+| 🟠 | Waiting on another ticket or Pull Request first. Say which |
+| 🔴 | Blocked, or the person has to do something. Say what, in a few words |
+| ⚪ | Not started (Backlog or Todo) |
+
+Example: `🟢 [ABC-12](https://linear.app/[workspace]/issue/ABC-12) Short title: [#19](https://github.com/[organisation]/[repo]/pull/19)`
+
+- Every ticket ID links to its ticket, and every Pull Request number links to the Pull Request.
+- Work with no ticket is just the circle and a short title.
+- Only what the person needs to act on. Leave out what they already know.
+
+### Ask before every commit and push
+
+[Only if the person chose this during setup. Otherwise delete this section. When it stays, also make it the first line of this file.]
+
+Never commit or push without asking first, and wait for a clear yes to that specific action. A yes covers one action: approval for one task does not carry over to the next, even in the same session. Docs-only changes and version bumps need a yes too.
 
 ## Environment variables
 
