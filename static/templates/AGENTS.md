@@ -47,7 +47,7 @@
 - **Pull requests**: [review and CI requirements, and where Pull Requests merge to]
 - **Merging and releases**: [merge strategy, and how work reaches production]
 - **GitHub repo**: [https://github.com/organisation/repo, read from the git remote and confirmed with the person]
-- **Linear project**: [workspace, project and ticket prefix, such as `activatus-life`, Launchpad, `ACT`. Or "None"]
+- **Linear project**: [workspace, project and ticket prefix, such as `activatus-life`, Launchpad, `ACT`, read from the project's docs or asked for, and confirmed with the person. Or "None"]
 
 **Never copy a Linear workspace or ticket prefix from another project.** If the Linear project above is missing, ask before creating, linking or citing any ticket.
 
@@ -72,12 +72,6 @@ Example: `🟢 [ABC-12](https://linear.app/[workspace]/issue/ABC-12) Short title
 - Every ticket ID links to its ticket, and every Pull Request number links to the Pull Request.
 - Work with no ticket is just the circle and a short title.
 - Only what the person needs to act on. Leave out what they already know.
-
-### Ask before every commit and push
-
-[Only if the person chose this during setup. Otherwise delete this section. When it stays, also make it the first line of this file.]
-
-Never commit or push without asking first, and wait for a clear yes to that specific action. A yes covers one action: approval for one task does not carry over to the next, even in the same session. Docs-only changes and version bumps need a yes too.
 
 ## Environment variables
 

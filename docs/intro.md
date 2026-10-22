@@ -22,7 +22,7 @@ This site documents the shared code standards used across all Activatus projects
 | EditorConfig         | [`.editorconfig`](/docs/Standards/editorconfig)     | Editor-level whitespace rules                                                                   |
 | direnv + nvm         | [`.envrc` / `.nvmrc`](/docs/Standards/direnv)       | Automatic Node version switching on `cd`                                                        |
 | AGENTS.md            | [`AGENTS.md`](/docs/Standards/agent-specs)          | AI agent context and agent skills                                                               |
-| Working with Agents  | [Optional](/docs/Standards/working-with-agents)     | Status circles, asking before every commit, and the project's GitHub repo and Linear project    |
+| Working with Agents  | [Optional](/docs/Standards/working-with-agents)     | The project's GitHub repo and Linear project, and optional status circles                       |
 | CSS Styling          | [Styling guide](/docs/Standards/styling)            | Tailwind CSS, flexbox-first layout and global colour variables                                  |
 | Tech Stack           | [Tech stack](/docs/Standards/tech-stack)            | The frameworks, libraries and versions we build on                                              |
 

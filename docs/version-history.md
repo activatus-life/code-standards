@@ -18,7 +18,7 @@ sidebar_label: "Version History"
 **Read only the versions newer than the project's.** A project on version 1 that is updating to version 3 reads version 2 and version 3 on this page, and nothing else. Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
 
 1. **Find the project's version** in its `AGENTS.md`. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
-2. **Update the package:** `pnpm update @activatus/code-standards --latest`. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
+2. **Update the package:** `pnpm update @activatus/code-standards --latest`. If pnpm refuses because the version is too new, add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`, as in [Setup](/docs/Guides/setup#1-install-the-standards). Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
 3. **Read each version newer than the project's**, oldest first. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
 4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished. When a change says to copy a line from the `AGENTS.md` template, and the project's `AGENTS.md` records the standards in its own words instead, write the updated rule there in the project's own shape.
 5. **Strike out what the standard now covers.** After the changes, re-read the project's list of opted-out and changed standards in `docs/development/coding-standards.md`. Take off the list any exception the new version has made part of the standard, and update any rule it records for an old shape of the standard. A differences list that still describes the old standard sends the next agent wrong.
@@ -41,24 +41,35 @@ Anyone changing the standards adds a version, alongside the change:
 - **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: pilot it (below), drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
 - **Pilot a version in a real project before releasing it.** Once the work-in-progress version is written, have one real project apply it exactly as written, reading only what the page says. Every judgement call the agent has to make, and every instruction that does not fit the project, is a missing sentence: fold it back into the version before publishing. Release only when the pilot runs without the agent asking a question the page does not answer.
 - **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`. Write each fix so a project already on that version knows what to do.
+- **Every patch number is published.** Publish each patch to npm as soon as its Fixes are written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
 
 ---
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.7
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.8
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.7`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@3.0.8`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
 
-**Fixes in 3.0.7.** New, optional: [Working with Agents](/docs/Standards/working-with-agents). Setup now offers two ways of working with the agent, A. status circles and B. ask before every commit and push, and asks for the project's GitHub repo and Linear project. If the project already applied 3.0.6:
+**Fixes in 3.0.8.** If the project already applied 3.0.7, check these:
 
-- Add **GitHub repo** and **Linear project** to the Project workflow section of `AGENTS.md`, from the [template](/docs/templates#agents). Read the repo from `git remote get-url origin` and confirm it with the person. Always ask for the Linear project; never copy it from another project.
-- Print the [Working with the agent](/docs/Guides/setup#working-with-the-agent) question to the person. Copy the sections they choose from the template into Project workflow, and write their answer in `docs/development/coding-standards.md`, under "Details". If `AGENTS.md` already covers a choice in the project's own words, keep that and only fill in what is missing.
+- **Ask before every commit and push (option B) is gone.** Whether agents commit is the project's own workflow, as in change 1. If the project took B in 3.0.7, the rule stays only if the person wants it: it belongs under **Who commits** in Project workflow, in the project's own words. Remove the "Ask before every commit and push" section copied from the template, and take B off `docs/development/coding-standards.md`.
+- **The Linear project can come from the project's own docs.** If they already name it, read it from there and confirm it with the person. Never copy it from another project.
+- **`pnpm-workspace.yaml` is Prettier-ignored.** pnpm rewrites it with single quotes on every install, so `pnpm format:check` failed after every update. Add `pnpm-workspace.yaml` to `.prettierignore`.
+- **The update steps cover pnpm's release-age check**: if pnpm refuses a version that has only just been published, add the package to `minimumReleaseAgeExclude`. See [Setup](/docs/Guides/setup#1-install-the-standards).
+- 3.0.3 and 3.0.6 were never published to npm. Their fixes are in 3.0.4 and 3.0.7. Every patch is now published.
 
-**How to check:** Project workflow in `AGENTS.md` names the GitHub repo and the Linear project, and `docs/development/coding-standards.md` records which options the project took.
+**How to check:** `.prettierignore` lists `pnpm-workspace.yaml`, `pnpm format:check` passes, and `AGENTS.md` has no "Ask before every commit and push" section unless the person chose to keep that rule.
 
-**Fixes in 3.0.6.** Nothing to do in a project. The update steps gained two rules: when the project's `AGENTS.md` records the standards in its own words, an update writes the changed line in that shape; and after an update the project's list of opted-out and changed standards is re-read, taking off it anything the new version now covers. The 3.0.5 numbers change has its check spelled out: `pnpm lint` reporting a `no-magic-numbers` finding means it is not finished. A project-specific block in an ESLint config is now defined: it is recorded in the project's `docs/development/coding-standards.md`, or `pnpm lint` fails without it.
+**Fixes in 3.0.7.** New, optional: [Working with Agents](/docs/Standards/working-with-agents). Setup now asks for the project's GitHub repo and Linear project, and offers status circles. (3.0.7 also offered asking before every commit and push. 3.0.8 removed it.) If the project already applied 3.0.5:
+
+- Add **GitHub repo** and **Linear project** to the Project workflow section of `AGENTS.md`, from the [template](/docs/templates#agents). Read the repo from `git remote get-url origin` and confirm it with the person. Read the Linear project from the project's own docs if they name it, and confirm it; otherwise ask. Never copy it from another project.
+- Print the [status circles](/docs/Guides/setup#working-with-the-agent) question to the person. If they say yes, copy the Status circles section from the template into Project workflow. Write their answer in `docs/development/coding-standards.md`, under "Details". If `AGENTS.md` already has status circles in the project's own words, keep that.
+
+**How to check:** Project workflow in `AGENTS.md` names the GitHub repo and the Linear project, and `docs/development/coding-standards.md` records whether the project took the status circles.
+
+**Fixes in 3.0.6.** Never published to npm: these fixes are in 3.0.7. Nothing to do in a project. The update steps gained two rules: when the project's `AGENTS.md` records the standards in its own words, an update writes the changed line in that shape; and after an update the project's list of opted-out and changed standards is re-read, taking off it anything the new version now covers. The 3.0.5 numbers change has its check spelled out: `pnpm lint` reporting a `no-magic-numbers` finding means it is not finished. A project-specific block in an ESLint config is now defined: it is recorded in the project's `docs/development/coding-standards.md`, or `pnpm lint` fails without it.
 
 **Fixes in 3.0.5.** The ESLint configs now pass their own rules. Copied in as they were, they gave three problems on the config file itself: `No magic number: 3` (`no-magic-numbers`), and in Next.js projects two warnings, `import/no-anonymous-default-export` and `import-x/no-named-as-default-member`. Copy the new [ESLint config](/docs/Standards/eslint) for the project's framework over `eslint.config.mjs`, keeping any project-specific block: one that is recorded in the project's `docs/development/coding-standards.md`, or without which `pnpm lint` fails. A block that is neither, and the lint passes without it, is a leftover: ask before removing it. Then run `pnpm lint`: the config file itself has no problems. If the project already fixed these three by hand, there is nothing to do.
 
@@ -74,7 +85,7 @@ Install it with `pnpm add -D @activatus/code-standards@3.0.7`. Do change 1 first
 - New standard 12.1: links, text and stand-in data live in `lib/constants/`, as `r`, `s` and noData. `r` and `s` are the only single-letter names allowed. Do change 11.
 - The standards site has a home page, and the docs moved to `/docs/...`. Old links redirect, so nothing breaks. Update any link to the standards site in the project's `AGENTS.md` or docs to the `/docs/` address, such as `https://activatus-code-standards.vercel.app/docs/ontology`.
 
-**Fixes in 3.0.3.** Change 8 now says how to type a function inside an object that is built somewhere else: give the function its own `Props` type, such as `LaunchSessionProps`, and use it. If the project wrote those parameter types out inline, such as `({ worktreePath }: { worktreePath: string })`, replace each with the function's `Props` type. Also new: type first, never `satisfies`. It is an ESLint error now, so copy the new ESLint config and replace each `satisfies` with a type on the declaration, except in Storybook story files.
+**Fixes in 3.0.3.** Never published to npm: these fixes are in 3.0.4. Change 8 now says how to type a function inside an object that is built somewhere else: give the function its own `Props` type, such as `LaunchSessionProps`, and use it. If the project wrote those parameter types out inline, such as `({ worktreePath }: { worktreePath: string })`, replace each with the function's `Props` type. Also new: type first, never `satisfies`. It is an ESLint error now, so copy the new ESLint config and replace each `satisfies` with a type on the declaration, except in Storybook story files.
 
 **Fixes in 3.0.2.** Nothing to do in a project:
 

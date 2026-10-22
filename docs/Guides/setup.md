@@ -9,7 +9,7 @@ sidebar_label: "Setup"
 
 The person creates the app themselves — with `create-next-app`, Expo or anything else — and tells you to follow the standards. **Do not ask which framework the project uses.** Look at the project: its `package.json` and files tell you. The person only answers the questions below and checks your work. They never run a command.
 
-**These standards are the base for code, plus optional ways of working with the agent.** A project builds on top of them: it can add its own folders and conventions, and it makes its own project-management decisions (tickets, releases, branches, commit messages). Those go in the project's own docs, not here. The [Working with Agents](/docs/Standards/working-with-agents) options, status circles and asking before every commit, are offered in step 3, and the project takes them or leaves them.
+**These standards are the base for code, plus how agents link and report the project's work.** A project builds on top of them: it can add its own folders and conventions, and it makes its own project-management decisions (tickets, releases, branches, commit messages, who commits). Those go in the project's own docs, not here. Step 3 records the project's GitHub repo and Linear project, and offers the optional [status circles](/docs/Standards/working-with-agents#status-circles).
 
 ## 1. Install the standards
 
@@ -22,6 +22,14 @@ pnpm add -D @activatus/code-standards
 ```yaml title="pnpm-workspace.yaml"
 minimumReleaseAgeExclude:
   - "@activatus/code-standards"
+```
+
+Newer pnpm versions may add this exclusion for you when you run `pnpm add`. Check the file either way, and add it if it is not there: `pnpm update` hits the same check when a new version of the standards has only just been published.
+
+**pnpm owns `pnpm-workspace.yaml`** and rewrites it on every install, with single quotes, so `pnpm format:check` would fail after every update. Add the file to `.prettierignore`:
+
+```text title=".prettierignore"
+pnpm-workspace.yaml
 ```
 
 The standards are now in `node_modules/@activatus/code-standards/`:
@@ -100,25 +108,25 @@ The list has nothing about branches or commit messages. Those are the project's 
 
 ### Working with the agent
 
-Once the standards are agreed, **print this to the person exactly as it is written**:
-
-```text
-Working with the agent (optional). Want either of these?
-Answer A, B, both or neither.
-
- A. Status circles: report each ticket as one line
-    ✅ done  🟢 Pull Request to review  🟣 working on it
-    🟡 ready to commit  🟠 waiting  🔴 blocked or you act
-    ⚪ not started
- B. Ask before every commit and push, every time
-```
-
-Then ask for the **project links**, whatever the answer:
+Once the standards are agreed, get the **project links**:
 
 - **GitHub repo:** read it with `git remote get-url origin` and ask the person to confirm it. If there is no remote, ask for it.
-- **Linear project:** always ask, never guess: the workspace, the project and the ticket prefix, or "None" if the project does not use Linear.
+- **Linear project:** if the project's own docs already name it, read it from there and ask the person to confirm it. Otherwise ask. Never copy it from another project. Write the workspace, the project and the ticket prefix, or "None" if the project does not use Linear.
 
-**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: the project links, the status circles if they said A, and the commit rule at the top of the file and under "Who commits" if they said B. Delete the parts they did not take. Write which options they took in `docs/development/coding-standards.md`, under "Details", so a later update knows not to offer them again. See [Working with Agents](/docs/Standards/working-with-agents).
+Then **print this to the person exactly as it is written**:
+
+```text
+Status circles (optional). Want the agent to report each
+ticket as one line, with a circle that says if you need to act?
+
+ ✅ done  🟢 Pull Request to review  🟣 working on it
+ 🟡 ready to commit  🟠 waiting  🔴 blocked or you act
+ ⚪ not started
+
+Yes or no?
+```
+
+**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: the project links, and the status circles if they said yes. Delete the status circles section if they said no. Write the answer in `docs/development/coding-standards.md`, under "Details", so a later update knows not to ask again. See [Working with Agents](/docs/Standards/working-with-agents).
 
 ## 4. Apply the standards
 
@@ -163,7 +171,7 @@ The project already follows the standards, and a newer version is out.
    pnpm update @activatus/code-standards --latest
    ```
 
-   Its major version is now the newest version.
+   Its major version is now the newest version. If pnpm refuses because the version is too new, or `pnpm format:check` now fails on `pnpm-workspace.yaml`, see [1. Install the standards](#1-install-the-standards).
 
 3. **Read `node_modules/@activatus/code-standards/docs/version-history.md`**, but only the versions newer than the project's. Do not re-read the rest of the standards.
 4. **Skip any change to a standard the project opted out of.** The opt-outs are listed in `docs/development/coding-standards.md`.

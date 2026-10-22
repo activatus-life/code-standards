@@ -3,3 +3,5 @@ build/
 pnpm-lock.yaml
 # The templates are copied into projects and formatted there, with the project's own Prettier setup.
 static/templates/
+# pnpm rewrites this on every install, in its own style.
+pnpm-workspace.yaml
