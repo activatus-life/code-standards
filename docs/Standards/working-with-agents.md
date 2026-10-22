@@ -5,13 +5,13 @@ sidebar_label: "Working with Agents"
 
 # Working with Agents
 
-> How an AI agent links a project's work and reports on it. The project links are part of every setup; the status circles are optional, chosen during [Setup](/docs/Guides/setup#working-with-the-agent). Both work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
+> How an AI agent links a project's work and reports on it. The GitHub repo, the Linear project and the status circles are all optional. [Setup](/docs/Guides/setup#working-with-the-agent) offers all three every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
 
 Whatever the project chooses is written into the **Project workflow** section of its `AGENTS.md`, from the [template](/docs/templates#agents), so every agent in the project follows it.
 
 ## Project links
 
-Every project records these two links in **Project workflow**. An agent uses them to link tickets and Pull Requests, and to know where work belongs.
+Optional. A project records either link, both or neither, in **Project workflow**, and deletes the line for any link it does not use. An agent uses them to link tickets and Pull Requests, and to know where work belongs.
 
 | Link           | Where it comes from                                                                                                                                                                                                        |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

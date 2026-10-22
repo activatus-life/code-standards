@@ -30,7 +30,7 @@ Add `prettier.config.mjs` — see the [Prettier page](/docs/Standards/prettier) 
 Format everything at once:
 
 ```bash
-pnpm prettier --write .
+pnpm format
 ```
 
 Keep the reformat apart from any other change, so the formatting is easy to tell apart from real changes later.

@@ -51,10 +51,32 @@ Add scripts to `package.json`:
 ```json
 {
   "scripts": {
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format": "git ls-files -z --cached --others --exclude-standard | xargs -0 prettier --write --ignore-unknown --no-error-on-unmatched-pattern",
+    "format:check": "git ls-files -z --cached --others --exclude-standard | xargs -0 prettier --check --ignore-unknown --no-error-on-unmatched-pattern"
   }
 }
+```
+
+**Do not shorten these to `prettier --write .` and `prettier --check .`** The long form is deliberate: git lists the files, so every git ignore rule applies. See [What Prettier skips](#what-prettier-skips).
+
+## What Prettier skips
+
+Both scripts work on the same list of files: every file git tracks, plus every new file git has not been told to ignore. **Never narrow them to changed files**: a badly formatted file nobody touched still fails CI.
+
+**Why git lists the files.** On its own, Prettier reads only the project's `.gitignore` and `.prettierignore`. It does not read `.git/info/exclude` or a person's global git ignore, such as `~/.config/git/ignore`. Files a person keeps out of git that way, such as `.claude/settings.local.json`, would be checked by `prettier --check .` and rewritten by `prettier --write .`, so `format:check` failed on that one machine while CI passed. `git ls-files --exclude-standard` applies every git ignore rule, so those files never reach Prettier. `--no-error-on-unmatched-pattern` stops a file deleted but not yet committed from causing an error.
+
+**Where each kind of file is ignored:**
+
+| File                                                                      | Where it goes                                                                   |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| One person's local tool files, such as `.claude/settings.local.json`      | That person's `.git/info/exclude` or global git ignore. Never `.prettierignore` |
+| Files the whole project keeps out of git, such as `build/`                | `.gitignore`                                                                    |
+| Files in git that Prettier must not format, such as `pnpm-workspace.yaml` | `.prettierignore`, shared by the whole project                                  |
+
+pnpm rewrites `pnpm-workspace.yaml` in its own style on every install, so it always goes in `.prettierignore`:
+
+```text title=".prettierignore"
+pnpm-workspace.yaml
 ```
 
 ## Tailwind class sorting

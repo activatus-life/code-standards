@@ -46,8 +46,8 @@
 - **Commit messages**: [the commit message format]
 - **Pull requests**: [review and CI requirements, and where Pull Requests merge to]
 - **Merging and releases**: [merge strategy, and how work reaches production]
-- **GitHub repo**: [https://github.com/organisation/repo, read from the git remote and confirmed with the person]
-- **Linear project**: [workspace, project and ticket prefix, such as `activatus-life`, Launchpad, `ACT`, read from the project's docs or asked for, and confirmed with the person. Or "None"]
+- **GitHub repo**: [Optional. https://github.com/organisation/repo, read from the git remote and confirmed with the person. Delete this line if the project does not use it]
+- **Linear project**: [Optional. Workspace, project and ticket prefix, such as `activatus-life`, Launchpad, `ACT`, read from the project's docs or asked for, and confirmed with the person. Delete this line if the project does not use Linear]
 
 **Never copy a Linear workspace or ticket prefix from another project.** If the Linear project above is missing, ask before creating, linking or citing any ticket.
 

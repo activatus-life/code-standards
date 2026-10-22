@@ -108,12 +108,14 @@ The list has nothing about branches or commit messages. Those are the project's 
 
 ### Working with the agent
 
-Once the standards are agreed, get the **project links**:
+Once the standards are agreed, offer the three [Working with Agents](/docs/Standards/working-with-agents) options. All three are optional: offer every one, every time, so the person can fill them in quickly and keep going.
 
-- **GitHub repo:** read it with `git remote get-url origin` and ask the person to confirm it. If there is no remote, ask for it.
-- **Linear project:** if the project's own docs already name it, read it from there and ask the person to confirm it. Otherwise ask. Never copy it from another project. Write the workspace, the project and the ticket prefix, or "None" if the project does not use Linear.
+First the **project links**. Find each one yourself, then ask the person to confirm it or say "None":
 
-Then **print this to the person exactly as it is written**:
+- **GitHub repo:** read it with `git remote get-url origin`. If there is no remote, ask for it.
+- **Linear project:** read it from the project's own docs if they name it: the workspace, the project and the ticket prefix. If they do not, ask. Never copy it from another project.
+
+Then the **status circles**. **Print this to the person exactly as it is written**:
 
 ```text
 Status circles (optional). Want the agent to report each
@@ -126,7 +128,7 @@ ticket as one line, with a circle that says if you need to act?
 Yes or no?
 ```
 
-**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: the project links, and the status circles if they said yes. Delete the status circles section if they said no. Write the answer in `docs/development/coding-standards.md`, under "Details", so a later update knows not to ask again. See [Working with Agents](/docs/Standards/working-with-agents).
+**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. Write all three answers in `docs/development/coding-standards.md`, under "Details", so a later update knows not to ask again. See [Working with Agents](/docs/Standards/working-with-agents).
 
 ## 4. Apply the standards
 
@@ -139,7 +141,7 @@ Do only the standards the person agreed to. Copy every file from `node_modules/@
 | Standard                 | What to set up                                                                                                                                                                                                                                                                                                       |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 6. ESLint                | Copy the config for the project's framework from `static/templates/eslint/`: `base`, `typescript`, `react` or `nextjs`. Install the packages listed on the [ESLint page](/docs/Standards/eslint). Add the scripts `"lint": "eslint ."` and `"lint:fix": "eslint . --fix"`                                            |
-| 7. Prettier              | `pnpm add -D prettier prettier-plugin-tailwindcss`. Copy `static/templates/prettier.config.mjs`. Add the scripts `"format": "prettier --write ."` and `"format:check": "prettier --check ."`                                                                                                                         |
+| 7. Prettier              | `pnpm add -D prettier prettier-plugin-tailwindcss`. Copy `static/templates/prettier.config.mjs`. Add the `format` and `format:check` scripts exactly as on the [Prettier page](/docs/Standards/prettier#usage)                                                                                                       |
 | 8. Stylelint             | Only if the project has hand-written CSS or SCSS. Copy the config from `static/templates/stylelint/css/` or `scss/`. See [Stylelint](/docs/Standards/stylelint)                                                                                                                                                      |
 | 9. EditorConfig          | Copy `static/templates/.editorconfig`                                                                                                                                                                                                                                                                                |
 | 10. Node version         | Copy `static/templates/.nvmrc` and `static/templates/.envrc`. See [direnv + nvm](/docs/Standards/direnv)                                                                                                                                                                                                             |
