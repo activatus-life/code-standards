@@ -9,12 +9,30 @@
 	background: var(--brand-cream);
 }
 
+/*
+ * The card and the buttons fill exactly the first screen, less the
+ * page's top padding and a gap below, so the buttons always land at
+ * the bottom of it. The image shrinks to whatever space is left.
+ */
+.hero {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2rem;
+	width: 100%;
+	height: calc(100vh - var(--ifm-navbar-height) - 5rem);
+	height: calc(100dvh - var(--ifm-navbar-height) - 5rem);
+	min-height: 34rem;
+}
+
 .card {
 	display: flex;
+	flex: 1 1 0;
 	flex-direction: column;
 	justify-content: space-between;
 	width: 100%;
 	max-width: 44rem;
+	min-height: 0;
 	overflow: hidden;
 	border-radius: 2rem;
 	background: var(--brand-card);
@@ -46,8 +64,21 @@
 
 .cardImage {
 	display: block;
-	width: 100%;
-	height: auto;
+	flex: 1 1 0;
+	align-self: center;
+	width: auto;
+	max-width: 100%;
+	min-height: 0;
+	object-fit: contain;
+	object-position: center bottom;
+	/* On a wide card the image is narrower than the card: fade its sides in. */
+	mask-image: linear-gradient(
+		to right,
+		transparent,
+		black 12%,
+		black 88%,
+		transparent
+	);
 }
 
 .actions {
@@ -128,10 +159,6 @@
 }
 
 @media (min-width: 48rem) {
-	.card {
-		min-height: 60rem;
-	}
-
 	.cardText {
 		padding: 3rem 3rem 0;
 	}

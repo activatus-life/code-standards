@@ -44,25 +44,27 @@ const HomePage = () => {
 	return (
 		<Layout title="Code Standards" description={DESCRIPTION}>
 			<main className={styles.page}>
-				<section className={styles.card}>
-					<div className={styles.cardText}>
-						<h1 className={styles.title}>Code Standards</h1>
-						<p className={styles.description}>{DESCRIPTION}</p>
-					</div>
-					<img
-						className={styles.cardImage}
-						src={cardImageUrl}
-						alt="A code editor next to a checklist with every item ticked"
-						width={920}
-						height={760}
-					/>
-				</section>
+				<div className={styles.hero}>
+					<section className={styles.card}>
+						<div className={styles.cardText}>
+							<h1 className={styles.title}>Code Standards</h1>
+							<p className={styles.description}>{DESCRIPTION}</p>
+						</div>
+						<img
+							className={styles.cardImage}
+							src={cardImageUrl}
+							alt="A code editor next to a checklist with every item ticked"
+							width={920}
+							height={760}
+						/>
+					</section>
 
-				<div className={styles.actions}>
-					<CopyInstallButton />
-					<Link className={styles.docsButton} to="/docs">
-						Read the docs
-					</Link>
+					<div className={styles.actions}>
+						<CopyInstallButton />
+						<Link className={styles.docsButton} to="/docs">
+							Read the docs
+						</Link>
+					</div>
 				</div>
 
 				<article className={`markdown ${styles.readme}`}>
