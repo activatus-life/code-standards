@@ -18,14 +18,14 @@ sidebar_label: "Version History"
 **Read only the versions newer than the project's.** A project on version 1 that is updating to version 3 reads version 2 and version 3 on this page, and nothing else. Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
 
 1. **Find the project's version** in its `AGENTS.md`. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
-2. **Update the package:** `pnpm update @activatus/code-standards --latest`. If pnpm refuses because the version is too new, add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`, as in [Setup](/docs/Guides/setup#1-install-the-standards). Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
+2. **Update the package:** `pnpm add -D @activatus/code-standards@latest`, never a typed version number. If pnpm refuses because the version is too new, add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`, as in [Setup](/docs/Guides/setup#1-install-the-standards). The entry is the plain package name, with no version. If pnpm wrote one with versions in it, such as `'@activatus/code-standards@3.0.4 || 3.0.5'`, replace it with the plain name: otherwise pnpm adds another version to it on every update. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
 3. **Read each version newer than the project's**, oldest first. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
 4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished. When a change says to copy a line from the `AGENTS.md` template, and the project's `AGENTS.md` records the standards in its own words instead, write the updated rule there in the project's own shape.
 5. **Strike out what the standard now covers.** After the changes, re-read the project's list of opted-out and changed standards in `docs/development/coding-standards.md`. Take off the list any exception the new version has made part of the standard, and update any rule it records for an old shape of the standard. A differences list that still describes the old standard sends the next agent wrong.
 6. **Run `pnpm lint`, `pnpm format:check`, `pnpm test` and the build** after each change. `format:check` checks every file git does not ignore; never narrow it to changed files.
 7. **Update the version number** in `AGENTS.md` once every change is done.
 
-**A patch keeps the same version number.** When only the last number changes, such as 3.0.0 → 3.0.1, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
+**A patch keeps the same version number.** When only the last or middle number changes, such as 3.0.0 → 3.0.1 or 3.0.9 → 3.1.0, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
 
 **When a change does not fit the project**, for example it renames a folder the project does not have, skip it. If you are not sure, ask; do not guess.
 
@@ -41,6 +41,7 @@ Anyone changing the standards adds a version, alongside the change:
 - **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: pilot it (below), drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
 - **Pilot a version in a real project before releasing it.** Once the work-in-progress version is written, have one real project apply it exactly as written, reading only what the page says. Every judgement call the agent has to make, and every instruction that does not fit the project, is a missing sentence: fold it back into the version before publishing. Release only when the pilot runs without the agent asking a question the page does not answer.
 - **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`. Write each fix so a project already on that version knows what to do.
+- **Adding something optional** to a released version, such as a new setup question, bumps the middle number: `3.0.9` → `3.1.0`. It is written up the same way as a fix, and projects keep the same version number in `AGENTS.md`.
 - **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.0.9 — optional project links`, so releases are easy to find in the git log.
 - **Every patch number is published.** Publish each patch to npm as soon as its Fixes are written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
@@ -49,9 +50,17 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.0.9
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.1.0
 
-Install it with `pnpm add -D @activatus/code-standards@3.0.9`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.1.0.** If the project already applied 3.0.9, check these:
+
+- **Install and update with `@latest`.** Use `pnpm add -D @activatus/code-standards@latest`, never a typed version number. `package.json` keeps whatever version pnpm writes. Nothing to change in the project.
+- **`minimumReleaseAgeExclude` is the plain package name.** In `pnpm-workspace.yaml`, the entry is `"@activatus/code-standards"`, with no version. If it has versions in it, such as `'@activatus/code-standards@3.0.4 || 3.0.5'`, replace it with the plain name. Otherwise pnpm adds another version on every update.
+- **Setup asks whether AI should ask before every commit and push.** It is optional, a yes or no, recorded under **Who commits** in Project workflow. Ask the person the [question](/docs/Guides/setup#working-with-the-agent). A yes is written under Who commits; a no writes nothing, and the agent uses its own judgement. Write their answer in `docs/development/coding-standards.md`, under "Details".
+
+**How to check:** `minimumReleaseAgeExclude` lists `"@activatus/code-standards"` with no version, running `pnpm add -D @activatus/code-standards@latest` again leaves `pnpm-workspace.yaml` unchanged, and if the person said yes, Who commits in `AGENTS.md` has the asking rule.
 
 **Fixes in 3.0.9.** If the project already applied 3.0.8, check these:
 

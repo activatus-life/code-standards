@@ -41,7 +41,7 @@
 
 [How this project runs its work. These are the project's own decisions, not part of the code standards. Say where they are written up (usually `docs/development/`), then list the rules an agent must follow:]
 
-- **Who commits**: [whether AI agents may commit, push or make branches, and when]
+- **Who commits**: [whether AI agents may commit, push or make branches, and when. If the person said yes to asking before committing during setup: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, leave the asking rule out]
 - **Branches**: [how branches are named]
 - **Commit messages**: [the commit message format]
 - **Pull requests**: [review and CI requirements, and where Pull Requests merge to]

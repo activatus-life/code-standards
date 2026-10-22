@@ -10,7 +10,8 @@ import styles from "./index.module.css";
 
 const DESCRIPTION =
 	"A copy and paste config for humans and AI to follow, so code is human-readable, easy to debug and maintains strong industry standards.";
-const INSTALL_COMMAND = "pnpm add -D @activatus/code-standards";
+const INSTALL_COMMAND =
+	"pnpm add -D @activatus/code-standards@latest";
 const COPIED_MESSAGE_MILLISECONDS = 2000;
 const ACTIVATUS_URL = "https://github.com/activatus-life";
 

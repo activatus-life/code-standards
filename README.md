@@ -27,14 +27,14 @@ Ours live here. If it's not in this repo, it's not a standard, it's an opinion.
 The standards ship as an npm package, published on npm (npmjs.com) and installed with pnpm, so an AI agent reads the exact version a project uses, straight from `node_modules`:
 
 ```bash
-pnpm add -D @activatus/code-standards
+pnpm add -D @activatus/code-standards@latest
 ```
 
 Then tell your agent: **"Follow the Activatus Code Standards. Start with `node_modules/@activatus/code-standards/docs/Guides/setup.md`."** It prints a numbered list of the standards, you say which ones you don't want, and it sets up the rest. You never touch the terminal.
 
 The package version is the standards version: `3.0.0` is version 3.
 
-> 🔢 **Updating a project to newer standards?** Run `pnpm update @activatus/code-standards --latest`, then point the agent at the **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**: it reads only the versions newer than the project's, does exactly what each one says, and bumps the number. Cheaper than shouting the whole pub a round.
+> 🔢 **Updating a project to newer standards?** Run `pnpm add -D @activatus/code-standards@latest`, then point the agent at the **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**: it reads only the versions newer than the project's, does exactly what each one says, and bumps the number. Cheaper than shouting the whole pub a round.
 
 ---
 

@@ -5,7 +5,7 @@ sidebar_label: "Working with Agents"
 
 # Working with Agents
 
-> How an AI agent links a project's work and reports on it. The GitHub repo, the Linear project and the status circles are all optional. [Setup](/docs/Guides/setup#working-with-the-agent) offers all three every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
+> How an AI agent links a project's work, reports on it and asks before committing. The GitHub repo, the Linear project, the status circles and asking before every commit and push are all optional. [Setup](/docs/Guides/setup#working-with-the-agent) offers all four every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
 
 Whatever the project chooses is written into the **Project workflow** section of its `AGENTS.md`, from the [template](/docs/templates#agents), so every agent in the project follows it.
 
@@ -42,4 +42,6 @@ Optional. An agent reports the state of every ticket or piece of work as one lin
 - **No ticket is fine.** Work without one is just the circle and a short title.
 - **Only what the person needs.** Leave out anything they already know.
 
-Whether and when agents commit is not part of this. It is the project's own workflow, under **Who commits** in Project workflow.
+## Ask before committing
+
+Optional. Setup asks: "Would you like AI to ask you before every commit and push to git?" A yes is written under **Who commits** in Project workflow: ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only. A no means nothing is written, and the agent uses its own judgement.

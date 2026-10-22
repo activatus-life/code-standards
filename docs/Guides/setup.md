@@ -14,8 +14,10 @@ The person creates the app themselves — with `create-next-app`, Expo or anythi
 ## 1. Install the standards
 
 ```bash
-pnpm add -D @activatus/code-standards
+pnpm add -D @activatus/code-standards@latest
 ```
+
+**Always install with `@latest`, never a typed version number.** `package.json` keeps whatever version pnpm writes.
 
 **If pnpm refuses because the version is too new**, that is pnpm's `minimumReleaseAge` setting: by default it will not install a version published less than a day ago. The standards come from us, so add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`:
 
@@ -24,7 +26,7 @@ minimumReleaseAgeExclude:
   - "@activatus/code-standards"
 ```
 
-Newer pnpm versions may add this exclusion for you when you run `pnpm add`. Check the file either way, and add it if it is not there: `pnpm update` hits the same check when a new version of the standards has only just been published.
+Newer pnpm versions may add this exclusion for you when you run `pnpm add`. Check the file either way, and add it if it is not there: an update hits the same check when a new version of the standards has only just been published. The entry is the plain package name, with no version. If pnpm wrote one with versions in it, such as `'@activatus/code-standards@3.0.4 || 3.0.5'`, replace it with the plain name: otherwise pnpm adds another version to it on every update.
 
 **pnpm owns `pnpm-workspace.yaml`** and rewrites it on every install, with single quotes, so `pnpm format:check` would fail after every update. Add the file to `.prettierignore`:
 
@@ -108,7 +110,7 @@ The list has nothing about branches or commit messages. Those are the project's 
 
 ### Working with the agent
 
-Once the standards are agreed, offer the three [Working with Agents](/docs/Standards/working-with-agents) options. All three are optional: offer every one, every time, so the person can fill them in quickly and keep going.
+Once the standards are agreed, offer the four [Working with Agents](/docs/Standards/working-with-agents) options. All four are optional: offer every one, every time, so the person can fill them in quickly and keep going.
 
 First the **project links**. Find each one yourself, then ask the person to confirm it or say "None":
 
@@ -128,7 +130,14 @@ ticket as one line, with a circle that says if you need to act?
 Yes or no?
 ```
 
-**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. Write all three answers in `docs/development/coding-standards.md`, under "Details", so a later update knows not to ask again. See [Working with Agents](/docs/Standards/working-with-agents).
+Then **ask before committing**. **Print this to the person exactly as it is written**:
+
+```text
+Would you like AI to ask you before every commit and push
+to git? Yes or no?
+```
+
+**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. Write all four answers in `docs/development/coding-standards.md`, under "Details", so a later update knows not to ask again. See [Working with Agents](/docs/Standards/working-with-agents).
 
 ## 4. Apply the standards
 
@@ -164,16 +173,16 @@ The other standards are rules for how code is written. There is nothing to insta
 
 The project already follows the standards, and a newer version is out.
 
-**A patch keeps the same version number.** When only the last number changes, such as 3.0.0 → 3.0.1, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
+**A patch keeps the same version number.** When only the last or middle number changes, such as 3.0.0 → 3.0.1 or 3.0.9 → 3.1.0, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
 
 1. **Note the project's version.** Read `**Code standards version:**` in `AGENTS.md`. This is the version the code follows.
 2. **Update the package:**
 
    ```bash
-   pnpm update @activatus/code-standards --latest
+   pnpm add -D @activatus/code-standards@latest
    ```
 
-   Its major version is now the newest version. If pnpm refuses because the version is too new, or `pnpm format:check` now fails on `pnpm-workspace.yaml`, see [1. Install the standards](#1-install-the-standards).
+   Its major version is now the newest version. If pnpm refuses because the version is too new, or `pnpm format:check` now fails on `pnpm-workspace.yaml`, see [1. Install the standards](#1-install-the-standards). Check `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` is the plain name, `"@activatus/code-standards"`, with no version in it.
 
 3. **Read `node_modules/@activatus/code-standards/docs/version-history.md`**, but only the versions newer than the project's. Do not re-read the rest of the standards.
 4. **Skip any change to a standard the project opted out of.** The opt-outs are listed in `docs/development/coding-standards.md`.
