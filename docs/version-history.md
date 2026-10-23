@@ -27,7 +27,7 @@ sidebar_label: "Version History"
 8. **Run `pnpm standards:check`**, and fix what it finds. See [Checking a project](/docs/Guides/setup#checking-a-project).
 9. **Update the version number** in `AGENTS.md` once every change is done.
 
-**A patch keeps the same version number.** When only the last or middle number changes, such as 3.0.0 → 3.0.1 or 3.0.9 → 3.1.0, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed. A project already on the installed major version is never "nothing to do": follow [Already on this version](/docs/Guides/setup#already-on-this-version).
+**A fix or a minor version keeps the same version number.** When only the last number changes (a fix, such as 3.0.0 → 3.0.1) or the middle number changes (a minor version, such as 3.0.9 → 3.1.0), the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed. A project already on the installed major version is never "nothing to do": follow [Already on this version](/docs/Guides/setup#already-on-this-version).
 
 **When a change does not fit the project**, for example it renames a folder the project does not have, skip it. If you are not sure, ask; do not guess.
 
@@ -44,6 +44,7 @@ Anyone changing the standards adds a version, alongside the change:
 - **Pilot a version in a real project before releasing it.** Once the work-in-progress version is written, have one real project apply it exactly as written, reading only what the page says. Every judgement call the agent has to make, and every instruction that does not fit the project, is a missing sentence: fold it back into the version before publishing. Release only when the pilot runs without the agent asking a question the page does not answer.
 - **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`. Write each fix so a project already on that version knows what to do.
 - **Adding something optional** to a released version, such as a new setup question, bumps the middle number: `3.0.9` → `3.1.0`. It is written up the same way as a fix, and projects keep the same version number in `AGENTS.md`.
+- **Changes that move files are listed under Structural changes.** At the top of the version's Fixes, list each change that moves or renames files in a project, with a rough size, such as "moves every component `constants.ts`", so a project can plan the work and run a [regression check](/docs/Guides/regression-checks) first. For now, structural changes ship in fix and minor versions; once the standards settle, they will wait for the next major version.
 - **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.0.9 — optional project links`, so releases are easy to find in the git log.
 - **Every patch number is published.** Publish each patch to npm as soon as its Fixes are written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
@@ -52,11 +53,37 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.2.0
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.2.1
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
 
+**Fixes in 3.2.1.** If the project already applied 3.2.0, check these:
+
+**Structural changes in 3.2.1.** These move files. Plan them, and run a [regression check](/docs/Guides/regression-checks) first:
+
+- Every component `constants.ts` and every topic file in `lib/constants/` (`motion.ts`, `durations.ts`, `cardRail.ts`) moves into the seven standard files. Large on a site with many components: the Activatus homepage has 36 component files and 3 topic files. `pnpm standards:check` names the file each export goes to.
+- Sub-component folders inside a grouping folder, such as `lifeActivated/outcomeArtwork/alignmentArtwork/`, move flat into the parent's `components/` folder. Small: the 3.1.1 step already moved most of them.
+
+- **`lib/constants/` has seven standard files:** `routes.ts`, `strings.ts`, `numbers.ts`, `noData.ts`, and three new ones, created only once there is something to put in them:
+  - **`animation.ts`**: how things move. Motion and choreography objects (`*_MOTION`), entrances, scroll stops, drift, zoom, scroll pacing and motion media queries.
+  - **`artwork.ts`**: what is drawn and where. Layouts, card pieces, backdrop tiles, canvas sizes and image paths. Long SVG paths go in an `.svg` file in `public/` or an icon component, never here.
+  - **`classNames.ts`**: Tailwind class strings shared between files, only when a component cannot hold them and they still repeat. A class name one file uses stays inline.
+
+  Each animation and artwork object stays whole, its numbers named by their keys (`snapSeconds`). Never lift them out into `numbers.ts`, which keeps loose single numbers only. Lifting them out made names like `CONFIDENCE_ROUND_ONE_SWING_ONE_DEGREES` and split one movement across files; the reasons for one numbers file (translation, one place to look) do not apply to motion and drawing data. Each file is one file, never split by topic. See [Constants](/docs/Structure/folder-structure#constants).
+
+  **What to do:** move every component `constants.ts`, and every other file in `lib/constants/`, into the seven files. A topic file such as `motion.ts` is folded into `animation.ts`. Run `pnpm standards:check`: each finding names the file each export most likely belongs in; check each against the [Constants table](/docs/Structure/folder-structure#constants). In `eslint.config.mjs`, copy the template over it again: the `max-lines` block now reads `lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts`. Copy the Constants rules into `AGENTS.md` from the template.
+
+- **A loop over a list looks each item up by its id.** Write a key out by name when you mean one item, `r.plans.starter`. Inside a loop over the list, use the item's id, typed from `r`: `keyof typeof r.sources`. Delete separate lookup objects that map an id to its link, such as `SOURCE_ROUTES` or `PLAN_ROUTES`: `r` already is that lookup. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
+
+- **`pnpm standards:check` checks more of the How to check lists:** sub-components sit flat in their root component's `components/` folder; the homepage is in `app/(homepage)/`; `docs/development/coding-standards.md` records the four agent answers under "Details"; `docs/design/design-system.md` has a filled-in Colour palette table; and `lib/constants/` holds only the seven standard files. Fix what it finds.
+
+- **Keep every docs folder.** 3.2.0's rule is final: no docs folder is deleted, even one that does not apply yet.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; `lib/constants/` holds only the seven standard files and `index.ts`; no component has its own `constants.ts`.
+
 **Fixes in 3.2.0.** If the project already applied 3.1.1, check these:
+
+**Structural changes in 3.2.0.** Only one: restore any docs folder deleted under 3.1.1, from the templates. Small.
 
 - **A standards check ships with the package.** Add the script `"standards:check": "node node_modules/@activatus/code-standards/scripts/verifyStandards/verifyStandards.mjs"` to `package.json`, run `pnpm standards:check`, and fix what it finds. It follows the exceptions recorded in `docs/development/coding-standards.md`. See [Checking a project](/docs/Guides/setup#checking-a-project). Copy the Code standards section of `AGENTS.md` from the template again: it now says to run the check.
 - **Keep every docs folder and file**, even ones that do not apply yet. 3.1.1 allowed deleting a folder that could not apply; that is withdrawn, because the folders keep every project's docs laid out the same and a small project grows into them. Restore any folder deleted under 3.1.1 from the templates, and remove its entry from `coding-standards.md`.
@@ -68,6 +95,14 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 **How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; every folder from the doc templates exists in `docs/`.
 
 **Fixes in 3.1.1.** If the project already applied 3.1.0, check these:
+
+**Structural changes in 3.1.1.** These move files. Plan them, and run a [regression check](/docs/Guides/regression-checks) first:
+
+- The homepage moves into `app/(homepage)/`: `app/page.tsx` and the homepage's components. Small.
+- The site frame moves into `components/layout/`: the navigation, header and footer. Small.
+- Every component `constants.ts` moves into `lib/constants/`. Large on a site with many components: the Activatus homepage had 36. Follow the 3.2.1 rule, not this version's.
+- Every nested sub-component folder moves flat into its parent's `components/` folder. Medium to large: the Activatus homepage had 28.
+- `r` or `s` split into several files only to stay under 300 lines goes back into one file. Small.
 
 - **`routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts` can run past 300 lines.** They hold data only, so `max-lines` no longer applies to them. Splitting `r` or `s` across files to stay under 300 lines only made labels harder to find. In `eslint.config.mjs`, add this block straight after the test-file block:
 
@@ -93,8 +128,8 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 - **The site frame lives in `components/layout/`**: navigation, header, footer and anything else that frames the pages. It may read `r` and `s`. Move those components there from `components/shared/` or `app/components/`. Layout primitives such as Duplex stay in `components/ui/`.
 - **A props-only component that is not on the Design System Components list stays in `components/ui/`.** Record it, with its props, in `docs/development/coding-standards.md`, under a new "Components for the standards" heading (copy it from the template), and tell the person. Move back into `components/ui/` any such component that was moved out only because it was not listed.
 - **Four components joined the list:** Brand Logo, Notification Card, Scroll Cue and Dropdown Menu. If the project has them, check their props match the [list](/docs/design-system-components).
-- **Every named number lives in `lib/constants/numbers.ts`**, even one only one file uses, in one file that is never split. Move numbers from the tops of app files and from any topic files (`durations.ts`, `limits.ts`) into it. Config files and scripts outside the app keep theirs at the top.
-- **No component-level `constants.ts`.** Every link, piece of text and number goes in `lib/constants/`, even if one file uses it, so all the text is in one place for translation. Move any component's `constants.ts` into `r`, `s` and `numbers.ts`.
+- **Every named number lives in `lib/constants/numbers.ts`**, even one only one file uses, in one file that is never split. Move numbers from the tops of app files and from any topic files (`durations.ts`, `limits.ts`) into it. _Changed in 3.2.1: motion and artwork objects stay whole in `animation.ts` and `artwork.ts`. Do the 3.2.1 step instead of moving their numbers here._ Config files and scripts outside the app keep theirs at the top.
+- **No component-level `constants.ts`.** Every link, piece of text and number goes in `lib/constants/`, even if one file uses it, so all the text is in one place for translation. Move any component's `constants.ts` into `r`, `s` and `numbers.ts`. _Changed in 3.2.1: there are seven constants files to move into. Do the 3.2.1 step instead._
 - **Write `r` and `s` keys out by name**, `r.plans.starter`, never `r.plans[planId]`. A list of items keeps its words in `s` and its links in `r` under the same keys. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
 - **No `"#"` placeholder links.** Show the text without a link and put `{/* TODO: … */}` above it until the page exists. Unfinished work is marked `// TODO: Message`.
 - **`lib/constants/` never imports from `lib/types/`.** Move any type it imports from there beside the constant.
@@ -103,7 +138,7 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 - **The palette is listed in `docs/design/design-system.md`**: each colour's name, value, class names and use. `globals.css` holds only colours Tailwind does not have. Copy the Colour palette section from the template and fill it in.
 - **AGENTS.md: the Code standards section sits between `<!-- code-standards:start -->` and `<!-- code-standards:end -->`**, and an update replaces everything between them. Copy the section from the template, markers included. Move any project exception written into it into `docs/development/coding-standards.md`, and anything else the project added, such as a framework's block, outside the markers.
 - **Docs:** copy the new `docs/product/ontology.md` template if the project has none, and ask the person to review it. Fix the link in `overview/writing-docs.md` if `what-is-it.md` was renamed. Retitle `how-it-works.md` "Overview — How It Works". Delete any version 2 leftovers: `_category_.json`, the `sidebar_position`, `sidebar_label`, `slug`, `status` and `lastReviewed` front matter, and `docs/index.md`.
-- **Decision Docs are confirmed with the person** before an agent creates, changes or deletes one, unless `AGENTS.md` names an agent that manages them. A folder that cannot apply may be deleted with the person's yes, recorded in `coding-standards.md`. Moving or reformatting a doc does not change its Updated date.
+- **Decision Docs are confirmed with the person** before an agent creates, changes or deletes one, unless `AGENTS.md` names an agent that manages them. ~~A folder that cannot apply may be deleted with the person's yes, recorded in `coding-standards.md`.~~ _Withdrawn in 3.2.0: keep every folder._ Moving or reformatting a doc does not change its Updated date.
 - **Stylelint configs name their export:** `const config = { … }; export default config;`. Change the project's `stylelint.config.mjs` to match.
 - **The Linear ticket prefix is the team's, not the project's.** In `AGENTS.md`, Project workflow, write the Linear workspace, team and project, such as `activatus-life`, team `ACT`, project Launchpad.
 

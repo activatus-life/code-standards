@@ -20,12 +20,6 @@ const TEMPLATE_DOCS = listTemplateDocs({
 }).map((fullPath) =>
 	path.posix.join("docs", path.relative(docsDirectory, fullPath)),
 );
-const CONSTANTS_FILES = [
-	"lib/constants/index.ts",
-	"lib/constants/routes.ts",
-	"lib/constants/strings.ts",
-	"lib/constants/numbers.ts",
-];
 
 const check = (projectFiles) =>
 	checkRequiredFiles({
@@ -35,10 +29,7 @@ const check = (projectFiles) =>
 
 describe("checkRequiredFiles", () => {
 	it("passes a project with every standard file", () => {
-		assert.deepEqual(
-			check([...TEMPLATE_DOCS, ...CONSTANTS_FILES]),
-			[],
-		);
+		assert.deepEqual(check(TEMPLATE_DOCS), []);
 	});
 
 	it("accepts the overview doc renamed after the project", () => {
@@ -47,26 +38,12 @@ describe("checkRequiredFiles", () => {
 				(filePath) => filePath !== "docs/overview/what-is-it.md",
 			),
 			"docs/overview/what-is-launchpad.md",
-			...CONSTANTS_FILES,
 		];
 		assert.deepEqual(check(projectFiles), []);
 	});
 
-	it("flags a component-level constants file", () => {
-		const findings = check([
-			...TEMPLATE_DOCS,
-			...CONSTANTS_FILES,
-			"components/ui/tooltip/constants.ts",
-		]);
-		assert.equal(findings.length, 1);
-		assert.equal(findings[0].standard, "12.1");
-	});
-
-	it("flags missing docs and constants", () => {
+	it("flags missing docs", () => {
 		const findings = check([]);
 		assert.ok(findings.some((finding) => finding.standard === "18"));
-		assert.ok(
-			findings.some((finding) => finding.standard === "12.1"),
-		);
 	});
 });
