@@ -9,6 +9,8 @@ import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import { configs as typescript } from "typescript-eslint";
 
+import { projectOverrides } from "./eslint.overrides.mjs";
+
 // Code patterns that are errors in every file.
 const RESTRICTED_SYNTAX = [
 	{
@@ -192,6 +194,11 @@ const config = [
 		},
 	},
 	{
+		// r, s, numbers and noData are lists, not logic, so they can be long.
+		files: ["lib/constants/{routes,strings,numbers,noData}.ts"],
+		rules: { "max-lines": "off" },
+	},
+	{
 		files: ["**/*.config.{js,mjs,ts}", "**/*.stories.tsx"],
 		rules: { "import-x/no-default-export": "off" },
 	},
@@ -210,6 +217,8 @@ const config = [
 			],
 		},
 	},
+	// This project's own changes: see eslint.overrides.mjs.
+	...projectOverrides,
 	prettier,
 ];
 

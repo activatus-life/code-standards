@@ -1,4 +1,4 @@
-# Overview — How it Works
+# Overview — How It Works
 
 > [One line: what this doc decides.]
 

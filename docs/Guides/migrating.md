@@ -19,6 +19,8 @@ The standards apply to **code we write**, not to packages we pull in. Do not lin
 
 ## Stage 1 — Prettier (formatting only)
 
+Applies setup standard 7.
+
 Formatting changes are safe to make all at once because they don't change behaviour.
 
 ```bash
@@ -47,9 +49,13 @@ vendor/
 
 ## Stage 2 — EditorConfig
 
+Applies setup standard 9.
+
 Add the `.editorconfig` file. No code changes needed — your editor will handle it on next save.
 
 ## Stage 3 — ESLint
+
+Applies setup standard 6.
 
 Add the [standard config](/docs/Standards/eslint) for your project type, then start in warn-only mode to see what you're dealing with. Add a block before `prettier`:
 
@@ -73,6 +79,8 @@ export default config;
 Run `pnpm lint` and triage the output. Fix them one kind at a time (for example, all `any` removals together). Once clean, remove the overrides.
 
 ## Stage 4 — Names
+
+Applies setup standard 1.
 
 Renaming is the biggest job in most migrations, and the easiest place to get confused. Every name we write becomes [Human-Readable Names](/docs/Standards/human-readable-names). Work through it in this order.
 
@@ -154,13 +162,19 @@ node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs --list rena
 
 ## Stage 5 — AGENTS.md
 
+Applies setup standard 21.
+
 Copy the [AGENTS.md template](/docs/templates#agents) to the project root and replace every `[placeholder]`. Agree the standards with the person first ([Setup, step 3](/docs/Guides/setup#3-agree-the-standards)), and set the code standards version from the [Version History](/docs/version-history).
 
 ## Stage 6 — Agent skills
 
+Applies setup standard 21.
+
 Copy the eight [standard skill files](/docs/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
 
 ## Stage 7 — Docs
+
+Applies setup standard 18.
 
 Move the project's existing documentation into the standard [`docs/` folders](/docs/Standards/documentation#-the-folders), rewriting each as a [Decision Doc](/docs/Standards/documentation#-the-doc-format), then add the [`docsSite/` viewer](/docs/Standards/documentation#-setting-it-up) so it shows at `/docs`.
 

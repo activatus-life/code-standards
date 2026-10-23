@@ -63,10 +63,10 @@ This applies to everyone, **including AI agents**. An agent's work is not finish
 
 ## Files
 
-| Rule                    | What you will see                                       | What it means                      | How to fix it                                                                                  |
-| ----------------------- | ------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `max-lines`             | `File has too many lines (312). Maximum allowed is 300` | The file is over 300 lines         | Split it: move functions to `utils/`, sub-components to their own folders, types to `types.ts` |
-| `unicorn/filename-case` | `Filename is not in camel case or pascal case`          | The file name is in the wrong case | Rename it: camelCase for code files, PascalCase for component files                            |
+| Rule                    | What you will see                                       | What it means                      | How to fix it                                                                                                                                                                                    |
+| ----------------------- | ------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `max-lines`             | `File has too many lines (312). Maximum allowed is 300` | The file is over 300 lines         | Split it: move functions to `utils/`, sub-components to their own folders, types to `types.ts`. `routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts` in `lib/constants/` never get this error |
+| `unicorn/filename-case` | `Filename is not in camel case or pascal case`          | The file name is in the wrong case | Rename it: camelCase for code files, PascalCase for component files                                                                                                                              |
 
 ## Types
 

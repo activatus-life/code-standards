@@ -38,8 +38,10 @@ project-root/
 │   │   └── webhooks/
 │   │       └── stripe/
 │   │           └── route.ts
-│   ├── layout.tsx
-│   └── page.tsx
+│   ├── (homepage)/                                  # The homepage, served at /
+│   │   ├── components/                              # Used only by the homepage
+│   │   └── page.tsx
+│   └── layout.tsx
 ├── components/                                      # React components
 │   ├── ui/                                          # Design System Components
 │   │   └── button/                                  # Example component structure
@@ -48,7 +50,8 @@ project-root/
 │   │       ├── Button.stories.tsx                   # Storybook stories
 │   │       ├── types.ts                             # Component types
 │   │       └── index.ts                             # Export file
-│   └── shared/                                      # Used by more than one page
+│   ├── layout/                                      # The site frame: navigation, header, footer
+│   └── shared/                                      # Used by three or more pages
 ├── lib/                                             # Outside connections and app-wide setup
 │   ├── permissions/                                 # Who may do what
 │   │   ├── index.ts                                 # Main definitions
@@ -133,46 +136,65 @@ project-root/
 
 ## 🧩 Where components live
 
-**A component lives where it is used.** There are no feature folders: a component either belongs to one page, to one section, or is shared.
+**A component lives where it is used.** There are no feature folders: a component belongs to one page or one section, is shared, or is part of the site frame.
 
 | Used by                                                                                         | Lives in                                             | Example                                        |
 | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------- |
 | **Every project the same way** — the [Design System Components](/docs/design-system-components) | `components/ui/`                                     | `components/ui/button/`                        |
-| **More than one page** of this project                                                          | `components/shared/`                                 | `components/shared/siteHeader/`                |
-| **A few pages in one section**                                                                  | A `components/` folder in that section's route group | `app/(billing)/components/invoiceTable/`       |
-| **One page only**                                                                               | A `components/` folder in that page's route folder   | `app/account-settings/components/accountForm/` |
+| **The site frame** — navigation, header, footer                                                 | `components/layout/`                                 | `components/layout/siteHeader/`                |
+| **Three or more pages** of this project                                                         | `components/shared/`                                 | `components/shared/pricingTable/`              |
+| **Three or more pages in one section**                                                          | A `components/` folder in that section's route group | `app/(billing)/components/invoiceTable/`       |
+| **One or two pages**                                                                            | A `components/` folder in that page's route folder   | `app/account-settings/components/accountForm/` |
+| **The homepage**                                                                                | `app/(homepage)/components/`                         | `app/(homepage)/components/heroSection/`       |
 
 A route group is a folder in brackets, such as `(billing)`. It groups pages without changing their URLs: `app/(billing)/invoices/page.tsx` is served at `/invoices`.
+
+**The homepage is a route group too: `app/(homepage)/`.** It holds the homepage's `page.tsx` and its own `components/` and `utils/` folders, and is served at `/`. Without it, the homepage's components sit loose in `app/components/` beside the root layout, with no clean place for the next page's. `app/` keeps only the root `layout.tsx` and the files Next.js needs there, such as `globals.css`. A folder inside `app/` is only a route when it holds a `page.tsx` or `route.ts`, so `components/` and `utils/` folders inside `app/` are safe: they never become URLs.
 
 ```text
 project-root/
 ├── app/
 │   ├── (billing)/                       # A section: groups pages, not part of the URL
-│   │   ├── components/                  # Used by more than one billing page
+│   │   ├── components/                  # Used by three or more billing pages
 │   │   │   └── invoiceTable/
 │   │   ├── invoices/
 │   │   │   └── page.tsx                 # /invoices
 │   │   └── payments/
 │   │       └── page.tsx                 # /payments
-│   └── account-settings/
-│       ├── components/                  # Used only by this page
-│       │   └── accountForm/
-│       │       ├── AccountForm.tsx
-│       │       ├── AccountForm.test.tsx
-│       │       ├── types.ts
-│       │       └── index.ts
-│       └── page.tsx                     # /account-settings
+│   ├── (homepage)/                      # The homepage, served at /
+│   │   ├── components/                  # Used only by the homepage
+│   │   │   └── heroSection/
+│   │   └── page.tsx                     # /
+│   ├── account-settings/
+│   │   ├── components/                  # Used only by this page
+│   │   │   └── accountForm/
+│   │   │       ├── AccountForm.tsx
+│   │   │       ├── AccountForm.test.tsx
+│   │   │       ├── types.ts
+│   │   │       └── index.ts
+│   │   └── page.tsx                     # /account-settings
+│   └── layout.tsx                       # The root layout
 └── components/
     ├── ui/                              # Design System Components: Button, Card, Modal
     │   └── button/
-    └── shared/                          # Used by more than one page of this project
-        └── siteHeader/
+    ├── layout/                          # The site frame: navigation, header, footer
+    │   ├── siteHeader/
+    │   └── siteFooter/
+    └── shared/                          # Used by three or more pages of this project
+        └── pricingTable/
 ```
 
 ### Rules
 
-- **Start where it is used, and move it when it is shared.** A new component goes in its page's `components/` folder. When a second page in the same section needs it, move it to the section's `components/` folder. When a page in another section needs it, move it to `components/shared/`.
+- **Start where it is used, and share it on the third use.** Two uses are not enough to see which props really change from one use to the next. Three are.
+  1. **First use:** a new component goes in its page's `components/` folder.
+  2. **Second use:** copy it into the second page's `components/` folder. Only one copy, and each copy has a comment naming the other: `// Copy of app/invoices/components/invoiceSummary/. Merge on the third use.`
+  3. **Third use:** merge the copies into one component. Design its props from all three uses, move it to the section's `components/` folder if all three pages are in one section, or to `components/shared/` if not, and delete the copies.
+- **This is the only copying allowed.** A third copy is a mistake. It does not apply to [Design System Components](/docs/design-system-components), which are shared from the start, or to constants, which always live in `lib/constants/`.
 - **`components/ui/` is only for [Design System Components](/docs/design-system-components).** They take everything through props and import nothing from the project, so they can be copied into another project unchanged. See [Reusable by design](/docs/Structure/component-organization#reusable-by-design).
+- **A props-only component that is not on the list yet stays in `components/ui/`.** A project cannot edit the standards, so it cannot add the component to the list itself. If a component takes everything through props and imports nothing from the project, keep it in `components/ui/` and record it in `docs/development/coding-standards.md`, under "Components for the standards", with its props. Tell the person, so it is added to the list in the next release.
+- **`components/layout/` is the site frame**: the navigation, header, footer and anything else that frames the pages. It is this project's own code, so it may read `r` and `s`, and usually wraps Design System Components such as Navigation Bar and Footer. It does not have to be on every page, and it does not have to be rendered from a `layout.tsx` file. **Layout primitives, such as Duplex and Section Wrapper, are Design System Components**: they go in `components/ui/`, never `components/layout/`.
+- **`components/shared/` is everything else used by three or more pages.** The difference from `components/layout/` is what it is, not how often it is used: a footer is layout even on one page, and a pricing table used on three pages is shared.
 - **A page or shared component wraps Design System Components.** It holds this project's logic and data, and passes props down.
 - **Never group by type** (`atoms/`, `molecules/`, `organisms/`). Group by where a component is used.
 
@@ -265,6 +287,7 @@ Add the export to `utils/index.ts` whenever you add a function.
 ### Rules
 
 - **Start local, promote when shared.** A function begins in the component's `utils/`. When another component in the same section needs it, move its folder to the section's `utils/`. When anything outside the section needs it, move it to the global `utils/`.
+- **Sort, find, get, filter and format functions are utils from the start.** A function that only works on the data passed to it goes in a `utils/` folder the first time it is written, never inside the component, even with one user.
 - **One function per folder**, with the folder and file named after the function (`formatCurrency/formatCurrency.ts`), plus its test file and an `index.ts`.
 - **Every function has a test file** in the same folder. See [Readable Code](/docs/Standards/readable-code#every-function-and-component-has-a-test-file).
 - **Import from the `utils` folder**, never from the files inside it.
@@ -274,14 +297,14 @@ Add the export to `utils/index.ts` whenever you add a function.
 
 ## 🔤 Constants: `r`, `s`, noData and numbers {#constants}
 
-Every link, every piece of text on screen and every piece of stand-in data lives in `lib/constants/`, never written straight into a component:
+Every link, every piece of text on screen, every named number and every piece of stand-in data lives in `lib/constants/`, never written straight into a component. **There is no component-level `constants.ts`**: even a value only one file uses goes here, so every piece of text is in one place when the site is translated into other languages, and every number is named the same way.
 
 ```text
 lib/constants/
 ├── routes.ts      # r: every link
 ├── strings.ts     # s: every piece of static text
-├── noData.ts      # Stand-in data for local development
-├── durations.ts   # Shared numbers, one file per topic
+├── numbers.ts     # Every named number
+├── noData.ts      # Stand-in data, once the data's shape is decided
 └── index.ts       # Exports all of them
 ```
 
@@ -309,6 +332,7 @@ export const r = {
 
 - **A dynamic route starts from its `r` route.** Build the changing part where it is used: `` `${r.insights}/${insight.slug}` ``.
 - **Name each key after the place it goes**, in camelCase: `r.myStory`, `r.linkedIn`.
+- **No `"#"` placeholder links.** A link with nowhere to go yet is shown as plain text, without a link, with a TODO above it: `{/* TODO: Link to the pricing page once it exists */}`. A `"#"` link is a bug a user can click.
 
 ### `s`: strings
 
@@ -327,9 +351,40 @@ export const s = {
 - **The keys of `s` are the site's translation keys.** When a site gets more languages, each key is translated into each language. Name each key after what the text says or does, and never use one key for two different jobs.
 - **Only real copy goes in `s`.** Dummy text belongs in `noData.ts`.
 
+### A list of items with links
+
+Each item's words go in `s` and its link goes in `r`, under the same key, so the words can be translated and the link stays with the other links. The component reads each one by name:
+
+```ts title="lib/constants/strings.ts"
+export const s = {
+	plans: {
+		starter: { title: "Starter", action: "Start free" },
+		team: { title: "Team", action: "Talk to us" },
+	},
+};
+```
+
+```ts title="lib/constants/routes.ts"
+export const r = {
+	plans: {
+		starter: "/signup?plan=starter",
+		team: "/contact",
+	},
+};
+```
+
+```tsx title="app/(homepage)/components/pricingPlans/PricingPlans.tsx"
+<Link href={r.plans.starter}>{s.plans.starter.action}</Link>
+<Link href={r.plans.team}>{s.plans.team.action}</Link>
+```
+
+**Write each key out by name**, `r.plans.starter`, never a key held in a variable such as `r.plans[planId]`. A reader can see exactly which words and which link each line uses.
+
 ### noData: stand-in data for local development
 
 **`noData.ts` stands in for outside data while you work locally**, when the CMS, database or API can't be reached, such as when you have no internet. Every page still renders with something that looks real.
+
+**Create it once the project has decided how its data comes in**, the shape of the CMS, database or API response. Not before: the shape may still change. If the person asks for stand-in data before then, such as a list of fake users, put it in `noData.ts` with a comment above it: `// Not the real schema: a basic shape to finish the task.`
 
 ```ts title="lib/constants/noData.ts"
 const DUMMY_HEADING = "A heading for local development";
@@ -357,24 +412,20 @@ const insights =
 - **Dummy values sit at the top of `noData.ts`** as their own constants, `DUMMY_HEADING` and the rest. They are never added to `s`.
 - **noData is for the whole site.** All of it lives in this one file.
 
-### Numbers: named, and kept by topic
+### Numbers: named, in one file {#numbers-named-and-kept-by-topic}
 
 **A number other than `-1`, `0` or `1` gets a name**, such as `MAXIMUM_RETRY_ATTEMPTS`. Those three mean "nothing", "one more" and "not found", so they read clearly as they are. Any other number was chosen by someone, and its name says what it controls. ESLint checks this with `no-magic-numbers`.
 
-There is no `n` object. Text and links are one kind of thing each, but numbers are not: a retry limit, a cookie lifetime and a page size have nothing in common. Put each number where its meaning lives:
+**Every named number lives in `lib/constants/numbers.ts`**, even one that only one file uses, so every project finds its numbers in the same place. There is no `n` object: each number is its own `SCREAMING_SNAKE_CASE` export.
 
-| Used by            | Where it goes                                     | Example                                                                                |
-| ------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| One file           | At the top of that file                           | `const MAXIMUM_NESTING_DEPTH = 3;` in `eslint.config.mjs`                              |
-| More than one file | `lib/constants/`, in a file named after its topic | `lib/constants/durations.ts`, `lib/constants/limits.ts`, `lib/constants/httpStatus.ts` |
-
-```ts title="lib/constants/durations.ts"
+```ts title="lib/constants/numbers.ts"
 export const COOKIE_DURATION_DAYS = 30;
+export const MAXIMUM_RETRY_ATTEMPTS = 3;
 export const SESSION_TIMEOUT_MILLISECONDS = 900_000;
 ```
 
-- **Start in the file that uses it**, and move it to `lib/constants/` when a second file needs it.
-- **Never a `numbers.ts`** or any other file of unrelated values. Name the file after the topic.
+- **One file, never split by topic.** `numbers.ts` can run past 300 lines, like `r` and `s`.
+- **Config files and scripts outside the app**, such as `eslint.config.mjs`, keep their numbers at the top of the file: they are not part of the app and do not import from it.
 - **Put the unit in the name**: `_MILLISECONDS`, `_DAYS`, `_PIXELS`.
 
 ### Rules
@@ -384,6 +435,8 @@ export const SESSION_TIMEOUT_MILLISECONDS = 900_000;
 - **Files inside `lib/constants/` import each other directly**, `import { s } from "./strings";`, never through `index.ts`. See [Inside a folder, import files directly](/docs/Structure/import-organization#2-inside-a-folder-import-files-directly).
 - **`r` and `s` are the only single-letter names allowed anywhere.** See [Human-Readable Names](/docs/Standards/human-readable-names#r-and-s).
 - **Other constants**, such as numbers, are `SCREAMING_SNAKE_CASE`: see [Naming Conventions](/docs/Structure/naming-conventions#constants).
+- **`routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts` can run past 300 lines.** They are data only, so ESLint does not apply `max-lines` to them. Keep each one a single file: never split them to get under the limit.
+- **`lib/constants/` never imports from `lib/types/`.** `lib/types/` reads some of its types from the constants (`typeof s`), so an import the other way makes a loop. When a constant needs a type, write the type beside the constant, or read it from the constant.
 
 ---
 

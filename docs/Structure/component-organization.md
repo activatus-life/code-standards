@@ -416,40 +416,42 @@ This makes it easy to spot component folders and keeps them consistent with file
 
 ## Nested Components
 
-For components with sub-components, give each sub-component its own folder:
+For components with sub-components, give each sub-component its own folder, inside the parent's `components/` folder:
 
 ```text
 components/
 └── card/
     ├── Card.tsx
     ├── Card.test.tsx
-    ├── cardHeader/
-    │   ├── CardHeader.tsx
-    │   ├── CardHeader.test.tsx
-    │   ├── types.ts
-    │   └── index.ts
-    ├── cardBody/
-    │   ├── CardBody.tsx
-    │   ├── CardBody.test.tsx
-    │   ├── types.ts
-    │   └── index.ts
-    ├── cardFooter/
-    │   ├── CardFooter.tsx
-    │   ├── CardFooter.test.tsx
-    │   ├── types.ts
-    │   └── index.ts
+    ├── components/
+    │   ├── cardHeader/
+    │   │   ├── CardHeader.tsx
+    │   │   ├── CardHeader.test.tsx
+    │   │   ├── types.ts
+    │   │   └── index.ts
+    │   ├── cardBody/
+    │   │   ├── CardBody.tsx
+    │   │   ├── CardBody.test.tsx
+    │   │   ├── types.ts
+    │   │   └── index.ts
+    │   └── cardTitleArrow/    # Used only by CardHeader, but sits beside it
+    │       ├── CardTitleArrow.tsx
+    │       ├── CardTitleArrow.test.tsx
+    │       ├── types.ts
+    │       └── index.ts
     ├── types.ts
-    └── index.ts             # Re-exports all sub-components
+    └── index.ts             # Re-exports the card and its sub-components
 ```
+
+**Every sub-component sits flat in the parent's one `components/` folder**, even one that only another sub-component uses, such as `cardTitleArrow`. There is never a `components/` folder inside a sub-component, so a component is at most two levels deep: the component, then its sub-components. Deeper folders are hard to find and make long import paths.
 
 ### `index.ts` for Nested Components
 
 ```typescript
 // Card/index.ts
 export { Card } from "./Card";
-export { CardHeader } from "./cardHeader";
-export { CardBody } from "./cardBody";
-export { CardFooter } from "./cardFooter";
+export { CardHeader } from "./components/cardHeader";
+export { CardBody } from "./components/cardBody";
 export type { CardProps } from "./types";
 ```
 
@@ -463,15 +465,17 @@ Inside a component's folder, import files directly. **Never import through the f
 
 ```typescript
 // card/Card.tsx — the parent imports its sub-components
-import { CardBody } from "./cardBody";
-import { CardHeader } from "./cardHeader";
+import { CardBody } from "./components/cardBody";
+import { CardHeader } from "./components/cardHeader";
 import type { CardProps } from "./types";
 
-// card/cardBody/CardBody.tsx — a sub-component imports types by file
-import type { CardProps } from "../types";
+// card/components/cardHeader/CardHeader.tsx — a sub-component imports
+// a sibling sub-component through its folder, and types by file
+import { CardTitleArrow } from "../cardTitleArrow";
+import type { CardProps } from "../../types";
 
 // ❌ Bad — a sub-component importing its parent through the index
-import { Card } from "..";
+import { Card } from "../..";
 ```
 
 ### From Other Components
@@ -495,7 +499,7 @@ import { Card, CardHeader, CardBody } from "@/components/ui/card";
 
 Consider creating separate component folders when:
 
-1. **Used by more than one page** → Move to the section's `components/` folder, or `components/shared/`
+1. **Used by more than one page** → Copy it on the second use, and merge the copies into the section's `components/` folder or `components/shared/` on the third. See [Where components live](/docs/Structure/folder-structure#rules)
 2. **Complex logic** → Separate file for clarity
 3. **Multiple variants** → Sub-components in same folder
 4. **Shared styles** → Keep co-located

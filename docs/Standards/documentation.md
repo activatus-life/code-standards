@@ -67,12 +67,12 @@ These are the same in every project:
 
 Decisions that only make sense for this one product go in their own folders:
 
-| Folder                                   | Holds                                                |
-| ---------------------------------------- | ---------------------------------------------------- |
-| `product/`                               | What this product is and how its main parts work     |
-| `integrations/`                          | One file per outside service the product connects to |
-| `user-flows/`                            | One file per User Flow                               |
-| _A folder for the product's own subject_ | For example, Launchpad has `tickets/`                |
+| Folder                                   | Holds                                                                                                              |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `product/`                               | What this product is and how its main parts work. Starts with `ontology.md`: the product's words and how it speaks |
+| `integrations/`                          | One file per outside service the product connects to                                                               |
+| `user-flows/`                            | One file per User Flow                                                                                             |
+| _A folder for the product's own subject_ | For example, Launchpad has `tickets/`                                                                              |
 
 ### Which folder?
 
@@ -94,6 +94,12 @@ Keep these pairs distinct:
 - **Create a new file** only when a topic has no home.
 
 A `Not started` file is a visible gap: it shows a decision that has not been made yet.
+
+**A folder that cannot apply to the project may be deleted**, such as `data/` or `security/` on a marketing site with no database or accounts. Ask the person first, and record the deleted folders and the reason in `docs/development/coding-standards.md`, under "Details".
+
+### Decision Docs belong to the person
+
+**Confirm with the person before creating, changing or deleting a Decision Doc**, including deleting a folder. A decision is theirs to make, not the agent's. The exception is a project whose `AGENTS.md` names an agent that manages the docs, such as a planning agent: that agent follows its own instructions.
 
 ---
 
@@ -149,6 +155,8 @@ Every doc has the same shape:
 ### When a decision changes
 
 Update the doc, change the **Updated** date, and add a `## History` entry: what changed, why, when, and which work was affected. Keep the original decision and its reason in the history.
+
+**The Updated date tracks the decision, not the file.** Moving, renaming, reformatting or converting a doc to this format, with no decision changed, leaves the date as it is.
 
 ---
 
@@ -262,7 +270,7 @@ export default nextConfig;
 
 ## 🚀 Setting it up
 
-1. **Copy the docs.** Copy the [`docs/` templates](/docs/templates#document-templates) into the project's `docs/` folder. Rename `overview/what-is-it.md` after the project (`what-is-launchpad.md`) and update its title.
+1. **Copy the docs.** Copy the [`docs/` templates](/docs/templates#document-templates) into the project's `docs/` folder. Converting docs from version 2 or earlier? Delete the old viewer's leftovers: every `_category_.json`, the `sidebar_position`, `sidebar_label`, `slug`, `status` and `lastReviewed` front matter, and `docs/index.md` once its content has moved to `overview/`. Rename `overview/what-is-it.md` after the project (`what-is-launchpad.md`), update its title, and update the link to it in `overview/writing-docs.md`. The docs build fails on a broken link.
 
 2. **Copy the viewer.** Copy the [`docsSite/` template](/docs/templates#docs-site) into the project root. Rename `package.json.txt` to `package.json` and `gitignore.txt` to `.gitignore`, set `PROJECT_NAME` in `docusaurus.config.mjs`, and point the home redirect in `src/pages/index.tsx` at the renamed overview file.
 
@@ -295,6 +303,8 @@ export default nextConfig;
    ```
 
    Open `http://localhost:3000/docs`.
+
+7. **Ask the person to review `docs/product/ontology.md`** before work starts: the product's words and how it speaks. Every agent reads it, so a wrong word spreads. Tell them to ask their AI to make any changes.
 
 :::caution[Do not name the script `docs`]
 

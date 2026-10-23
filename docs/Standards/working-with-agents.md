@@ -5,7 +5,7 @@ sidebar_label: "Working with Agents"
 
 # Working with Agents
 
-> How an AI agent links a project's work, reports on it and asks before committing. The GitHub repo, the Linear project, the status circles and asking before every commit and push are all optional. [Setup](/docs/Guides/setup#working-with-the-agent) offers all four every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
+> How an AI agent links a project's work, reports on it and asks before committing. The GitHub repo, the Linear project, the status circles and asking before every commit and push are all optional. [Setup](/docs/Guides/setup#4-working-with-the-agent) offers all four every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
 
 Whatever the project chooses is written into the **Project workflow** section of its `AGENTS.md`, from the [template](/docs/templates#agents), so every agent in the project follows it.
 
@@ -13,10 +13,10 @@ Whatever the project chooses is written into the **Project workflow** section of
 
 Optional. A project records either link, both or neither, in **Project workflow**, and deletes the line for any link it does not use. An agent uses them to link tickets and Pull Requests, and to know where work belongs.
 
-| Link           | Where it comes from                                                                                                                                                                                                        |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GitHub repo    | Read it from `git remote get-url origin` and confirm it with the person. If there is no remote, ask                                                                                                                        |
-| Linear project | If the project's own docs already name it, read it from there and confirm it with the person. Otherwise ask. Write the workspace, the project and the ticket prefix, such as `activatus-life`, Launchpad, `ACT`, or "None" |
+| Link           | Where it comes from                                                                                                                                                                                                                                                                                                   |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GitHub repo    | Read it from `git remote get-url origin` and confirm it with the person. If there is no remote, ask                                                                                                                                                                                                                   |
+| Linear project | If the project's own docs already name it, read it from there and confirm it with the person. Otherwise ask. Write the workspace, the team and the project, such as `activatus-life`, team `ACT`, project Launchpad, or "None". The ticket prefix, such as `ACT`, is the team's: every project in that team shares it |
 
 **Never copy a Linear workspace or ticket prefix from another project.** Projects under the same organisation often live in different Linear workspaces or projects, and a guessed prefix files tickets in the wrong place. If `AGENTS.md` does not name the Linear project, ask before creating, linking or citing any ticket.
 

@@ -149,7 +149,11 @@ Each project defines its colours once, in its global stylesheet:
 
 Tailwind turns every `--color-*` variable in `@theme` into utility classes: `--color-brand-primary` becomes `bg-brand-primary`, `text-brand-primary`, `border-brand-primary` and so on.
 
-The project's design decisions — what each colour is for, the fonts, the spacing — are recorded in its `docs/design/design-system.md` [Decision Doc](/docs/Standards/documentation).
+**`globals.css` is only for project colours.** Tailwind's built-in colours (`bg-slate-900`) need nothing there. Add a colour to `@theme` only when the design needs one Tailwind does not have, such as the brand colours.
+
+**The palette is listed in `docs/design/design-system.md`**, so anyone can see every colour without reading CSS: each colour's name, value, class names and what it is for. The project's other design decisions, the fonts and the spacing, are recorded in the same [Decision Doc](/docs/Standards/documentation).
+
+To see each colour in the editor, install **Tailwind CSS IntelliSense** (Tailwind Labs). It shows a swatch of the actual colour beside each class name.
 
 ### ✅ Use the colours
 

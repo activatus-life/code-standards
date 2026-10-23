@@ -6,11 +6,15 @@
 
 ## Decision
 
-This project follows the Activatus Code Standards, installed as the `@activatus/code-standards` package. The person agreed which standards apply during setup (step 3 of `docs/Guides/setup.md` in the package).
+This project follows the Activatus Code Standards, installed as the `@activatus/code-standards` package. The person agreed which standards apply during setup (steps 3 and 4 of `docs/Guides/setup.md` in the package).
 
 ## Details
 
-[For each standard this project skips or changes: its number and name from the setup list, what is different, and why. For example: "7. Prettier — skipped: the project uses Biome for formatting." If nothing differs, write "No differences".]
+[For each standard this project skips or changes, at setup or later: its number and name from the setup list, what is different, why, and the date the person agreed. For example: "7. Prettier — skipped: the project uses Biome for formatting (2026-10-23)." Every rule in `eslint.overrides.mjs` has an entry here. If nothing differs, write "No differences".]
+
+## Components for the standards
+
+[Props-only components this project keeps in `components/ui/` that are not in the Design System Components list yet, each with its props, to be added in the next release of the standards. If there are none, write "None".]
 
 ## Unfinished changes
 

@@ -23,9 +23,10 @@ sidebar_label: "Version History"
 4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished. When a change says to copy a line from the `AGENTS.md` template, and the project's `AGENTS.md` records the standards in its own words instead, write the updated rule there in the project's own shape.
 5. **Strike out what the standard now covers.** After the changes, re-read the project's list of opted-out and changed standards in `docs/development/coding-standards.md`. Take off the list any exception the new version has made part of the standard, and update any rule it records for an old shape of the standard. A differences list that still describes the old standard sends the next agent wrong.
 6. **Run `pnpm lint`, `pnpm format:check`, `pnpm test` and the build** after each change. `format:check` checks every file git does not ignore; never narrow it to changed files.
-7. **Update the version number** in `AGENTS.md` once every change is done.
+7. **Ask any [Working with the agent](/docs/Guides/setup#4-working-with-the-agent) question** whose answer is not recorded in `docs/development/coding-standards.md`, under "Details".
+8. **Update the version number** in `AGENTS.md` once every change is done.
 
-**A patch keeps the same version number.** When only the last or middle number changes, such as 3.0.0 → 3.0.1 or 3.0.9 → 3.1.0, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
+**A patch keeps the same version number.** When only the last or middle number changes, such as 3.0.0 → 3.0.1 or 3.0.9 → 3.1.0, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed. A project already on the installed major version is never "nothing to do": follow [Already on this version](/docs/Guides/setup#already-on-this-version).
 
 **When a change does not fit the project**, for example it renames a folder the project does not have, skip it. If you are not sure, ask; do not guess.
 
@@ -50,15 +51,57 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.1.0
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.1.1
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.1.1.** If the project already applied 3.1.0, check these:
+
+- **`routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts` can run past 300 lines.** They hold data only, so `max-lines` no longer applies to them. Splitting `r` or `s` across files to stay under 300 lines only made labels harder to find. In `eslint.config.mjs`, add this block straight after the test-file block:
+
+  ```js
+  {
+  	// r, s, numbers and noData are lists, not logic, so they can be long.
+  	files: ["lib/constants/{routes,strings,numbers,noData}.ts"],
+  	rules: { "max-lines": "off" },
+  },
+  ```
+
+  In a JavaScript project, the file pattern ends `.{js,mjs}` instead of `.ts`. If the project already split `r` or `s` into several files only to get under 300 lines, put each back into one file. Update the 300-line rule in `AGENTS.md` from the template.
+
+- **Setup's agent questions are now their own step**, [step 4](/docs/Guides/setup#4-working-with-the-agent), and every setup and update asks them. Agents were skipping them after the standards list. If `docs/development/coding-standards.md` does not record all four answers (the GitHub repo, the Linear project, the status circles and asking before committing), ask the person the missing ones and record them.
+
+- **The standards are the project's base, and changing one needs the person's yes.** An agent never skips, loosens or changes a standard on its own. It asks first, records the change in `docs/development/coding-standards.md`, under "Details" (number, name, what is different, why, and the date), then makes it. Copy the new rule into `AGENTS.md` from the template, under Code standards.
+- **ESLint changes live in `eslint.overrides.mjs`.** `eslint.config.mjs` is now an unchanged copy of the template, so an update can copy it straight over. Copy `static/templates/eslint.overrides.mjs` to the project root. Move every rule the project added or changed in `eslint.config.mjs` into it, each with a comment naming the standard's number, and check each has an entry in `coding-standards.md`. Ask the person about any that do not. Then copy the project's template from `static/templates/eslint/` over `eslint.config.mjs`. See [Project-specific overrides](/docs/Standards/eslint#project-specific-overrides).
+- **Components are shared on the third use, not the second.** On the second use, copy the component into the second page's `components/` folder, with a comment in each copy naming the other. On the third use, merge them into the section's `components/` folder or `components/shared/`, with props designed from all three uses. Nothing to move in the project: components already shared stay where they are. Update the components rule in `AGENTS.md` from the template. See [Where components live](/docs/Structure/folder-structure#rules).
+- **Sort, find, get, filter and format functions go in `utils/` from the start**, even with one user. Move any such function written inside a component into that component's `utils/` folder.
+- **The codeReview skill checks for these.** Copy `static/templates/skills/codeReview.md` into `.agents/skills/` and `.claude/commands/` again.
+
+- **The homepage is a route group, `app/(homepage)/`.** It holds the homepage's `page.tsx` and its own `components/` and `utils/`, and is still served at `/`. Move `app/page.tsx` there, and move the homepage's components out of `app/components/` into `app/(homepage)/components/`. See [Where components live](/docs/Structure/folder-structure#-where-components-live).
+- **The site frame lives in `components/layout/`**: navigation, header, footer and anything else that frames the pages. It may read `r` and `s`. Move those components there from `components/shared/` or `app/components/`. Layout primitives such as Duplex stay in `components/ui/`.
+- **A props-only component that is not on the Design System Components list stays in `components/ui/`.** Record it, with its props, in `docs/development/coding-standards.md`, under a new "Components for the standards" heading (copy it from the template), and tell the person. Move back into `components/ui/` any such component that was moved out only because it was not listed.
+- **Four components joined the list:** Brand Logo, Notification Card, Scroll Cue and Dropdown Menu. If the project has them, check their props match the [list](/docs/design-system-components).
+- **Every named number lives in `lib/constants/numbers.ts`**, even one only one file uses, in one file that is never split. Move numbers from the tops of app files and from any topic files (`durations.ts`, `limits.ts`) into it. Config files and scripts outside the app keep theirs at the top.
+- **No component-level `constants.ts`.** Every link, piece of text and number goes in `lib/constants/`, even if one file uses it, so all the text is in one place for translation. Move any component's `constants.ts` into `r`, `s` and `numbers.ts`.
+- **Write `r` and `s` keys out by name**, `r.plans.starter`, never `r.plans[planId]`. A list of items keeps its words in `s` and its links in `r` under the same keys. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
+- **No `"#"` placeholder links.** Show the text without a link and put `{/* TODO: … */}` above it until the page exists. Unfinished work is marked `// TODO: Message`.
+- **`lib/constants/` never imports from `lib/types/`.** Move any type it imports from there beside the constant.
+- **Create `noData.ts` only once the data's shape is decided.** An empty `noData.ts` can be deleted. Stand-in data asked for earlier carries the comment `// Not the real schema: a basic shape to finish the task.`
+- **A component's sub-components sit flat in its one `components/` folder**, two levels at most. Move any sub-component folder sitting directly in its parent, or nested inside another sub-component, into the parent's `components/` folder.
+- **The palette is listed in `docs/design/design-system.md`**: each colour's name, value, class names and use. `globals.css` holds only colours Tailwind does not have. Copy the Colour palette section from the template and fill it in.
+- **AGENTS.md: the Code standards section sits between `<!-- code-standards:start -->` and `<!-- code-standards:end -->`**, and an update replaces everything between them. Copy the section from the template, markers included. Move any project exception written into it into `docs/development/coding-standards.md`, and anything else the project added, such as a framework's block, outside the markers.
+- **Docs:** copy the new `docs/product/ontology.md` template if the project has none, and ask the person to review it. Fix the link in `overview/writing-docs.md` if `what-is-it.md` was renamed. Retitle `how-it-works.md` "Overview — How It Works". Delete any version 2 leftovers: `_category_.json`, the `sidebar_position`, `sidebar_label`, `slug`, `status` and `lastReviewed` front matter, and `docs/index.md`.
+- **Decision Docs are confirmed with the person** before an agent creates, changes or deletes one, unless `AGENTS.md` names an agent that manages them. A folder that cannot apply may be deleted with the person's yes, recorded in `coding-standards.md`. Moving or reformatting a doc does not change its Updated date.
+- **Stylelint configs name their export:** `const config = { … }; export default config;`. Change the project's `stylelint.config.mjs` to match.
+- **The Linear ticket prefix is the team's, not the project's.** In `AGENTS.md`, Project workflow, write the Linear workspace, team and project, such as `activatus-life`, team `ACT`, project Launchpad.
+
+**How to check:** `pnpm lint` passes with `routes.ts`, `strings.ts`, `numbers.ts` or `noData.ts` over 300 lines; `app/page.tsx` has moved to `app/(homepage)/page.tsx`; `lib/constants/` has `numbers.ts` and no component has its own `constants.ts`; `AGENTS.md` has the code-standards markers; the navigation, header and footer are in `components/layout/`; `eslint.config.mjs` matches the template exactly, with `eslint.overrides.mjs` beside it; every rule in `eslint.overrides.mjs` has an entry in `coding-standards.md`; `lib/constants/` has no `strings/` or `routes/` folder made only to stay under the limit; `docs/development/coding-standards.md` records all four agent answers.
 
 **Fixes in 3.1.0.** If the project already applied 3.0.9, check these:
 
 - **Install and update with `@latest`.** Use `pnpm add -D @activatus/code-standards@latest`, never a typed version number. `package.json` keeps whatever version pnpm writes. Nothing to change in the project.
 - **`minimumReleaseAgeExclude` is the plain package name.** In `pnpm-workspace.yaml`, the entry is `"@activatus/code-standards"`, with no version. If it has versions in it, such as `'@activatus/code-standards@3.0.4 || 3.0.5'`, replace it with the plain name. Otherwise pnpm adds another version on every update.
-- **Setup asks whether AI should ask before every commit and push.** It is optional, a yes or no, recorded under **Who commits** in Project workflow. Ask the person the [question](/docs/Guides/setup#working-with-the-agent). A yes is written under Who commits; a no writes nothing, and the agent uses its own judgement. Write their answer in `docs/development/coding-standards.md`, under "Details".
+- **Setup asks whether AI should ask before every commit and push.** It is optional, a yes or no, recorded under **Who commits** in Project workflow. Ask the person the [question](/docs/Guides/setup#4-working-with-the-agent). A yes is written under Who commits; a no writes nothing, and the agent uses its own judgement. Write their answer in `docs/development/coding-standards.md`, under "Details".
 
 **How to check:** `minimumReleaseAgeExclude` lists `"@activatus/code-standards"` with no version, running `pnpm add -D @activatus/code-standards@latest` again leaves `pnpm-workspace.yaml` unchanged, and if the person said yes, Who commits in `AGENTS.md` has the asking rule.
 
@@ -93,7 +136,7 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 **Fixes in 3.0.7.** New, optional: [Working with Agents](/docs/Standards/working-with-agents). Setup now asks for the project's GitHub repo and Linear project, and offers status circles. (3.0.7 also offered asking before every commit and push. 3.0.8 removed it.) If the project already applied 3.0.5:
 
 - Offer the **GitHub repo** and the **Linear project**, both optional, and add each one the person confirms to the Project workflow section of `AGENTS.md`, from the [template](/docs/templates#agents). Read the repo from `git remote get-url origin` and confirm it with the person. Read the Linear project from the project's own docs if they name it, and confirm it; otherwise ask. Never copy it from another project.
-- Print the [status circles](/docs/Guides/setup#working-with-the-agent) question to the person. If they say yes, copy the Status circles section from the template into Project workflow. Write their answer in `docs/development/coding-standards.md`, under "Details". If `AGENTS.md` already has status circles in the project's own words, keep that.
+- Print the [status circles](/docs/Guides/setup#4-working-with-the-agent) question to the person. If they say yes, copy the Status circles section from the template into Project workflow. Write their answer in `docs/development/coding-standards.md`, under "Details". If `AGENTS.md` already has status circles in the project's own words, keep that.
 
 **How to check:** Project workflow in `AGENTS.md` names each link the person confirmed, and `docs/development/coding-standards.md` records the answer for each option.
 
