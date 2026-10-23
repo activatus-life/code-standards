@@ -91,7 +91,7 @@ For TypeScript projects. Install commands are on the [ESLint page](/docs/Standar
 
 **Copy to:** `eslint.config.mjs` in the project root
 
-For React projects. Set `settings.react.version` to the project's React version.
+For React projects. Copy it unchanged. A project on a React version other than 19 sets `settings.react.version` in `eslint.overrides.mjs`: `{ settings: { react: { version: "19.2" } } }`.
 
 <CodeBlock language="js" title="eslint.config.mjs">
   {eslintReact}
@@ -103,7 +103,7 @@ For React projects. Set `settings.react.version` to the project's React version.
 
 **Copy to:** `eslint.config.mjs` in the project root
 
-For Next.js projects. Set `settings.react.version` to the project's React version.
+For Next.js projects. Copy it unchanged. A project on a React version other than 19 sets `settings.react.version` in `eslint.overrides.mjs`: `{ settings: { react: { version: "19.2" } } }`.
 
 <CodeBlock language="js" title="eslint.config.mjs">
   {eslintNextjs}
@@ -353,6 +353,14 @@ Plain file: [`/templates/next.config.mjs`](pathname:///templates/next.config.mjs
 <CodeBlock language="js" title="next.config.mjs">
   {nextConfig}
 </CodeBlock>
+
+---
+
+## Regression check {#visual}
+
+**Copy to:** `tests/visual/` in the project root
+
+Optional. Proves a large refactor changed nothing visible. Copy the whole [`static/templates/tests/visual/`](https://github.com/activatus-life/code-standards/tree/main/static/templates/tests/visual) folder. See [Regression Checks for Refactors](/docs/Guides/regression-checks).
 
 ---
 

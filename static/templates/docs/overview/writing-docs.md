@@ -10,6 +10,10 @@ This project's docs follow the Activatus documentation standard: https://activat
 
 Every file in `docs/` is a Decision Doc. Read the standard before adding or editing one.
 
+## Why
+
+One format for every doc, so people and agents always know where to look.
+
 ## Related
 
 - [What Is It](what-is-it.md)

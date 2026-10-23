@@ -95,7 +95,7 @@ Keep these pairs distinct:
 
 A `Not started` file is a visible gap: it shows a decision that has not been made yet.
 
-**A folder that cannot apply to the project may be deleted**, such as `data/` or `security/` on a marketing site with no database or accounts. Ask the person first, and record the deleted folders and the reason in `docs/development/coding-standards.md`, under "Details".
+**Keep every folder and file, even ones that do not apply yet.** They keep every project's docs laid out the same way, and a small project such as a one-page site grows into them. Never delete one to tidy the menu.
 
 ### Decision Docs belong to the person
 
@@ -265,6 +265,43 @@ const nextConfig = {
 
 export default nextConfig;
 ```
+
+---
+
+## 🔄 Converting existing docs
+
+How to turn a project's existing documentation into Decision Docs. **Every word is kept**: converting changes where things live and how they are laid out, never what they say. Confirm the plan with the person before starting.
+
+### Outside material, such as client briefs
+
+A brief says what to build rather than recording a decision, but it is still a decision: to build what the brief says.
+
+1. **Give the product its own folder**, such as `docs/homepage/`, with one doc per part of the product.
+2. **Decision:** "Build it as the brief below says."
+3. **Why:** the client's reason, and which brief wins where two disagree.
+4. **Details:** the brief's full text, unchanged.
+5. **A superseded brief** goes under `## History`, marked "Reference only".
+6. **The table of which brief wins** goes in `scope/core.md`.
+
+### Build decisions made along the way
+
+**One decision per file.** A decision made while building a part, such as "the hero cards become the rail's cards", gets its own doc beside that part's doc, in the same product folder. It is never folded into the part's doc.
+
+### Headings
+
+A doc has one `#` heading, its title. Push every heading in the old content down by the **smallest step that frees `#`**: if the old doc's top level is `#`, every heading moves down one level. Skip headings inside code blocks. **If that pushes any heading past `######`, split the doc** into one doc per top-level part instead. The site's menu on the right shows levels 2 and 3 only, so keep the important structure there.
+
+### Images
+
+**Images go in `docs/assets/`, in a folder per product area**, such as `docs/assets/homepage/`. Link each image from the doc that uses it, with a relative path. **Refer to a folder of images as a code path, `docs/assets/homepage/`, never a link**: the docs site cannot open a folder, so the link breaks the build.
+
+### Old viewer leftovers
+
+Delete every `_category_.json`, the `sidebar_position`, `sidebar_label`, `slug`, `status` and `lastReviewed` front matter, and `docs/index.md` once its content has moved to `overview/`.
+
+### The Updated date
+
+Converting a doc does not change its decision, so the **Updated** date stays as it was. Use the date of the last real decision, from the old doc or the git history.
 
 ---
 

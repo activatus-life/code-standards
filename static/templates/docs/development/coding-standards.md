@@ -8,6 +8,10 @@
 
 This project follows the Activatus Code Standards, installed as the `@activatus/code-standards` package. The person agreed which standards apply during setup (steps 3 and 4 of `docs/Guides/setup.md` in the package).
 
+## Why
+
+Every Activatus project follows the same standards, so people and agents can move between projects without relearning the basics. Recording each difference here keeps it visible, and stops the next update from undoing it.
+
 ## Details
 
 [For each standard this project skips or changes, at setup or later: its number and name from the setup list, what is different, why, and the date the person agreed. For example: "7. Prettier — skipped: the project uses Biome for formatting (2026-10-23)." Every rule in `eslint.overrides.mjs` has an entry here. If nothing differs, write "No differences".]

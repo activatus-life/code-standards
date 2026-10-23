@@ -168,7 +168,7 @@ Follow these rules in every change:
 
 **Look before you build a component.** Check the project's `components/ui/`, then the Design System Components in the code standards, then other Activatus projects, then shadcn. Build to the props listed in the Design System Components; never invent new prop names for a component that is already listed. A component in `components/ui/` takes everything through props and never imports from features, services, stores or `app/`.
 
-**Lint must pass before you finish.** Run `pnpm lint` and `pnpm test` before finishing any task, and fix every error by changing the code.
+**Lint must pass before you finish.** Run `pnpm lint` and `pnpm test` before finishing any task, and fix every error by changing the code. After setting up or updating the standards, also run `pnpm standards:check`.
 
 **Never switch a lint rule off to make an error go away.** Do not add `eslint-disable` comments, edit `eslint.config.mjs` or `eslint.overrides.mjs`, or move files to hide them. The only exceptions are `let` and a type cast, each on a single line with a reason after ` -- `. If a rule seems impossible to satisfy, stop and ask.
 
