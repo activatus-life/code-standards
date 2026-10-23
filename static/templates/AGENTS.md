@@ -47,7 +47,7 @@
 - **Pull requests**: [review and CI requirements, and where Pull Requests merge to]
 - **Merging and releases**: [merge strategy, and how work reaches production]
 - **GitHub repo**: [Optional. https://github.com/organisation/repo, read from the git remote and confirmed with the person. Delete this line if the project does not use it]
-- **Linear project**: [Optional. Workspace, project and ticket prefix, such as `activatus-life`, Launchpad, `ACT`, read from the project's docs or asked for, and confirmed with the person. Delete this line if the project does not use Linear]
+- **Linear project**: [Optional. Workspace, team and project, such as `activatus-life`, team `ACT`, project Launchpad. The ticket prefix is the team's key, shared by every project in that team. Read it from the project's docs or asked for, and confirmed with the person. Delete this line if the project does not use Linear]
 
 **Never copy a Linear workspace or ticket prefix from another project.** If the Linear project above is missing, ask before creating, linking or citing any ticket.
 
@@ -101,20 +101,26 @@ The project's docs are plain Markdown in `docs/`. **Every file is a Decision Doc
 - **Update the docs in the same change.** If a change makes a doc wrong, fix the doc and change its Updated date.
 - Do not edit `docsSite/` unless the task is about the docs viewer itself.
 
+<!-- code-standards:start -->
+
 ## Code standards
+
+**This section is copied from the code standards and replaced on every update.** Never edit it to describe a project exception: record exceptions in `docs/development/coding-standards.md`. Anything else the project adds, such as the block a framework writes, goes outside this section.
 
 This project follows the Activatus Code Standards. They are installed as the `@activatus/code-standards` dev dependency: **read them in `node_modules/@activatus/code-standards/docs/`**, which is the exact version this project uses. The same pages are at https://activatus-code-standards.vercel.app for people.
 
 **Code standards version:** [the major version of the installed `@activatus/code-standards` package when the standards were last applied]
 
-This is the version the code follows. When the package is updated, read only the newer versions in `node_modules/@activatus/code-standards/docs/version-history.md`, make the changes they list, then update this number. See "Updating to a newer version" in `docs/Guides/setup.md`.
+This is the version the code follows. It is the major version only: fixes such as 3.1.1 keep it at 3, but can still ask for changes, so read the Fixes for the installed version on every update. When the package is updated, read only the newer versions in `node_modules/@activatus/code-standards/docs/version-history.md`, make the changes they list, then update this number. See "Updating to a newer version" in `docs/Guides/setup.md`.
 
 **Standards this project skips or changes** are listed, by number, in `docs/development/coding-standards.md`. Follow every other standard.
+
+**The standards are this project's base. Never skip, loosen or change one on your own.** Ask the person first. If they agree, record it in `docs/development/coding-standards.md`, under "Details" (the standard's number and name, what is different, why, and the date), then make the change. ESLint changes go in `eslint.overrides.mjs` with a comment naming the standard's number. Never edit `eslint.config.mjs`: it is copied from the standards unchanged.
 
 Follow these rules in every change:
 
 - **Every function and component has a test file**, created in the same change. One test file tests one function or one component.
-- **No file longer than 300 lines** (test files are exempt).
+- **No file longer than 300 lines.** Test files are exempt, and so are `routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts` in `lib/constants/`, which hold data only.
 - **Every name is made of whole, human-readable words.** Variables, parameters, props, types, constants, form fields, files, folders, routes, database columns, scripts and environment variables — everything. No shortened words, no single letters (except `r` and `s`, below), no numbered names, not even for a loop counter or an event handler. Full rule: Human-Readable Names in the code standards (https://activatus-code-standards.vercel.app/docs/Standards/human-readable-names).
 
   | Never | Always |
@@ -139,20 +145,21 @@ Follow these rules in every change:
 - **Functions, never classes.**
 - **One parameter per function.** Use a single object when more than one value is needed.
 - **Return early.** Never nest more than three levels deep.
-- **No magic numbers or strings.** Use named constants. Only `-1`, `0` and `1` stay bare. A number used in one file is named at the top of that file; one shared across the app goes in `lib/constants/`, in a file named after its topic (`durations.ts`, `limits.ts`), never a `numbers.ts`. Put the unit in the name: `SESSION_TIMEOUT_MILLISECONDS`.
-- **Links, text and stand-in data live in `lib/constants/`**, never written straight into a component. `r` holds every link (pages, outside sites, `mailto:`, `tel:`, `sms:`). `s` holds every piece of static text, and its keys become the translation keys when the site gets more languages. `noData.ts` holds stand-in data named `NO_DATA_` plus the thing it replaces (`NO_DATA_INSIGHTS`), used only in local development when the real source can't be reached, never in production. Dummy values sit at the top of `noData.ts`, never in `s`. Import them all in one line, `import { NO_DATA_INSIGHTS, r, s } from "@/lib/constants";`. `r` and `s` are the only single-letter names allowed anywhere. Full rule: https://activatus-code-standards.vercel.app/docs/Structure/folder-structure#constants
+- **No magic numbers or strings.** Use named constants. Only `-1`, `0` and `1` stay bare. Every named number goes in `lib/constants/numbers.ts`, even one only one file uses; config files keep theirs at the top. Put the unit in the name: `SESSION_TIMEOUT_MILLISECONDS`.
+- **Links, text and stand-in data live in `lib/constants/`**, never written straight into a component. `r` holds every link (pages, outside sites, `mailto:`, `tel:`, `sms:`). `s` holds every piece of static text, and its keys become the translation keys when the site gets more languages. `noData.ts` holds stand-in data named `NO_DATA_` plus the thing it replaces (`NO_DATA_INSIGHTS`), used only in local development when the real source can't be reached, never in production. Dummy values sit at the top of `noData.ts`, never in `s`. There is no component-level `constants.ts`: every link, piece of text and number goes in `lib/constants/`, even if one file uses it. `lib/constants/` never imports from `lib/types/`. Write each key out by name, `r.plans.starter`, never `r.plans[planId]`. No `"#"` placeholder links: show plain text with a `{/* TODO: … */}` until the page exists. Create `noData.ts` only once the data's shape is decided; stand-in data asked for before then carries `// Not the real schema: a basic shape to finish the task.` Import them all in one line, `import { NO_DATA_INSIGHTS, r, s } from "@/lib/constants";`. `r` and `s` are the only single-letter names allowed anywhere. Full rule: https://activatus-code-standards.vercel.app/docs/Structure/folder-structure#constants
 - **No nested ternaries. No boolean flag parameters.**
 - **No `any`, no non-null `!`, no `as` cast without a comment saying why.**
 - **Named exports only**, except where a tool requires a default export.
 - **Type names end in `Props` or `Type`**, and say what the thing is, not the job it does. A type that only describes one field of a function's props is written inside the `Props`: `StartAgentRunProps` holds its `dependencies`, with no separate `StartAgentRunDependenciesType`. Every function still has its own `Props` for its single object parameter, such as `LaunchSessionProps` for `launchSession`, used wherever that function is written: `async ({ worktreePath }: LaunchSessionProps) =>`. Type a value where it is declared, never afterwards with `satisfies`. The one exception is Storybook story files, which follow Storybook's docs: `satisfies Meta<typeof Component>`.
 - **One component per file.** Server and client components live in separate files.
+- **A component's children sit flat in its own `components/` folder**, `accordion/components/item/` and `accordion/components/ctaArrow/`, even when one child is only used by another. Never a `components/` folder inside a child: two levels at most.
 - **Component file order**: imports, component, variables, state, `useMemo` values, `useCallback` functions, effects, render. No inline functions in render.
-- **Reusable functions live in a `utils/` folder** — global, section or component level — one folder per function, with an `index.ts`.
-- **Components live where they are used:** Design System Components in `components/ui/`; components used on more than one page in `components/shared/`; components used by a few pages in one section in that section's route group (`app/(billing)/components/`); components used by one page in that page's `components/` folder. Start a new component beside its page, and move it up when a second page needs it. No `components/features/` folder.
+- **Reusable functions live in a `utils/` folder** — global, section or component level — one folder per function, with an `index.ts`. A function that sorts, finds, gets, filters or formats the data passed to it goes in a `utils/` folder the first time it is written. Move a function up a level when a second user needs it.
+- **Components live where they are used:** Design System Components in `components/ui/`, plus any props-only component not on the list yet, recorded under "Components for the standards" in `docs/development/coding-standards.md`; the site frame (navigation, header, footer) in `components/layout/`; the homepage's components in `app/(homepage)/components/`; components used on three or more pages in `components/shared/`; components used by three or more pages in one section in that section's route group (`app/(billing)/components/`); everything else in its page's `components/` folder. Start a new component beside its page. When a second page needs it, copy it there: one copy only, and each copy has a comment naming the other. When a third page needs it, merge the copies into one shared component, with props designed from all three uses. No `components/features/` folder.
 - **Code file names are camelCase**; component files are PascalCase. **Anything that becomes a URL is kebab-case**: route folders and documentation folders and files (`docs/architecture/background-jobs.md`). CSS variables are kebab-case too.
 - **Lay out with flexbox first**, and split layouts into child components. Only use CSS grid when specifically asked.
 - **Style with Tailwind.** Colours come from the global colour palette in `app/globals.css` only — never a hard-coded or arbitrary colour. The design decisions are in `docs/design/design-system.md`.
-- **Comments explain why, not what.** Never leave commented-out code.
+- **Comments explain why, not what.** Never leave commented-out code. Mark unfinished work with `// TODO: Message` (`{/* TODO: Message */}` in JSX).
 - **Error messages say what happened and what to do.**
 
 **Third-party code is exempt.** Code in `node_modules/` and `vendor/` belongs to someone else: do not lint it, do not reformat it, do not edit it to meet these rules.
@@ -163,9 +170,11 @@ Follow these rules in every change:
 
 **Lint must pass before you finish.** Run `pnpm lint` and `pnpm test` before finishing any task, and fix every error by changing the code.
 
-**Never switch a lint rule off to make an error go away.** Do not add `eslint-disable` comments, edit the ESLint config, or move files to hide them. The only exceptions are `let` and a type cast, each on a single line with a reason after ` -- `. If a rule seems impossible to satisfy, stop and ask.
+**Never switch a lint rule off to make an error go away.** Do not add `eslint-disable` comments, edit `eslint.config.mjs` or `eslint.overrides.mjs`, or move files to hide them. The only exceptions are `let` and a type cast, each on a single line with a reason after ` -- `. If a rule seems impossible to satisfy, stop and ask.
 
 When you report a lint error to the person, explain it in plain English: what is wrong, why it matters, and what you did to fix it.
+
+<!-- code-standards:end -->
 
 ## Available skills
 

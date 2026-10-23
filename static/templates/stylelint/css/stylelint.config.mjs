@@ -1,5 +1,5 @@
 /** @type {import("stylelint").Config} */
-export default {
+const config = {
 	ignoreFiles: ["**/vendor/**"],
 	extends: [
 		"stylelint-config-standard",
@@ -38,3 +38,5 @@ export default {
 		},
 	],
 };
+
+export default config;

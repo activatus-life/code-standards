@@ -32,7 +32,7 @@ Create `stylelint.config.mjs` in your project root:
 
 ```js title="stylelint.config.mjs"
 /** @type {import("stylelint").Config} */
-export default {
+const config = {
   ignoreFiles: ["**/vendor/**"],
   extends: [
     "stylelint-config-standard",
@@ -71,13 +71,15 @@ export default {
     },
   ],
 };
+
+export default config;
 ```
 
 ### SCSS
 
 ```js title="stylelint.config.mjs"
 /** @type {import("stylelint").Config} */
-export default {
+const config = {
   ignoreFiles: ["**/vendor/**"],
   extends: [
     "stylelint-config-standard-scss",
@@ -89,6 +91,8 @@ export default {
     "color-function-notation": "modern",
   },
 };
+
+export default config;
 ```
 
 ### Project-specific overrides
@@ -96,7 +100,7 @@ export default {
 Add to the `rules` block:
 
 ```js
-export default {
+const config = {
   // ...
   rules: {
     // ...
@@ -104,6 +108,8 @@ export default {
     "selector-max-type": 3,
   },
 };
+
+export default config;
 ```
 
 Add a lint script to `package.json`:

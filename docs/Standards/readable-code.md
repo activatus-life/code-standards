@@ -43,6 +43,8 @@ A file over 300 lines is doing more than one job. Split it before it gets there:
 
 Blank lines and comments do not count towards the limit. **Test files are exempt** — a thorough test file can run long.
 
+**`routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts` in `lib/constants/` are exempt too.** They are lists of data, not logic, and a big app has a lot of links and text. Splitting them would mean more places to look for one label. They stay data only: no functions in them. See [Constants](/docs/Structure/folder-structure#constants).
+
 ---
 
 ## Names are full English words
@@ -311,7 +313,7 @@ if (order.status === "shipped") {
 
 **`-1`, `0` and `1` are allowed**, because they are part of how code works rather than a choice anyone makes: `0` is the start or nothing (`items[0]`, `length === 0`), `1` is one more or one less (`index + 1`), and `-1` is "not found" (`indexOf`). Any other number was chosen by someone, so its name says what it controls. Even `2` gets a name.
 
-A number used in one file is named at the top of that file. One shared across the app goes in `lib/constants/`, in a file named after its topic. See [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic) for where they go, and [Naming Conventions](/docs/Structure/naming-conventions#constants) for how to name them.
+Every named number lives in `lib/constants/numbers.ts`, even one only one file uses. See [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic) for where they go, and [Naming Conventions](/docs/Structure/naming-conventions#constants) for how to name them.
 
 ---
 
@@ -422,6 +424,7 @@ await waitMilliseconds(1000);
 
 - If a comment describes **what** the code does, rename things until the comment is not needed.
 - **Never leave commented-out code.** Delete it — Git remembers.
+- **Mark unfinished work with `// TODO: Message`**, or `{/* TODO: Message */}` in JSX. Editors with the TODO Highlight extension (Wayou Liu) list them automatically. A project can also list them under "Unfinished changes" in `docs/development/coding-standards.md`.
 
 ---
 

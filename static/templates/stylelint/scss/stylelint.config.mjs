@@ -1,5 +1,5 @@
 /** @type {import("stylelint").Config} */
-export default {
+const config = {
 	ignoreFiles: ["**/vendor/**"],
 	extends: [
 		"stylelint-config-standard-scss",
@@ -11,3 +11,5 @@ export default {
 		"color-function-notation": "modern",
 	},
 };
+
+export default config;

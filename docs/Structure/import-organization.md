@@ -101,19 +101,19 @@ Enforced by ESLint `import-x/no-cycle`.
 **A folder's `index.ts` is for code outside the folder.** Code inside the folder imports its neighbours by file, never through the folder's own `index.ts`. Importing through your own index is the most common way a circular import is created by accident.
 
 ```ts
-// card/cardHeader/CardHeader.tsx
+// card/components/cardHeader/CardHeader.tsx
 
 // ✅ Good — import the file directly
-import type { CardProps } from "../types";
+import type { CardProps } from "../../types";
 
 // ❌ Bad — the card index imports CardHeader, so this is a circle
-import { Card } from "..";
+import { Card } from "../..";
 ```
 
 | Importing from         | Import through                                                         |
 | ---------------------- | ---------------------------------------------------------------------- |
 | **Outside** the folder | The folder's `index.ts`: `import { Card } from "@/components/ui/card"` |
-| **Inside** the folder  | The file itself: `import type { CardProps } from "../types"`           |
+| **Inside** the folder  | The file itself: `import type { CardProps } from "../../types"`        |
 
 A parent component imports its sub-components. **A sub-component never imports its parent.** If a child needs something from the parent, the parent passes it as a prop.
 

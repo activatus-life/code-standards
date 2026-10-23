@@ -19,7 +19,8 @@ Review the changes and report problems. Do NOT modify any files.
    - **Types** — `any`, non-null `!`, and `as` casts without a comment saying why
    - **Tests** — every new or changed function and component has a test file
    - **Readable code** — files over 300 lines, any name that is not human-readable (folders, files, props, form field `name`s and labels, types, union values, database columns, routes, environment variables and test names as well as variables), functions doing more than one thing, more than one parameter, nesting deeper than three levels, magic numbers
-   - **Structure** — reusable functions outside a `utils/` folder, server and client code in one file, inline functions in render
+   - **Structure** — reusable functions outside a `utils/` folder (a sort, find, get, filter or format function inside a component), server and client code in one file, inline functions in render, a component copied a third time instead of merged, a copied component without a comment naming its other copy
+   - **Changed standards** — any change to `eslint.config.mjs`, and any rule in `eslint.overrides.mjs` or other change to a standard with no matching entry in `docs/development/coding-standards.md`
    - **Styling** — hard-coded colours, CSS grid that was not asked for
 5. Report the findings in order of severity: **Must fix**, **Should fix**, **Consider**. For each one give the file and line, what is wrong, and how to fix it.
 6. Finish with a one-line verdict: ready to commit, or not.

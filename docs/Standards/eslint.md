@@ -80,6 +80,8 @@ import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
+import { projectOverrides } from "./eslint.overrides.mjs";
+
 // Code patterns that are errors in every file.
 const RESTRICTED_SYNTAX = [
 	{
@@ -194,9 +196,16 @@ const config = [
 		rules: { "max-lines": "off", "no-magic-numbers": "off" },
 	},
 	{
+		// r, s, numbers and noData are lists, not logic, so they can be long.
+		files: ["lib/constants/{routes,strings,numbers,noData}.{js,mjs}"],
+		rules: { "max-lines": "off" },
+	},
+	{
 		files: ["**/*.config.{js,mjs}"],
 		rules: { "import-x/no-default-export": "off" },
 	},
+	// This project's own changes: see eslint.overrides.mjs.
+	...projectOverrides,
 	prettier,
 ];
 
@@ -214,6 +223,8 @@ import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import { configs as typescript } from "typescript-eslint";
+
+import { projectOverrides } from "./eslint.overrides.mjs";
 
 // Code patterns that are errors in every file.
 const RESTRICTED_SYNTAX = [
@@ -381,6 +392,11 @@ const config = [
 		},
 	},
 	{
+		// r, s, numbers and noData are lists, not logic, so they can be long.
+		files: ["lib/constants/{routes,strings,numbers,noData}.ts"],
+		rules: { "max-lines": "off" },
+	},
+	{
 		files: ["**/*.config.{js,mjs,ts}", "**/*.stories.tsx"],
 		rules: { "import-x/no-default-export": "off" },
 	},
@@ -399,6 +415,8 @@ const config = [
 			],
 		},
 	},
+	// This project's own changes: see eslint.overrides.mjs.
+	...projectOverrides,
 	prettier,
 ];
 
@@ -422,6 +440,8 @@ import reactHooks from "eslint-plugin-react-hooks";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import { configs as typescript } from "typescript-eslint";
+
+import { projectOverrides } from "./eslint.overrides.mjs";
 
 // Code patterns that are errors in every file.
 const RESTRICTED_SYNTAX = [
@@ -606,6 +626,11 @@ const config = [
 		},
 	},
 	{
+		// r, s, numbers and noData are lists, not logic, so they can be long.
+		files: ["lib/constants/{routes,strings,numbers,noData}.ts"],
+		rules: { "max-lines": "off" },
+	},
+	{
 		files: ["**/*.config.{js,mjs,ts}", "**/*.stories.tsx"],
 		rules: { "import-x/no-default-export": "off" },
 	},
@@ -624,6 +649,8 @@ const config = [
 			],
 		},
 	},
+	// This project's own changes: see eslint.overrides.mjs.
+	...projectOverrides,
 	prettier,
 ];
 
@@ -649,6 +676,8 @@ import nextTypescript from "eslint-config-next/typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
+
+import { projectOverrides } from "./eslint.overrides.mjs";
 
 // Code patterns that are errors in every file.
 const RESTRICTED_SYNTAX = [
@@ -833,6 +862,11 @@ const config = [
 		},
 	},
 	{
+		// r, s, numbers and noData are lists, not logic, so they can be long.
+		files: ["lib/constants/{routes,strings,numbers,noData}.ts"],
+		rules: { "max-lines": "off" },
+	},
+	{
 		files: [
 			"**/*.config.{js,mjs,ts}",
 			"**/*.stories.tsx",
@@ -866,6 +900,8 @@ const config = [
 			],
 		},
 	},
+	// This project's own changes: see eslint.overrides.mjs.
+	...projectOverrides,
 	prettier,
 ];
 
@@ -882,22 +918,26 @@ Use the `globals` package rather than turning `no-undef` off or hand-writing a g
 
 ### Project-specific overrides
 
-Add a block before `prettier` to add or override rules:
+**Never change `eslint.config.mjs`.** It is copied from the standards unchanged, so an update can copy the new version straight over it. A project's own rule changes live in `eslint.overrides.mjs`, which the config reads just before `prettier`. Copy it from `static/templates/eslint.overrides.mjs`: it starts empty.
 
-```js
-const config = [
-  // ...
-  {
-    rules: {
-      // project-specific overrides
-      "no-console": "off",
-    },
-  },
-  prettier,
+**A change needs the person's yes first.** The standards are the project's base, so an agent never switches off, loosens or changes a rule on its own. Ask, then:
+
+1. Record it in `docs/development/coding-standards.md`, under "Details": the standard's number and name, what is different, why, and the date.
+2. Add it to `eslint.overrides.mjs`, with a comment naming the standard's number.
+
+```js title="eslint.overrides.mjs"
+export const projectOverrides = [
+	{
+		files: ["scripts/**/*.mjs"],
+		rules: {
+			// Standard 6: scripts print to the terminal.
+			"no-console": "off",
+		},
+	},
 ];
-
-export default config;
 ```
+
+A rule change in `eslint.overrides.mjs` with no matching entry in `coding-standards.md` is a mistake: the codeReview skill flags it. The only changes made without asking are the single-line `let` and type-cast exceptions: see [the only allowed exceptions](/docs/Standards/lint-errors#the-only-allowed-exceptions).
 
 Keep `prettier` last — it switches off every rule that would fight the formatter.
 
@@ -981,7 +1021,7 @@ Every `eslint-disable` comment must say why, after `--`. A rule is never switche
 
 ### `max-lines: 300`
 
-No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt. See [Readable Code](/docs/Standards/readable-code#no-file-longer-than-300-lines).
+No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt, and so are `lib/constants/routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts`, which hold data only. See [Readable Code](/docs/Standards/readable-code#no-file-longer-than-300-lines).
 
 ### `max-depth: 3`
 

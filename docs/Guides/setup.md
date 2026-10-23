@@ -9,7 +9,16 @@ sidebar_label: "Setup"
 
 The person creates the app themselves — with `create-next-app`, Expo or anything else — and tells you to follow the standards. **Do not ask which framework the project uses.** Look at the project: its `package.json` and files tell you. The person only answers the questions below and checks your work. They never run a command.
 
-**These standards are the base for code, plus how agents link and report the project's work.** A project builds on top of them: it can add its own folders and conventions, and it makes its own project-management decisions (tickets, releases, branches, commit messages, who commits). Those go in the project's own docs, not here. Step 3 records the project's GitHub repo and Linear project, and offers the optional [status circles](/docs/Standards/working-with-agents#status-circles).
+**These standards are the base for code, plus how agents link and report the project's work.** A project builds on top of them: it can add its own folders and conventions, and it makes its own project-management decisions (tickets, releases, branches, commit messages, who commits). Those go in the project's own docs, not here. Step 4 records the project's GitHub repo and Linear project, and offers the optional [status circles](/docs/Standards/working-with-agents#status-circles).
+
+**Setup asks the person two sets of questions. Ask both, every time:**
+
+1. **The standards list** ([step 3](#3-agree-the-standards)).
+2. **Working with the agent** ([step 4](#4-working-with-the-agent)): the GitHub repo, the Linear project, the status circles, and whether AI asks before every commit and push.
+
+A person saying "all good" to the standards list has not answered step 4. Ask it next.
+
+**The standards are the project's base.** After setup, never skip, loosen or change a standard on your own: ask the person first. If they agree, record it in `docs/development/coding-standards.md`, under "Details", then make the change. ESLint changes go in `eslint.overrides.mjs`, never in `eslint.config.mjs`. See [Project-specific overrides](/docs/Standards/eslint#project-specific-overrides).
 
 ## 1. Install the standards
 
@@ -52,7 +61,7 @@ Open the project's `AGENTS.md` and look for `**Code standards version:**`.
 | -------------------------------------------- | ------------------------------------ | ----------------------------------------------------------- |
 | No `AGENTS.md`, or no code standards version | The standards have never been set up | [3. Agree the standards](#3-agree-the-standards)            |
 | A version lower than the installed package   | The project follows an older version | [Updating to a newer version](#updating-to-a-newer-version) |
-| The same version as the installed package    | Already up to date                   | Nothing to do. Tell the person                              |
+| The same version as the installed package    | Already on this version              | [Already on this version](#already-on-this-version)         |
 
 ## 3. Agree the standards
 
@@ -74,7 +83,7 @@ Tell me the numbers to skip or change, or say "all good".
 10. Node version set by .nvmrc and direnv
 11. Styling: Tailwind, flexbox first, colours only from the global palette
 12. Folder structure: folders at the project root; reusable helper functions in utils/ (no business rules, no outside calls)
-12.1. Constants: r for every link, s for every piece of text, noData for local stand-in data, shared numbers by topic, all in lib/constants/
+12.1. Constants: r for every link, s for every piece of text, every number in numbers.ts, noData for stand-in data, all in lib/constants/
 13. Components live where they are used: components/ui/, components/shared/, or beside their page
 14. Component files in a fixed order, with index.ts exports, and server and client code in separate files
 15. Design System Components: every project builds the standard components with the same props
@@ -108,14 +117,16 @@ Then wait for the answer.
 
 The list has nothing about branches or commit messages. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/docs/Standards/agent-specs#project-workflow).
 
-### Working with the agent
+**Then go straight to step 4.** Setup is not finished until the person has answered it.
 
-Once the standards are agreed, offer the four [Working with Agents](/docs/Standards/working-with-agents) options. All four are optional: offer every one, every time, so the person can fill them in quickly and keep going.
+## 4. Working with the agent
+
+Do this step every time, straight after step 3. Once the standards are agreed, offer the four [Working with Agents](/docs/Standards/working-with-agents) options. All four are optional: offer every one, every time, so the person can fill them in quickly and keep going.
 
 First the **project links**. Find each one yourself, then ask the person to confirm it or say "None":
 
 - **GitHub repo:** read it with `git remote get-url origin`. If there is no remote, ask for it.
-- **Linear project:** read it from the project's own docs if they name it: the workspace, the project and the ticket prefix. If they do not, ask. Never copy it from another project.
+- **Linear project:** read it from the project's own docs if they name it: the workspace, the team (its key is the ticket prefix, such as `ACT`) and the project. If they do not, ask. Never copy it from another project.
 
 Then the **status circles**. **Print this to the person exactly as it is written**:
 
@@ -139,7 +150,7 @@ to git? Yes or no?
 
 **Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. Write all four answers in `docs/development/coding-standards.md`, under "Details", so a later update knows not to ask again. See [Working with Agents](/docs/Standards/working-with-agents).
 
-## 4. Apply the standards
+## 5. Apply the standards
 
 Do only the standards the person agreed to. Copy every file from `node_modules/@activatus/code-standards/static/templates/` — never write a config file from scratch.
 
@@ -147,17 +158,17 @@ Do only the standards the person agreed to. Copy every file from `node_modules/@
 
 **An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/docs/Guides/migrating), one stage at a time, after the config files below are in place.
 
-| Standard                 | What to set up                                                                                                                                                                                                                                                                                                       |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 6. ESLint                | Copy the config for the project's framework from `static/templates/eslint/`: `base`, `typescript`, `react` or `nextjs`. Install the packages listed on the [ESLint page](/docs/Standards/eslint). Add the scripts `"lint": "eslint ."` and `"lint:fix": "eslint . --fix"`                                            |
-| 7. Prettier              | `pnpm add -D prettier prettier-plugin-tailwindcss`. Copy `static/templates/prettier.config.mjs`. Add the `format` and `format:check` scripts exactly as on the [Prettier page](/docs/Standards/prettier#usage)                                                                                                       |
-| 8. Stylelint             | Only if the project has hand-written CSS or SCSS. Copy the config from `static/templates/stylelint/css/` or `scss/`. See [Stylelint](/docs/Standards/stylelint)                                                                                                                                                      |
-| 9. EditorConfig          | Copy `static/templates/.editorconfig`                                                                                                                                                                                                                                                                                |
-| 10. Node version         | Copy `static/templates/.nvmrc` and `static/templates/.envrc`. See [direnv + nvm](/docs/Standards/direnv)                                                                                                                                                                                                             |
-| 11. Styling              | Copy `static/templates/globals.css` to `app/globals.css`. Ask the person for the project's colours, and replace the example palette                                                                                                                                                                                  |
-| 12.1. Constants          | Create `lib/constants/` with `routes.ts` (`r`), `strings.ts` (`s`), `noData.ts` and an `index.ts` that exports them. If the project keeps them somewhere else, such as `app/constants/`, move them. See [Constants](/docs/Structure/folder-structure#constants)                                                      |
-| 18. Docs                 | Copy `static/templates/docs/` to `docs/` and `static/templates/docsSite/` to `docsSite/`. Add the `/docs` route from `static/templates/next.config.mjs`. See [Setting it up](/docs/Standards/documentation#-setting-it-up)                                                                                           |
-| 21. AGENTS.md and skills | Copy `static/templates/AGENTS.md` to the project root and fill in every `[placeholder]`. If the framework wrote its own `AGENTS.md` (Next.js does), keep any instruction it gives about reading the framework's own docs. Copy `static/templates/skills/` into `.agents/skills/`, and again into `.claude/commands/` |
+| Standard                 | What to set up                                                                                                                                                                                                                                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 6. ESLint                | Copy the config for the project's framework from `static/templates/eslint/`: `base`, `typescript`, `react` or `nextjs`, and copy `static/templates/eslint.overrides.mjs` beside it. Install the packages listed on the [ESLint page](/docs/Standards/eslint). Add the scripts `"lint": "eslint ."` and `"lint:fix": "eslint . --fix"` |
+| 7. Prettier              | `pnpm add -D prettier prettier-plugin-tailwindcss`. Copy `static/templates/prettier.config.mjs`. Add the `format` and `format:check` scripts exactly as on the [Prettier page](/docs/Standards/prettier#usage)                                                                                                                        |
+| 8. Stylelint             | Only if the project has hand-written CSS or SCSS. Copy the config from `static/templates/stylelint/css/` or `scss/`. See [Stylelint](/docs/Standards/stylelint)                                                                                                                                                                       |
+| 9. EditorConfig          | Copy `static/templates/.editorconfig`                                                                                                                                                                                                                                                                                                 |
+| 10. Node version         | Copy `static/templates/.nvmrc` and `static/templates/.envrc`. See [direnv + nvm](/docs/Standards/direnv)                                                                                                                                                                                                                              |
+| 11. Styling              | Copy `static/templates/globals.css` to `app/globals.css`. Ask the person for the project's colours, and replace the example palette                                                                                                                                                                                                   |
+| 12.1. Constants          | Create `lib/constants/` with `routes.ts` (`r`), `strings.ts` (`s`), `numbers.ts` and an `index.ts` that exports them. Create `noData.ts` later, once the data's shape is decided. If the project keeps them somewhere else, such as `app/constants/`, move them. See [Constants](/docs/Structure/folder-structure#constants)          |
+| 18. Docs                 | Copy `static/templates/docs/` to `docs/` and `static/templates/docsSite/` to `docsSite/`. Add the `/docs` route from `static/templates/next.config.mjs`. See [Setting it up](/docs/Standards/documentation#-setting-it-up)                                                                                                            |
+| 21. AGENTS.md and skills | Copy `static/templates/AGENTS.md` to the project root and fill in every `[placeholder]`. If the framework wrote its own `AGENTS.md` (Next.js does), keep any instruction it gives about reading the framework's own docs. Copy `static/templates/skills/` into `.agents/skills/`, and again into `.claude/commands/`                  |
 
 The other standards are rules for how code is written. There is nothing to install for them: follow them in every change.
 
@@ -165,7 +176,30 @@ The other standards are rules for how code is written. There is nothing to insta
 
 1. Setting `**Code standards version:**` in `AGENTS.md` to the installed package's major version. See [Finishing a change later](#finishing-a-change-later) if anything is left to do.
 2. Running `pnpm lint`, `pnpm format:check` and the tests.
-3. Telling the person what you set up, which standards they skipped, and anything only they can do, such as filling in a secret in `.env.local`.
+3. **Printing this to the person**, filled in, so every project's handover reads the same:
+
+```text
+Code standards set up: version [N] ([package version]).
+
+Set up:       [the standards applied, by number]
+Skipped:      [numbers and reasons, or "None"]
+Left to do:   [unfinished changes, or "None"]
+Only you can: [secrets in .env.local and the like, or "Nothing"]
+
+Before we start: please review docs/product/ontology.md,
+the product's words and how it speaks. Ask me to change
+anything that is wrong.
+```
+
+---
+
+## Already on this version
+
+The project's `AGENTS.md` has the same major version as the installed package, such as 3. That does not mean there is nothing to do: a newer patch, such as 3.1.1, can still ask for changes.
+
+1. **Read the version's Fixes** in `node_modules/@activatus/code-standards/docs/version-history.md`, and do anything they ask.
+2. **Check `docs/development/coding-standards.md`, under "Details",** for the [step 4](#4-working-with-the-agent) answers: the GitHub repo, the Linear project, the status circles and asking before committing. Ask the person any that are not recorded, and record them as step 4 says.
+3. **Tell the person** what you changed, or that the project was already up to date.
 
 ---
 
@@ -187,7 +221,8 @@ The project already follows the standards, and a newer version is out.
 3. **Read `node_modules/@activatus/code-standards/docs/version-history.md`**, but only the versions newer than the project's. Do not re-read the rest of the standards.
 4. **Skip any change to a standard the project opted out of.** The opt-outs are listed in `docs/development/coding-standards.md`.
 5. **Do every other change** as its "What to do" says, and run its "How to check" search.
-6. **Set `**Code standards version:**`** in `AGENTS.md` to the new version, and tell the person what changed. If a change is being finished later, record it first: see [Finishing a change later](#finishing-a-change-later).
+6. **Ask any [step 4](#4-working-with-the-agent) question** whose answer is not recorded in `docs/development/coding-standards.md`, under "Details".
+7. **Set `**Code standards version:**`** in `AGENTS.md` to the new version, and tell the person what changed. If a change is being finished later, record it first: see [Finishing a change later](#finishing-a-change-later).
 
 See the [Version History](/docs/version-history) for the full update rules.
 

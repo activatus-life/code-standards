@@ -5,6 +5,8 @@ import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
+import { projectOverrides } from "./eslint.overrides.mjs";
+
 // Code patterns that are errors in every file.
 const RESTRICTED_SYNTAX = [
 	{
@@ -119,9 +121,16 @@ const config = [
 		rules: { "max-lines": "off", "no-magic-numbers": "off" },
 	},
 	{
+		// r, s, numbers and noData are lists, not logic, so they can be long.
+		files: ["lib/constants/{routes,strings,numbers,noData}.{js,mjs}"],
+		rules: { "max-lines": "off" },
+	},
+	{
 		files: ["**/*.config.{js,mjs}"],
 		rules: { "import-x/no-default-export": "off" },
 	},
+	// This project's own changes: see eslint.overrides.mjs.
+	...projectOverrides,
 	prettier,
 ];
 

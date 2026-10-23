@@ -13,7 +13,7 @@ We do not share component code between projects yet, so this page is what keeps 
 
 - **Before building a component, look it up here.** If it is listed, build it with these variants and props — the same names, the same meaning. Do not invent your own.
 - **Do not rename, remove or repurpose a listed prop.** Projects differ in how a component looks, never in [how it works](/docs/Guides/component-library-workflow#same-component-different-paint).
-- **Building a component that is not listed?** Add it to this page in the same piece of work, so the next project builds it the same way.
+- **Building a component that is not listed?** If it takes everything through props and imports nothing from the project, keep it in the project's `components/ui/` and record it, with its props, in the project's `docs/development/coding-standards.md`, under "Components for the standards". Tell the person: it is added to this page in the next release, so the next project builds it the same way. Working in the standards repo itself? Add it here in the same piece of work.
 - **A project needs something a listed component does not do?** Add the prop or variant here first, then build it. The reference changes before the code does.
 - **How to write each component** — its folder, files, the order inside the file, tests and stories — is in [Component Organization](/docs/Structure/component-organization). This page says _what_ each component takes; that page says _how_ every component is written.
 
@@ -21,17 +21,19 @@ This applies to everyone building components, **including AI agents**.
 
 ## Global / Navigation
 
-| #   | Component          | Variants                      | Key props                                                                                                              |
-| --- | ------------------ | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| 1   | **NavigationBar**  | default, large                | logo (asset)<br />navigationItems (link[])<br />callToAction (Button)<br />sticky (boolean)<br />transparent (boolean) |
-| 2   | **Expanded Menu**  | —                             | columns (linkGroup[])<br />featured (blok[])<br />trigger (text)                                                       |
-| 3   | **Hamburger Menu** | —                             | icon<br />menuItems (link[])<br />icon (asset)<br />position (left/right)                                              |
-| 4   | **Search Bar**     | inline, overlay               | placeholder<br />scope (text)<br />showSuggestions (boolean)                                                           |
-| 5   | **Promo Bar**      | —                             | text (richtext)<br />link<br />dismissible (boolean)<br />startDate<br />endDate                                       |
-| 6   | **Breadcrumbs**    | —                             | items (link[])<br />separator (text)<br />showHome (boolean)                                                           |
-| 7   | **Sidebar**        | —                             | items (link[])<br />position (left/right)<br />collapsible (boolean)<br />width                                        |
-| 8   | **Pagination**     | numbered, load-more, infinite | totalPages (number)<br />current (number)<br />showPrevNext (boolean)                                                  |
-| 9   | **Footer**         | slim, default, large          | logo<br />columns (linkGroup[])<br />socialLinks (link[])<br />legalLinks (link[])<br />copyright (text)               |
+| #   | Component          | Variants                      | Key props                                                                                                                                                                                       |
+| --- | ------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **NavigationBar**  | default, large                | logo (asset)<br />navigationItems (link[])<br />callToAction (Button)<br />sticky (boolean)<br />transparent (boolean)                                                                          |
+| 2   | **Expanded Menu**  | —                             | columns (linkGroup[])<br />featured (blok[])<br />trigger (text)                                                                                                                                |
+| 3   | **Hamburger Menu** | —                             | icon<br />menuItems (link[])<br />icon (asset)<br />position (left/right)                                                                                                                       |
+| 4   | **Search Bar**     | inline, overlay               | placeholder<br />scope (text)<br />showSuggestions (boolean)                                                                                                                                    |
+| 5   | **Promo Bar**      | —                             | text (richtext)<br />link<br />dismissible (boolean)<br />startDate<br />endDate                                                                                                                |
+| 6   | **Breadcrumbs**    | —                             | items (link[])<br />separator (text)<br />showHome (boolean)                                                                                                                                    |
+| 7   | **Sidebar**        | —                             | items (link[])<br />position (left/right)<br />collapsible (boolean)<br />width                                                                                                                 |
+| 8   | **Pagination**     | numbered, load-more, infinite | totalPages (number)<br />current (number)<br />showPrevNext (boolean)                                                                                                                           |
+| 9   | **Footer**         | slim, default, large          | logo<br />columns (linkGroup[])<br />socialLinks (link[])<br />legalLinks (link[])<br />copyright (text)                                                                                        |
+| 62  | **Brand Logo**     | —                             | className (Tailwind classes, usually a size such as `size-8`)<br />Each project inlines its own logo SVG, coloured from the palette and hidden from screen readers: the link around it names it |
+| 65  | **Dropdown Menu**  | —                             | Radix UI's Dropdown Menu props, unchanged (shadcn/ui)<br />parts: Dropdown Menu Trigger, Dropdown Menu Content, Dropdown Menu Item                                                              |
 
 ## Auth / Account
 
@@ -48,6 +50,7 @@ This applies to everyone building components, **including AI agents**.
 | --- | --------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
 | 14  | **Hero Banner** | Image, Video | heading<br />subheading<br />body (richtext)<br />media (asset/video)<br />buttons (Button[])<br />alignment<br />overlay (boolean) |
 | 15  | **Banner**      | —            | eyebrow<br />heading<br />subheading (richtext)<br />alignment                                                                      |
+| 64  | **Scroll Cue**  | —            | label (text)                                                                                                                        |
 
 ## Layout primitives
 
@@ -72,6 +75,7 @@ This applies to everyone building components, **including AI agents**.
 | 46  | **Review**             | —                    | author<br />rating (number)<br />date<br />body<br />avatar<br />verified (boolean)                          |
 | 20  | **Card**               | default, image, icon | image (asset)<br />title<br />body (richtext)<br />link<br />button (Button)                                 |
 | 24  | **Accordion**          | —                    | items array (title, content)<br />allowMultiple (boolean)                                                    |
+| 63  | **Notification Card**  | —                    | notifications array (title, message, timeLabel), front card first<br />className                             |
 
 ## Media
 
