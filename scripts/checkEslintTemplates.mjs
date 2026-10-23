@@ -7,7 +7,12 @@
 // Run: pnpm check:eslint-templates
 // Copy the templates into the ESLint page: add --update-docs
 import { ESLint } from "eslint";
-import { readFile, writeFile } from "node:fs/promises";
+import {
+	copyFile,
+	mkdir,
+	readFile,
+	writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,6 +32,18 @@ const eslintPagePath = path.join(
 	repoDirectory,
 	"docs/Standards/eslint.md",
 );
+// In a project, eslint.config.mjs and eslint.overrides.mjs sit side
+// by side. Here the templates sit in their own folders, so each is
+// copied beside the overrides template before it is loaded. Inside
+// node_modules, so the configs still find this repo's packages.
+const stagedDirectory = path.join(
+	repoDirectory,
+	"node_modules/.cache/eslintTemplates",
+);
+const overridesTemplatePath = path.join(
+	repoDirectory,
+	"static/templates/eslint.overrides.mjs",
+);
 const shouldUpdateDocs = process.argv.includes("--update-docs");
 
 const TEMPLATES = [
@@ -36,11 +53,28 @@ const TEMPLATES = [
 	{ name: "nextjs", heading: "### Next.js" },
 ];
 const CONFIG_FILE_NAME = "eslint.config.mjs";
+const OVERRIDES_FILE_NAME = "eslint.overrides.mjs";
 const CODE_BLOCK_START = '```js title="eslint.config.mjs"\n';
 const CODE_BLOCK_END = "\n```";
 
 const getTemplatePath = (templateName) =>
 	path.join(templatesDirectory, templateName, CONFIG_FILE_NAME);
+
+const getStagedPath = (templateName) =>
+	path.join(stagedDirectory, templateName, CONFIG_FILE_NAME);
+
+const stageTemplate = async (templateName) => {
+	const folder = path.join(stagedDirectory, templateName);
+	await mkdir(folder, { recursive: true });
+	await copyFile(
+		getTemplatePath(templateName),
+		getStagedPath(templateName),
+	);
+	await copyFile(
+		overridesTemplatePath,
+		path.join(folder, OVERRIDES_FILE_NAME),
+	);
+};
 
 // A project has one config. This script loads four in one process,
 // so typescript-eslint is told each one's folder. The Next.js rules
@@ -48,7 +82,7 @@ const getTemplatePath = (templateName) =>
 const createLinter = ({ templateName, workingDirectory }) =>
 	new ESLint({
 		cwd: workingDirectory,
-		overrideConfigFile: getTemplatePath(templateName),
+		overrideConfigFile: getStagedPath(templateName),
 		overrideConfig: {
 			settings: { next: { rootDir: nextjsFixtureDirectory } },
 			...(templateName !== "base" && {
@@ -70,9 +104,12 @@ const describeProblems = (results) =>
 const lintTemplateAgainstItself = async (templateName) => {
 	const linter = createLinter({
 		templateName,
-		workingDirectory: path.join(templatesDirectory, templateName),
+		workingDirectory: path.join(stagedDirectory, templateName),
 	});
-	const results = await linter.lintFiles([CONFIG_FILE_NAME]);
+	const results = await linter.lintFiles([
+		CONFIG_FILE_NAME,
+		OVERRIDES_FILE_NAME,
+	]);
 	return describeProblems(results).map(
 		(problem) => `${templateName} fails its own rules:\n${problem}`,
 	);
@@ -142,6 +179,9 @@ const checkEslintPage = async () => {
 	return failures;
 };
 
+await Promise.all(
+	TEMPLATES.map((template) => stageTemplate(template.name)),
+);
 const templateFailures = await Promise.all(
 	TEMPLATES.map((template) =>
 		lintTemplateAgainstItself(template.name),

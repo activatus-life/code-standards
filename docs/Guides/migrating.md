@@ -4,9 +4,40 @@ sidebar_position: 3
 
 # Migrating an Existing Project
 
-Migrating an established codebase to the shared standards is best done in stages, so each change stays small enough to check properly.
+Moving an established codebase onto the standards is done in stages, so each change stays small enough to check properly. This is the order that worked on a real 600-file project.
 
-**Already following the standards, and just updating to a newer version?** You don't need this whole guide. Read the [Version History](/docs/version-history) from your project's version onward, and do only what it lists.
+**Already following the standards, and just updating to a newer version?** You don't need this guide. Read the [Version History](/docs/version-history) from your project's version onward, and do only what it lists.
+
+**Agree the standards first.** Print the list in [Setup, step 3](/docs/Guides/setup#3-agree-the-standards), and ask the [step 4](/docs/Guides/setup#4-working-with-the-agent) questions. Skip any stage for a standard the person turned down.
+
+## The stages
+
+| Stage | What                                                                   | Setup standard | Why this order                                            |
+| ----- | ---------------------------------------------------------------------- | -------------- | --------------------------------------------------------- |
+| 0     | [Regression check](#stage-0--regression-check)                         | —              | Every later stage is measured against it                  |
+| 1     | [Formatting](#stage-1--formatting)                                     | 7, 9, 10       | The reformat touches every file, so it goes first, alone  |
+| 2     | [ESLint](#stage-2--eslint)                                             | 6              | Fix the code, never the rules                             |
+| 3     | [Names](#stage-3--names)                                               | 1              | The lint errors show most of the names to change          |
+| 4     | [Constants](#stage-4--constants)                                       | 12.1           | Components move next, and will import these               |
+| 5     | [Components](#stage-5--components)                                     | 12, 13, 14     | Pure moves first, then shared code, which needs the paths |
+| 6     | [Docs](#stage-6--docs)                                                 | 18             | The mechanical copy first, then the rewrite               |
+| 7     | [AGENTS.md, skills and version](#stage-7--agentsmd-skills-and-version) | 21             | Describes the final layout, so it goes last               |
+
+## How to work through the stages
+
+- **One branch per stage, stacked.** Each stage branches from the one before it. Stop after each stage for the person to review and commit. This is what keeps a large migration reviewable.
+- **Each stage changes one kind of thing.** A stage that moves files does not also change what they do.
+- **Run `pnpm lint`, `pnpm format:check`, the tests and the build at the end of every stage**, and the regression check from Stage 0 if the project has one.
+- **Record anything left for later** under "Unfinished changes" in `docs/development/coding-standards.md`. See [Finishing a change later](/docs/Guides/setup#finishing-a-change-later).
+
+:::warning[Squash merges lose the reformat commit]
+
+If the project squash-merges pull requests, the reformat commit's hash disappears from `main` when the stack is merged, and `.git-blame-ignore-revs` stops working. Decide before starting:
+
+- **Land Stages 0 and 1 on `main` by themselves first**, with a merge that keeps the commits, so the reformat survives as its own commit. Then stack the rest on top. Recommended.
+- **Or accept losing blame-ignore**, and squash everything.
+
+:::
 
 ## Before you start: third-party code is exempt
 
@@ -17,70 +48,54 @@ The standards apply to **code we write**, not to packages we pull in. Do not lin
 - Add `vendor/` to `.prettierignore` too.
 - **shadcn components are not third-party.** They are our code: convert them to the standards rather than moving them to `vendor/`. See [Adding a shadcn component](/docs/Guides/component-library-workflow#adding-a-shadcn-component).
 
-## Stage 1 — Prettier (formatting only)
+## Stage 0 — Regression check
 
-Applies setup standard 7.
+Optional, and recommended when Stages 4 to 6 will move a lot of code. Set up the [regression check](/docs/Guides/regression-checks) and take its baseline from the **live production site**, before anything changes. Every later stage must pass it unchanged.
 
-Formatting changes are safe to make all at once because they don't change behaviour.
+## Stage 1 — Formatting
 
-```bash
-pnpm add -D prettier prettier-plugin-tailwindcss
-```
+Applies setup standards 7, 9 and 10. Three commits, in this order:
 
-Add `prettier.config.mjs` — see the [Prettier page](/docs/Standards/prettier) for the full file contents.
+1. **The config files.** Rename every config to `.mjs` ([why](/docs/Guides/setup#5-apply-the-standards)). Add `prettier.config.mjs` from the [Prettier page](/docs/Standards/prettier), with its `format` and `format:check` scripts, `.editorconfig`, `.nvmrc` and `.envrc`. Do not reformat anything yet.
 
-Format everything at once:
+   ```bash
+   pnpm add -D prettier prettier-plugin-tailwindcss
+   ```
 
-```bash
-pnpm format
-```
+2. **The reformat, on its own.** Run `pnpm format` and commit the result with nothing else in it. Every file changes, and none of it changes behaviour.
+3. **`.git-blame-ignore-revs`.** Create it with the reformat commit's full hash and a comment saying what it was. GitHub reads it automatically. For local `git blame`, each person runs once:
 
-Keep the reformat apart from any other change, so the formatting is easy to tell apart from real changes later.
+   ```bash
+   git config blame.ignoreRevsFile .git-blame-ignore-revs
+   ```
 
-Add a `.prettierignore` if you have generated files you don't want touched:
+Add a `.prettierignore` for generated files and anything Prettier must not format. See [What Prettier skips](/docs/Standards/prettier#what-prettier-skips).
 
-```text
-dist/
-build/
-coverage/
-vendor/
-*.generated.ts
-```
-
-## Stage 2 — EditorConfig
-
-Applies setup standard 9.
-
-Add the `.editorconfig` file. No code changes needed — your editor will handle it on next save.
-
-## Stage 3 — ESLint
+## Stage 2 — ESLint
 
 Applies setup standard 6.
 
-Add the [standard config](/docs/Standards/eslint) for your project type, then start in warn-only mode to see what you're dealing with. Add a block before `prettier`:
+Copy the [standard config](/docs/Standards/eslint) for the project's framework to `eslint.config.mjs`, unchanged, and `eslint.overrides.mjs` beside it. To see the size of the job first, turn the noisiest rules down to warnings **in `eslint.overrides.mjs`**, never in `eslint.config.mjs`:
 
-```js
-const config = [
-  // ...
-  {
-    rules: {
-      // temporarily downgrade errors to warnings during migration
-      "@typescript-eslint/no-explicit-any": "warn",
-      "unicorn/filename-case": "warn",
-      "unicorn/name-replacements": "warn",
-    },
-  },
-  prettier,
+```js title="eslint.overrides.mjs"
+// Temporary, while migrating: see Unfinished changes in
+// docs/development/coding-standards.md.
+export const projectOverrides = [
+	{
+		rules: {
+			"@typescript-eslint/no-explicit-any": "warn",
+			"unicorn/filename-case": "warn",
+			"unicorn/name-replacements": "warn",
+		},
+	},
 ];
-
-export default config;
 ```
 
-Run `pnpm lint` and triage the output. Fix them one kind at a time (for example, all `any` removals together). Once clean, remove the overrides.
+Record the temporary warnings under "Unfinished changes". Run `pnpm lint`, and fix one kind of error at a time, such as every `any`. **Fix the code, not the rules.** When the warnings are gone, empty `eslint.overrides.mjs` again.
 
-## Stage 4 — Names
+## Stage 3 — Names
 
-Applies setup standard 1.
+Applies setup standard 1. Its own branch, after ESLint: the lint errors show most of the names to change.
 
 Renaming is the biggest job in most migrations, and the easiest place to get confused. Every name we write becomes [Human-Readable Names](/docs/Standards/human-readable-names). Work through it in this order.
 
@@ -160,26 +175,40 @@ node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs --list rena
 - **It cannot reach keys in plain object literals that aren't typed**, such as the expected value in a test's `toEqual({ properties: … })`. Search the tests for the old name and fix those keys by hand.
 - **Run the type check and tests after each batch** of renames.
 
-## Stage 5 — AGENTS.md
+## Stage 4 — Constants
+
+Applies setup standard 12.1. Move every link into `r`, every piece of text into `s`, and every number into `numbers.ts`, all in `lib/constants/`. See [Constants](/docs/Structure/folder-structure#constants).
+
+- **Move the values, nothing else.** The page must look and work exactly as before.
+- **No component-level `constants.ts` survives this stage.**
+- **A list of items with links** keeps its words in `s` and its links in `r` under the same keys: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links).
+- **Shared types move to `lib/types/`.** `lib/constants/` never imports from `lib/types/`.
+
+## Stage 5 — Components
+
+Applies setup standards 12, 13 and 14. Two branches:
+
+1. **5a: move the component folders, and nothing else.** Use `git mv` so the history follows, and rewrite the import paths. No code inside a file changes. Pure moves are quick to review. Follow [Where components live](/docs/Structure/folder-structure#-where-components-live): the homepage in `app/(homepage)/`, the site frame in `components/layout/`, and no `components/features/`.
+2. **5b: move the code several components share** to its standard home, now that the final paths are known: a shared component up one level, a hook beside the component that owns it, and sort, find, get, filter and format functions into `utils/`. Sub-components sit flat in their parent's `components/` folder.
+
+## Stage 6 — Docs
+
+Applies setup standard 18. Two branches:
+
+1. **6a: the mechanical part.** Copy the [doc templates](/docs/templates#document-templates) and the [`docsSite/` viewer](/docs/Standards/documentation#-setting-it-up), move images into `docs/assets/`, and delete the old viewer's leftovers.
+2. **6b: rewrite the content as Decision Docs.** This is the part that needs judgement, so it is reviewed on its own. Follow [Converting existing docs](/docs/Standards/documentation#-converting-existing-docs).
+
+## Stage 7 — AGENTS.md, skills and version
 
 Applies setup standard 21.
 
-Copy the [AGENTS.md template](/docs/templates#agents) to the project root and replace every `[placeholder]`. Agree the standards with the person first ([Setup, step 3](/docs/Guides/setup#3-agree-the-standards)), and set the code standards version from the [Version History](/docs/version-history).
-
-## Stage 6 — Agent skills
-
-Applies setup standard 21.
-
-Copy the eight [standard skill files](/docs/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
-
-## Stage 7 — Docs
-
-Applies setup standard 18.
-
-Move the project's existing documentation into the standard [`docs/` folders](/docs/Standards/documentation#-the-folders), rewriting each as a [Decision Doc](/docs/Standards/documentation#-the-doc-format), then add the [`docsSite/` viewer](/docs/Standards/documentation#-setting-it-up) so it shows at `/docs`.
+1. Copy the [AGENTS.md template](/docs/templates#agents) to the project root and replace every `[placeholder]`. It describes the final layout, so it goes last.
+2. Copy the eight [standard skill files](/docs/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
+3. Set `**Code standards version:**` from the [Version History](/docs/version-history).
+4. Run the [standards check](/docs/Guides/setup#checking-a-project), and fix what it finds.
 
 ## Tips
 
 - **Don't mix formatting and logic changes.** Reformat on its own, then change the code.
-- **Exclude generated files** from ESLint with `// eslint-disable-file` or `.eslintignore`-equivalent glob ignores in the config.
-- **Fix new-file compliance first**: agree that all _new_ files must pass the full ruleset even before the migration is complete.
+- **Generated files** are ignored with an entry in `eslint.overrides.mjs`, such as `{ ignores: ["generated/**"] }`, and a line in `.prettierignore`. Record the reason in `coding-standards.md`.
+- **New files follow the full standards from day one**, even before the migration is finished.

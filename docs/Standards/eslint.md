@@ -30,7 +30,7 @@ pnpm add -D eslint@latest @eslint/js@latest
 
 :::note[eslint-plugin-react on ESLint 10]
 
-`eslint-plugin-react` 7.37 officially supports ESLint only up to 9.7, and on ESLint 10 it crashes when it tries to detect the React version by itself. The React and Next.js configs below avoid this by setting the version: `settings: { react: { version: "19.0" } }`. **Keep that setting** and update the number when the project upgrades React. pnpm warns about the unmet peer dependency on install; that warning is expected.
+`eslint-plugin-react` 7.37 officially supports ESLint only up to 9.7, and on ESLint 10 it crashes when it tries to detect the React version by itself. The React and Next.js configs below avoid this by setting the version: `settings: { react: { version: "19.0" } }`. **Keep that setting.** A project on a React version other than 19 sets the number in `eslint.overrides.mjs`, `{ settings: { react: { version: "19.2" } } }`, never in `eslint.config.mjs`. pnpm warns about the unmet peer dependency on install; that warning is expected.
 
 :::
 
@@ -515,7 +515,8 @@ const config = [
 		},
 		settings: {
 			// Keep this. eslint-plugin-react crashes on ESLint 10 if it has to detect the version itself.
-			// Update the number when the project upgrades React.
+			// A project on another React version sets settings.react.version
+			// in eslint.overrides.mjs, never here.
 			react: { version: "19.0" },
 			"import-x/resolver-next": [createTypeScriptImportResolver()],
 		},
@@ -659,7 +660,7 @@ export default config;
 
 :::caution[Pin the React version]
 
-Set `settings.react.version` to the project's React version rather than `"detect"`. On ESLint 10, `eslint-plugin-react` 7 crashes while detecting the version (`contextOrFilename.getFilename is not a function`).
+Keep `settings.react.version` set rather than `"detect"`; change the number in `eslint.overrides.mjs`. On ESLint 10, `eslint-plugin-react` 7 crashes while detecting the version (`contextOrFilename.getFilename is not a function`).
 
 :::
 
@@ -751,7 +752,8 @@ const config = [
 		},
 		settings: {
 			// Keep this. eslint-plugin-react crashes on ESLint 10 if it has to detect the version itself.
-			// Update the number when the project upgrades React.
+			// A project on another React version sets settings.react.version
+			// in eslint.overrides.mjs, never here.
 			react: { version: "19.0" },
 			"import-x/resolver-next": [createTypeScriptImportResolver()],
 		},

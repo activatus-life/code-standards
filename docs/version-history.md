@@ -24,7 +24,8 @@ sidebar_label: "Version History"
 5. **Strike out what the standard now covers.** After the changes, re-read the project's list of opted-out and changed standards in `docs/development/coding-standards.md`. Take off the list any exception the new version has made part of the standard, and update any rule it records for an old shape of the standard. A differences list that still describes the old standard sends the next agent wrong.
 6. **Run `pnpm lint`, `pnpm format:check`, `pnpm test` and the build** after each change. `format:check` checks every file git does not ignore; never narrow it to changed files.
 7. **Ask any [Working with the agent](/docs/Guides/setup#4-working-with-the-agent) question** whose answer is not recorded in `docs/development/coding-standards.md`, under "Details".
-8. **Update the version number** in `AGENTS.md` once every change is done.
+8. **Run `pnpm standards:check`**, and fix what it finds. See [Checking a project](/docs/Guides/setup#checking-a-project).
+9. **Update the version number** in `AGENTS.md` once every change is done.
 
 **A patch keeps the same version number.** When only the last or middle number changes, such as 3.0.0 → 3.0.1 or 3.0.9 → 3.1.0, the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed. A project already on the installed major version is never "nothing to do": follow [Already on this version](/docs/Guides/setup#already-on-this-version).
 
@@ -51,9 +52,20 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.1.1
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.2.0
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.2.0.** If the project already applied 3.1.1, check these:
+
+- **A standards check ships with the package.** Add the script `"standards:check": "node node_modules/@activatus/code-standards/scripts/verifyStandards/verifyStandards.mjs"` to `package.json`, run `pnpm standards:check`, and fix what it finds. It follows the exceptions recorded in `docs/development/coding-standards.md`. See [Checking a project](/docs/Guides/setup#checking-a-project). Copy the Code standards section of `AGENTS.md` from the template again: it now says to run the check.
+- **Keep every docs folder and file**, even ones that do not apply yet. 3.1.1 allowed deleting a folder that could not apply; that is withdrawn, because the folders keep every project's docs laid out the same and a small project grows into them. Restore any folder deleted under 3.1.1 from the templates, and remove its entry from `coding-standards.md`.
+- **The React version lives in `eslint.overrides.mjs`.** A project on a React version other than 19 sets `{ settings: { react: { version: "19.2" } } }` there, and copies the template over `eslint.config.mjs` unchanged.
+- **The `writing-docs.md` and `coding-standards.md` templates gained a `## Why` section.** Add one to each if the project's copies have none.
+- **New, optional: the [Migrating guide](/docs/Guides/migrating) has new stages**, among them a regression check (Stage 0), constants (Stage 4), components (Stage 5) and docs (Stage 6), and the docs standard has [Converting existing docs](/docs/Standards/documentation#-converting-existing-docs). Nothing to do for a project already on version 3.
+- **New, optional: [Regression Checks for Refactors](/docs/Guides/regression-checks)**, a Playwright check that proves a refactor changed nothing visible. Nothing to do unless the project wants it.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; every folder from the doc templates exists in `docs/`.
 
 **Fixes in 3.1.1.** If the project already applied 3.1.0, check these:
 
@@ -468,7 +480,7 @@ See [When a name clashes](/docs/Standards/human-readable-names#when-a-name-clash
 ### No action needed
 
 - The [Setup](/docs/Guides/setup) guide is written for the agent: install the package, check the version, agree the standards, apply them. It never asks which framework the project uses, and never creates the app: the person does that.
-- The [migration guide](/docs/Guides/migrating#stage-4--names) has a Names stage.
+- The [migration guide](/docs/Guides/migrating#stage-3--names) has a Names stage.
 
 ---
 
