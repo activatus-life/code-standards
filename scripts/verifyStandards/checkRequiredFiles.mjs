@@ -1,19 +1,12 @@
-// Standards 12.1 and 18: the files every project has.
+// Standards 18 and 21: the docs every project has.
 import { readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 import { CODING_STANDARDS_PATH } from "./projectFiles.mjs";
 
-const CONSTANTS_FILES = [
-	"lib/constants/index.ts",
-	"lib/constants/routes.ts",
-	"lib/constants/strings.ts",
-	"lib/constants/numbers.ts",
-];
 // Setup renames this file after the project: what-is-launchpad.md.
 const RENAMED_OVERVIEW_PATH = "overview/what-is-it.md";
 const RENAMED_OVERVIEW_PATTERN = /^docs\/overview\/what-is-.+\.md$/;
-const COMPONENT_CONSTANTS_PATTERN = /(^|\/)constants\.tsx?$/;
 
 const listTemplateDocs = ({ directory, prefix = "" }) =>
 	readdirSync(directory).flatMap((entry) => {
@@ -54,27 +47,6 @@ const checkDocsFiles = ({ templatesDirectory, projectFiles }) => {
 		}));
 };
 
-const checkConstantsFiles = ({ projectFiles }) => {
-	const projectFileSet = new Set(projectFiles);
-	const missing = CONSTANTS_FILES.filter(
-		(filePath) => !projectFileSet.has(filePath),
-	).map((filePath) => ({
-		standard: "12.1",
-		message: `${filePath} is missing`,
-		page: "docs/Structure/folder-structure.md#constants",
-	}));
-	const componentConstants = projectFiles
-		.filter((filePath) => !filePath.startsWith("lib/constants/"))
-		.filter((filePath) => !filePath.startsWith("node_modules/"))
-		.filter((filePath) => COMPONENT_CONSTANTS_PATTERN.test(filePath))
-		.map((filePath) => ({
-			standard: "12.1",
-			message: `${filePath}: there is no component-level constants file. Move its values into r, s and numbers.ts in lib/constants/`,
-			page: "docs/Structure/folder-structure.md#constants",
-		}));
-	return [...missing, ...componentConstants];
-};
-
 export const checkRequiredFiles = ({
 	templatesDirectory,
 	projectFiles,
@@ -91,6 +63,5 @@ export const checkRequiredFiles = ({
 	return [
 		...codingStandards,
 		...checkDocsFiles({ templatesDirectory, projectFiles }),
-		...checkConstantsFiles({ projectFiles }),
 	];
 };

@@ -177,11 +177,12 @@ node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs --list rena
 
 ## Stage 4 — Constants
 
-Applies setup standard 12.1. Move every link into `r`, every piece of text into `s`, and every number into `numbers.ts`, all in `lib/constants/`. See [Constants](/docs/Structure/folder-structure#constants).
+Applies setup standard 12.1. Move every link into `r`, every piece of text into `s`, every loose number into `numbers.ts`, motion into `animation.ts`, drawing layouts into `artwork.ts`, and class names shared between files into `classNames.ts`, all in `lib/constants/`. See [Constants](/docs/Structure/folder-structure#constants).
 
 - **Move the values, nothing else.** The page must look and work exactly as before.
 - **No component-level `constants.ts` survives this stage.**
-- **A list of items with links** keeps its words in `s` and its links in `r` under the same keys: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links).
+- **Move motion and artwork objects whole.** Never pull their numbers out into `numbers.ts`. A topic file such as `motion.ts` or `durations.ts` is renamed or folded into the matching standard file.
+- **A list of items with links** keeps its words in `s` and its links in `r` under the same keys, and a loop looks each one up by its id: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links). Delete lookup objects such as `PLAN_ROUTES`.
 - **Shared types move to `lib/types/`.** `lib/constants/` never imports from `lib/types/`.
 
 ## Stage 5 — Components
@@ -197,6 +198,8 @@ Applies setup standard 18. Two branches:
 
 1. **6a: the mechanical part.** Copy the [doc templates](/docs/templates#document-templates) and the [`docsSite/` viewer](/docs/Standards/documentation#-setting-it-up), move images into `docs/assets/`, and delete the old viewer's leftovers.
 2. **6b: rewrite the content as Decision Docs.** This is the part that needs judgement, so it is reviewed on its own. Follow [Converting existing docs](/docs/Standards/documentation#-converting-existing-docs).
+
+**Keep every docs folder and file from the templates, even ones that do not apply yet.** This rule is final: no docs folder is deleted, whatever the size of the project. See [Setting it up](/docs/Standards/documentation#-setting-it-up).
 
 ## Stage 7 — AGENTS.md, skills and version
 

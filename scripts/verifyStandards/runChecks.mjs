@@ -7,7 +7,10 @@ import { checkAgentFiles } from "./checkAgentFiles.mjs";
 import { checkComponents } from "./checkComponents.mjs";
 import { checkConfigFiles } from "./checkConfigFiles.mjs";
 import { checkDocs } from "./checkDocs.mjs";
+import { checkConstants } from "./checkConstants.mjs";
+import { checkRecordedAnswers } from "./checkRecordedAnswers.mjs";
 import { checkRequiredFiles } from "./checkRequiredFiles.mjs";
+import { checkStructure } from "./checkStructure.mjs";
 import {
 	listProjectFiles,
 	PACKAGE_DIRECTORY,
@@ -44,6 +47,9 @@ export const runChecks = ({ projectDirectory }) => {
 		}),
 		...checkConfigFiles({ projectDirectory, templatesDirectory }),
 		...checkRequiredFiles({ templatesDirectory, projectFiles }),
+		...checkConstants({ projectDirectory, projectFiles }),
+		...checkStructure({ projectFiles }),
+		...checkRecordedAnswers({ projectDirectory }),
 		...checkComponents({
 			projectDirectory,
 			projectFiles,
