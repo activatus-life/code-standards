@@ -51,7 +51,7 @@ The standards are now in `node_modules/@activatus/code-standards/`:
 | `docs/version-history.md` | What changed in each version, and what a project has to do about it                        |
 | `static/templates/`       | The config files to copy: `AGENTS.md`, ESLint, Prettier, Stylelint and the rest            |
 
-**Read the standards from `node_modules`, not the website.** The installed package is the exact version the project uses. The package version is the standards version: `2.0.0` is version 2.
+**Read the standards from `node_modules`, not the website.** The installed package is the exact version the project uses. The package version is the standards version, and a project records it in full: `3.2.2`.
 
 ## 2. Work out where the project is
 
@@ -121,7 +121,7 @@ The list has nothing about branches or commit messages. Those are the project's 
 
 ## 4. Working with the agent
 
-Do this step every time, straight after step 3. Once the standards are agreed, offer the four [Working with Agents](/docs/Standards/working-with-agents) options. All four are optional: offer every one, every time, so the person can fill them in quickly and keep going.
+Do this step every time, straight after step 3. Once the standards are agreed, offer the five [Working with Agents](/docs/Standards/working-with-agents) options. All five are optional: offer every one, every time, so the person can fill them in quickly and keep going.
 
 First the **project links**. Find each one yourself, then ask the person to confirm it or say "None":
 
@@ -148,7 +148,14 @@ Would you like AI to ask you before every commit and push
 to git? Yes or no?
 ```
 
-**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. Write all four answers in `docs/development/coding-standards.md`, under "Details", on one line, so a later update knows not to ask again: `- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no] ([date]).` See [Working with Agents](/docs/Standards/working-with-agents).
+Then **told about decisions**. **Print this to the person exactly as it is written**:
+
+```text
+Would you like AI to tell you about each decision it makes
+that the code standards do not cover? Yes or no?
+```
+
+**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. If they said yes to being told about decisions, write under **Decisions**: "Tell the person about each decision you make that the code standards do not cover, in the summary at the end of the task." If they said no, delete the Decisions line. Write all five answers in `docs/development/coding-standards.md`, under "Details", on one line, so a later update knows not to ask again: `- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no]; told about decisions [yes or no] ([date]).` See [Working with Agents](/docs/Standards/working-with-agents).
 
 ## 5. Apply the standards
 
@@ -174,12 +181,12 @@ The other standards are rules for how code is written. There is nothing to insta
 
 **Finish by:**
 
-1. Setting `**Code standards version:**` in `AGENTS.md` to the installed package's major version. See [Finishing a change later](#finishing-a-change-later) if anything is left to do.
+1. Setting `**Code standards version:**` in `AGENTS.md` to the installed package's full version, such as `3.2.2`. See [Finishing a change later](#finishing-a-change-later) if anything is left to do.
 2. Running `pnpm lint`, `pnpm format:check`, the tests and the [standards check](#checking-a-project), and fixing what they find.
 3. **Printing this to the person**, filled in, so every project's handover reads the same:
 
 ```text
-Code standards set up: version [N] ([package version]).
+Code standards set up: version [full package version].
 
 Set up:       [the standards applied, by number]
 Skipped:      [numbers and reasons, or "None"]
@@ -195,12 +202,11 @@ anything that is wrong.
 
 ## Already on this version
 
-The project's `AGENTS.md` has the same major version as the installed package, such as 3. That does not mean there is nothing to do: a newer patch, such as 3.1.1, can still ask for changes.
+The project's `AGENTS.md` has the same full version as the installed package, such as 3.2.2. There are no version changes to make.
 
-1. **Read the version's Fixes** in `node_modules/@activatus/code-standards/docs/version-history.md`, and do anything they ask.
-2. **Check `docs/development/coding-standards.md`, under "Details",** for the [step 4](#4-working-with-the-agent) answers: the GitHub repo, the Linear project, the status circles and asking before committing. Ask the person any that are not recorded, and record them as step 4 says.
-3. **Run the [standards check](#checking-a-project)**, and fix what it finds.
-4. **Tell the person** what you changed, or that the project was already up to date.
+1. **Check `docs/development/coding-standards.md`, under "Details",** for the [step 4](#4-working-with-the-agent) answers: the GitHub repo, the Linear project, the status circles, asking before committing and being told about decisions. Ask the person any that are not recorded, and record them as step 4 says.
+2. **Run the [standards check](#checking-a-project)**, and fix what it finds.
+3. **Tell the person** what you changed, or that the project was already up to date.
 
 ---
 
@@ -208,7 +214,7 @@ The project's `AGENTS.md` has the same major version as the installed package, s
 
 The project already follows the standards, and a newer version is out.
 
-**A fix or a minor version keeps the same version number.** When only the last number changes (a fix, such as 3.0.0 → 3.0.1) or the middle number changes (a minor version, such as 3.0.9 → 3.1.0), the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed.
+**Every new number can ask for work**, whichever part changed. What each part means is in [How versions are numbered](/docs/version-history#how-versions-are-numbered).
 
 1. **Note the project's version.** Read `**Code standards version:**` in `AGENTS.md`. This is the version the code follows.
 2. **Update the package:**
@@ -217,14 +223,14 @@ The project already follows the standards, and a newer version is out.
    pnpm add -D @activatus/code-standards@latest
    ```
 
-   Its major version is now the newest version. If pnpm refuses because the version is too new, or `pnpm format:check` now fails on `pnpm-workspace.yaml`, see [1. Install the standards](#1-install-the-standards). Check `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` is the plain name, `"@activatus/code-standards"`, with no version in it.
+   Its version is now the newest. If pnpm refuses because the version is too new, or `pnpm format:check` now fails on `pnpm-workspace.yaml`, see [1. Install the standards](#1-install-the-standards). Check `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` is the plain name, `"@activatus/code-standards"`, with no version in it.
 
-3. **Read `node_modules/@activatus/code-standards/docs/version-history.md`**, but only the versions newer than the project's. Do not re-read the rest of the standards.
+3. **Read `node_modules/@activatus/code-standards/docs/version-history.md`**, but only the entries newer than the project's version. Do not re-read the rest of the standards.
 4. **Skip any change to a standard the project opted out of.** The opt-outs are listed in `docs/development/coding-standards.md`.
 5. **Do every other change** as its "What to do" says, and run its "How to check" search.
 6. **Ask any [step 4](#4-working-with-the-agent) question** whose answer is not recorded in `docs/development/coding-standards.md`, under "Details".
 7. **Run the [standards check](#checking-a-project)**, and fix what it finds.
-8. **Set `**Code standards version:**`** in `AGENTS.md` to the new version, and tell the person what changed. If a change is being finished later, record it first: see [Finishing a change later](#finishing-a-change-later).
+8. **Set `**Code standards version:**`** in `AGENTS.md` to the installed package's full version, and tell the person what changed. If a change is being finished later, record it first: see [Finishing a change later](#finishing-a-change-later).
 
 See the [Version History](/docs/version-history) for the full update rules.
 
@@ -254,7 +260,7 @@ It reports, and never changes a file. Each finding gives the standard's number a
 | 6 to 10  | `eslint.config.mjs`, `prettier.config.mjs`, `stylelint.config.mjs`, `.editorconfig` and `.envrc` match the templates; `eslint.overrides.mjs`, `.nvmrc` and the format scripts are in place |
 | 12.1     | `lib/constants/` has `index.ts`, `routes.ts`, `strings.ts` and `numbers.ts`, no component has its own `constants.ts`, and no other file sits beside the seven standard ones                |
 | 13       | Every sub-component sits flat in its root component's `components/` folder, and the homepage is in `app/(homepage)/`                                                                       |
-| 21       | `docs/development/coding-standards.md` records the four agent answers under "Details"                                                                                                      |
+| 21       | `docs/development/coding-standards.md` records the five agent answers under "Details"                                                                                                      |
 | 11       | `docs/design/design-system.md` has a filled-in Colour palette table                                                                                                                        |
 | 15       | Every `components/ui/` component is on the Design System Components list, or recorded under "Components for the standards"                                                                 |
 | 4        | Every file that exports a function or component has a test file beside it                                                                                                                  |

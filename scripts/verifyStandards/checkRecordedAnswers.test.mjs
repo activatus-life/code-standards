@@ -6,7 +6,7 @@ import { createTestProject } from "./testProject.mjs";
 
 const ALL_ANSWERS = `## Details
 
-- Working with the agent: GitHub repo https://github.com/example/site; Linear project None; status circles yes; ask before every commit and push yes (2026-10-23).
+- Working with the agent: GitHub repo https://github.com/example/site; Linear project None; status circles yes; ask before every commit and push yes; told about decisions no (2026-10-23).
 
 ## Related
 `;
@@ -35,7 +35,7 @@ const check = (files) =>
 	});
 
 describe("checkRecordedAnswers", () => {
-	it("passes all four answers and a filled-in palette", () => {
+	it("passes all five answers and a filled-in palette", () => {
 		assert.deepEqual(
 			check({
 				"docs/development/coding-standards.md": ALL_ANSWERS,
@@ -51,17 +51,17 @@ describe("checkRecordedAnswers", () => {
 				"## Details\n\n- GitHub repo: https://github.com/example/site\n",
 			"docs/design/design-system.md": PALETTE,
 		});
-		assert.equal(findings.length, 3);
+		assert.equal(findings.length, 4);
 		assert.match(findings[0].message, /the Linear project/);
 	});
 
 	it("flags the template's unfilled answers line", () => {
 		const findings = check({
 			"docs/development/coding-standards.md":
-				"## Details\n\n- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no] ([YYYY-MM-DD]).\n",
+				"## Details\n\n- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no]; told about decisions [yes or no] ([YYYY-MM-DD]).\n",
 			"docs/design/design-system.md": PALETTE,
 		});
-		assert.equal(findings.length, 4);
+		assert.equal(findings.length, 5);
 	});
 
 	it("flags a palette still holding the template's placeholder", () => {

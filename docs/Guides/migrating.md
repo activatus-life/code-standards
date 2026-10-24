@@ -52,6 +52,8 @@ The standards apply to **code we write**, not to packages we pull in. Do not lin
 
 Optional, and recommended when Stages 4 to 6 will move a lot of code. Set up the [regression check](/docs/Guides/regression-checks) and take its baseline from the **live production site**, before anything changes. Every later stage must pass it unchanged.
 
+**Take the baseline first, then move one kind of thing at a time.** The constants moves (Stage 4) and the folder moves (Stage 5a) are separate steps, each followed by a full regression run. When a run fails, only one kind of move can have caused it.
+
 ## Stage 1 — Formatting
 
 Applies setup standards 7, 9 and 10. Three commits, in this order:
@@ -181,8 +183,10 @@ Applies setup standard 12.1. Move every link into `r`, every piece of text into 
 
 - **Move the values, nothing else.** The page must look and work exactly as before.
 - **No component-level `constants.ts` survives this stage.**
-- **Move motion and artwork objects whole.** Never pull their numbers out into `numbers.ts`. A topic file such as `motion.ts` or `durations.ts` is renamed or folded into the matching standard file.
-- **A list of items with links** keeps its words in `s` and its links in `r` under the same keys, and a loop looks each one up by its id: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links). Delete lookup objects such as `PLAN_ROUTES`.
+- **Move animation and artwork objects whole.** Never pull their numbers out into `numbers.ts`. Any other file in `lib/constants/` is folded into the standard file that fits.
+- **Where each value goes is the project's call.** Read the [Constants table](/docs/Structure/folder-structure#constants) and decide. Record any value that fits none under "Details" in `coding-standards.md`, with the person's yes.
+- **An id moves into the object that uses it.** **CSS written as a string moves to `globals.css`**, never into a constants file.
+- **A list of items with links** keeps its words in `s` and its links in `r` under the same keys, and a loop looks each one up by its key: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links). Delete any separate lookup object that maps a key to its link.
 - **Shared types move to `lib/types/`.** `lib/constants/` never imports from `lib/types/`.
 
 ## Stage 5 — Components
@@ -207,7 +211,7 @@ Applies setup standard 21.
 
 1. Copy the [AGENTS.md template](/docs/templates#agents) to the project root and replace every `[placeholder]`. It describes the final layout, so it goes last.
 2. Copy the eight [standard skill files](/docs/templates#skills) into `.agents/skills/`, and again into `.claude/commands/`.
-3. Set `**Code standards version:**` from the [Version History](/docs/version-history).
+3. Set `**Code standards version:**` to the installed package's full version, such as `3.2.2`.
 4. Run the [standards check](/docs/Guides/setup#checking-a-project), and fix what it finds.
 
 ## Tips

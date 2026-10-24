@@ -7,27 +7,37 @@ sidebar_label: "Version History"
 
 > What changed in each version of the standards, and exactly what a project has to do about it. Written for the AI agent doing the update.
 
-**Every change to the standards gets a new version number.** Each project records the version it follows in its `AGENTS.md`, under "Code standards":
+**Every change to the standards gets a new version number.** Each project records the full version it follows in its `AGENTS.md`, under "Code standards", so the project pairs with the package and knows where to start:
 
 ```md
-**Code standards version:** 2
+**Code standards version:** 3.2.2
 ```
+
+## How versions are numbered
+
+| Part that changes | Example       | Means                                                                                                     |
+| ----------------- | ------------- | --------------------------------------------------------------------------------------------------------- |
+| First             | 3.2.2 → 4.0.0 | A major update to the standards                                                                           |
+| Middle            | 3.2.2 → 3.3.0 | Files move: the update moves or renames files in a project. Plan it, and take a regression baseline first |
+| Last              | 3.2.2 → 3.2.3 | Changes inside files only. Nothing moves                                                                  |
+
+Every new number can ask for work, whichever part changed. 3.1.1 and 3.2.1 came out before this rule and moved files in a last-number update; their moves are listed under **Structural changes**.
 
 ## Updating a project to a new version
 
-**Read only the versions newer than the project's.** A project on version 1 that is updating to version 3 reads version 2 and version 3 on this page, and nothing else. Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
+**Read only the entries newer than the project's version.** A project on 3.2.1 updating to 3.3.0 reads the 3.2.2 and 3.3.0 entries on this page, and nothing else. A project that recorded only a major number, such as `3`, reads every entry of that version from its start. Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
 
 1. **Find the project's version** in its `AGENTS.md`. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
 2. **Update the package:** `pnpm add -D @activatus/code-standards@latest`, never a typed version number. If pnpm refuses because the version is too new, add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`, as in [Setup](/docs/Guides/setup#1-install-the-standards). The entry is the plain package name, with no version. If pnpm wrote one with versions in it, such as `'@activatus/code-standards@3.0.4 || 3.0.5'`, replace it with the plain name: otherwise pnpm adds another version to it on every update. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
-3. **Read each version newer than the project's**, oldest first. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
+3. **Read each entry newer than the project's version**, oldest first. For a middle-number entry, take the [regression check](/docs/Guides/regression-checks) baseline before any file moves. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
 4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished. When a change says to copy a line from the `AGENTS.md` template, and the project's `AGENTS.md` records the standards in its own words instead, write the updated rule there in the project's own shape.
 5. **Strike out what the standard now covers.** After the changes, re-read the project's list of opted-out and changed standards in `docs/development/coding-standards.md`. Take off the list any exception the new version has made part of the standard, and update any rule it records for an old shape of the standard. A differences list that still describes the old standard sends the next agent wrong.
 6. **Run `pnpm lint`, `pnpm format:check`, `pnpm test` and the build** after each change. `format:check` checks every file git does not ignore; never narrow it to changed files.
 7. **Ask any [Working with the agent](/docs/Guides/setup#4-working-with-the-agent) question** whose answer is not recorded in `docs/development/coding-standards.md`, under "Details".
 8. **Run `pnpm standards:check`**, and fix what it finds. See [Checking a project](/docs/Guides/setup#checking-a-project).
-9. **Update the version number** in `AGENTS.md` once every change is done.
+9. **Set the version** in `AGENTS.md` to the installed package's full version once every change is done.
 
-**A fix or a minor version keeps the same version number.** When only the last number changes (a fix, such as 3.0.0 → 3.0.1) or the middle number changes (a minor version, such as 3.0.9 → 3.1.0), the project's version in `AGENTS.md` stays the same, but there may still be work to do. Update the package, then read that version's **Fixes** list and do anything it asks for the project's version. Check it every time the package is updated, even when the version number has not changed. A project already on the installed major version is never "nothing to do": follow [Already on this version](/docs/Guides/setup#already-on-this-version).
+**A project already on the installed full version** has no version changes to make: follow [Already on this version](/docs/Guides/setup#already-on-this-version).
 
 **When a change does not fit the project**, for example it renames a folder the project does not have, skip it. If you are not sure, ask; do not guess.
 
@@ -35,47 +45,76 @@ sidebar_label: "Version History"
 
 Anyone changing the standards adds a version, alongside the change:
 
-- **One version per release**, numbered one higher than the last. Whole numbers only. A version can collect several changes before it is released.
-- **Bump the package's major version to match** in `package.json`: version 3 is `3.0.0`. Then publish it to npm (npmjs.com) with `pnpm publish`. pnpm is the tool; npm is where the package lives, and projects install it from there with `pnpm add`.
+- **Pick the number from [How versions are numbered](#how-versions-are-numbered).** A major update is `4.0.0`. An update that moves files bumps the middle number, `3.2.2` → `3.3.0`. An update that only changes the inside of files bumps the last, `3.2.2` → `3.2.3`. Set it in `package.json`, then publish it to npm (npmjs.com) with `pnpm publish`. pnpm is the tool; npm is where the package lives, and projects install it from there with `pnpm add`.
 - **For every change, write:** what changed, why, what to do in a project, and how to check it is done. Write it for an agent that has not read the rest of the standards.
 - **If a project has nothing to do, say so.**
 - **Newest version at the top.**
-- **Work in progress goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: pilot it (below), drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
-- **Pilot a version in a real project before releasing it.** Once the work-in-progress version is written, have one real project apply it exactly as written, reading only what the page says. Every judgement call the agent has to make, and every instruction that does not fit the project, is a missing sentence: fold it back into the version before publishing. Release only when the pilot runs without the agent asking a question the page does not answer.
-- **Fixing a released version** bumps only the last number: `3.0.0` → `3.0.1`. Update the version's changes in place, and list what was fixed under its **Fixes**. Projects keep the same version number in `AGENTS.md`. Write each fix so a project already on that version knows what to do.
-- **Adding something optional** to a released version, such as a new setup question, bumps the middle number: `3.0.9` → `3.1.0`. It is written up the same way as a fix, and projects keep the same version number in `AGENTS.md`.
-- **Changes that move files are listed under Structural changes.** At the top of the version's Fixes, list each change that moves or renames files in a project, with a rough size, such as "moves every component `constants.ts`", so a project can plan the work and run a [regression check](/docs/Guides/regression-checks) first. For now, structural changes ship in fix and minor versions; once the standards settle, they will wait for the next major version.
-- **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.0.9 — optional project links`, so releases are easy to find in the git log.
-- **Every patch number is published.** Publish each patch to npm as soon as its Fixes are written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
+- **Work in progress on a major update goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
+- **Changing a released major version** goes under its **Fixes**, as `**Fixes in 3.2.3.**`, newest at the top. Update the version's changes in place where they are now wrong. Write each entry so a project already on the version before it knows what to do.
+- **A middle-number entry lists its moves first.** Each change that moves or renames files in a project, with a rough size, such as "one move per file", so a project can plan the work and take a [regression check](/docs/Guides/regression-checks) baseline first. A last-number entry never moves files.
+- **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.2.2 — full version numbers`, so releases are easy to find in the git log.
+- **Every number is published.** Publish each one to npm as soon as its entry is written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
 
 ---
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest fix:** 3.2.1
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.2.2
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.2.2.** If the project already applied 3.2.1, check these. Nothing moves in this version.
+
+- **The project records the full version.** `**Code standards version:**` in `AGENTS.md` is now the installed package's full version, such as `3.2.2`, not the major number alone, so the project and the package pair up and the next update knows where to start. Versions are now numbered by what they do: see [How versions are numbered](#how-versions-are-numbered). `pnpm standards:check` reads the full version, and flags a project that recorded only `3`.
+
+  **What to do:** copy the Code standards section of `AGENTS.md` from the template again, and set the version to the installed package's full version.
+
+- **The standards are the base, and agents build freely from there.** The `AGENTS.md` template now says so: most code is something the standards never mention, and the agent decides it and keeps it the same across the codebase. Only skipping, loosening or changing a standard needs the person's yes; the agent then records it and keeps going, never stopping to wait for a new version of the standards. Copied in with the section above.
+
+- **Where each constant goes is the project's call.** The [Constants table](/docs/Structure/folder-structure#constants) says what each file is for, not where every value in every project goes. 3.2.1's examples and check named values from one project; they are now neutral, and `pnpm standards:check` no longer guesses a value's file from its name. It lists the file, and the project decides.
+
+  **What to do:** best practice is every value in `lib/constants/` in the file the table says fits, with ids and CSS following the two rules below. Bring the project's values in line with that. Record any value that fits none under "Details" in `coding-standards.md`, with the person's yes.
+
+- **An id lives in the object that uses it.** A value that picks which item something acts on is a key inside that object, never a loose constant.
+
+  **What to do:** move each loose id constant into the object that uses it.
+
+- **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`.
+
+  **What to do:** move any CSS string out of `lib/constants/` and components into `globals.css`.
+
+- **`animation.ts` and `artwork.ts` are split by one question.** Where something ends up is artwork; how and when it gets there is animation. Drawing data the code reads goes in `artwork.ts`; a static drawing nothing reads goes in an `.svg` file or an icon component. `classNames.ts` can hold a set of class names keyed by variant, named `_CLASS_NAMES`. Nothing to move unless the project placed a value by the old wording.
+
+- **The regression baseline comes first.** Take it before any file moves, then do the constants moves and the folder moves as separate steps, with a full regression run after each. See [Stage 0](/docs/Guides/migrating#stage-0--regression-check).
+
+- **`pnpm standards:check` reports headings for standards 11 and 13**, which 3.2.1 printed blank. Nothing to do.
+
+- **Setup asks a fifth agent question:** does the person want to be told about decisions the agent makes that the code standards do not cover? Someone who reads the code may want to hear each one; someone who does not may not care. See [Told about decisions](/docs/Standards/working-with-agents#told-about-decisions).
+
+  **What to do:** ask the person the question in [setup step 4](/docs/Guides/setup#4-working-with-the-agent), and add the answer to the "Working with the agent" line under "Details" in `coding-standards.md`. If they said yes, add the rule under **Decisions** in the Project workflow section of `AGENTS.md`.
+
+**How to check:** `AGENTS.md` records the full installed version; `pnpm standards:check` passes, or lists only recorded exceptions; no CSS string or loose id constant is left in `lib/constants/`.
 
 **Fixes in 3.2.1.** If the project already applied 3.2.0, check these:
 
 **Structural changes in 3.2.1.** These move files. Plan them, and run a [regression check](/docs/Guides/regression-checks) first:
 
-- Every component `constants.ts` and every topic file in `lib/constants/` (`motion.ts`, `durations.ts`, `cardRail.ts`) moves into the seven standard files. Large on a site with many components: the Activatus homepage has 36 component files and 3 topic files. `pnpm standards:check` names the file each export goes to.
-- Sub-component folders inside a grouping folder, such as `lifeActivated/outcomeArtwork/alignmentArtwork/`, move flat into the parent's `components/` folder. Small: the 3.1.1 step already moved most of them.
+- Every component `constants.ts`, and every other file in `lib/constants/`, moves into the seven standard files: one move per file. `pnpm standards:check` lists them.
+- Every sub-component folder that is not directly in its root component's `components/` folder moves there: one move per folder. If the project did 3.1.1's move, only folders inside a grouping folder are left. `pnpm standards:check` lists them.
 
 - **`lib/constants/` has seven standard files:** `routes.ts`, `strings.ts`, `numbers.ts`, `noData.ts`, and three new ones, created only once there is something to put in them:
-  - **`animation.ts`**: how things move. Motion and choreography objects (`*_MOTION`), entrances, scroll stops, drift, zoom, scroll pacing and motion media queries.
-  - **`artwork.ts`**: what is drawn and where. Layouts, card pieces, backdrop tiles, canvas sizes and image paths. Long SVG paths go in an `.svg` file in `public/` or an icon component, never here.
-  - **`classNames.ts`**: Tailwind class strings shared between files, only when a component cannot hold them and they still repeat. A class name one file uses stays inline.
+  - **`animation.ts`**: how and when things move.
+  - **`artwork.ts`**: what is drawn, where it ends up, and how it is grouped.
+  - **`classNames.ts`**: Tailwind class names shared between files, only when a component cannot hold them and they still repeat. A class name one file uses stays inline.
 
-  Each animation and artwork object stays whole, its numbers named by their keys (`snapSeconds`). Never lift them out into `numbers.ts`, which keeps loose single numbers only. Lifting them out made names like `CONFIDENCE_ROUND_ONE_SWING_ONE_DEGREES` and split one movement across files; the reasons for one numbers file (translation, one place to look) do not apply to motion and drawing data. Each file is one file, never split by topic. See [Constants](/docs/Structure/folder-structure#constants).
+  Each animation and artwork object stays whole, its values named by their keys. Never lift them out into `numbers.ts`, which keeps loose single numbers only: lifting them out makes long names and splits one object across files. Each file is one file, never split by topic. See [Constants](/docs/Structure/folder-structure#constants).
 
-  **What to do:** move every component `constants.ts`, and every other file in `lib/constants/`, into the seven files. A topic file such as `motion.ts` is folded into `animation.ts`. Run `pnpm standards:check`: each finding names the file each export most likely belongs in; check each against the [Constants table](/docs/Structure/folder-structure#constants). In `eslint.config.mjs`, copy the template over it again: the `max-lines` block now reads `lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts`. Copy the Constants rules into `AGENTS.md` from the template.
+  **What to do:** move every component `constants.ts`, and every other file in `lib/constants/`, into the seven files. Where each value goes is the project's call: read the [Constants table](/docs/Structure/folder-structure#constants), decide each value's home, and record any value that fits none under "Details" in `coding-standards.md`, with the person's yes. In `eslint.config.mjs`, copy the template over it again: the `max-lines` block now reads `lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts`. Copy the Constants rules into `AGENTS.md` from the template.
 
-- **A loop over a list looks each item up by its id.** Write a key out by name when you mean one item, `r.plans.starter`. Inside a loop over the list, use the item's id, typed from `r`: `keyof typeof r.sources`. Delete separate lookup objects that map an id to its link, such as `SOURCE_ROUTES` or `PLAN_ROUTES`: `r` already is that lookup. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
+- **A loop over a list looks each item up by its key.** Write a key out by name when you mean one item, `r.plans.starter`. Inside a loop over the list, use the item's key, typed from `r`: `keyof typeof r.plans`. Delete separate lookup objects that map a key to its link: `r` already is that lookup. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
 
-- **`pnpm standards:check` checks more of the How to check lists:** sub-components sit flat in their root component's `components/` folder; the homepage is in `app/(homepage)/`; `docs/development/coding-standards.md` records the four agent answers under "Details"; `docs/design/design-system.md` has a filled-in Colour palette table; and `lib/constants/` holds only the seven standard files. Fix what it finds.
+- **`pnpm standards:check` checks more of the How to check lists:** sub-components sit flat in their root component's `components/` folder; the homepage is in `app/(homepage)/`; `docs/development/coding-standards.md` records the agent answers under "Details"; `docs/design/design-system.md` has a filled-in Colour palette table; and `lib/constants/` holds only the seven standard files. Fix what it finds.
 
 - **Keep every docs folder.** 3.2.0's rule is final: no docs folder is deleted, even one that does not apply yet.
 
@@ -100,8 +139,8 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 
 - The homepage moves into `app/(homepage)/`: `app/page.tsx` and the homepage's components. Small.
 - The site frame moves into `components/layout/`: the navigation, header and footer. Small.
-- Every component `constants.ts` moves into `lib/constants/`. Large on a site with many components: the Activatus homepage had 36. Follow the 3.2.1 rule, not this version's.
-- Every nested sub-component folder moves flat into its parent's `components/` folder. Medium to large: the Activatus homepage had 28.
+- Every component `constants.ts` moves into `lib/constants/`: one move per file. Follow the 3.2.1 rule, not this version's.
+- Every nested sub-component folder moves flat into its parent's `components/` folder: one move per folder.
 - `r` or `s` split into several files only to stay under 300 lines goes back into one file. Small.
 
 - **`routes.ts`, `strings.ts`, `numbers.ts` and `noData.ts` can run past 300 lines.** They hold data only, so `max-lines` no longer applies to them. Splitting `r` or `s` across files to stay under 300 lines only made labels harder to find. In `eslint.config.mjs`, add this block straight after the test-file block:

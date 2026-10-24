@@ -5,14 +5,16 @@ import path from "node:path";
 import { PACKAGE_DIRECTORY } from "./projectFiles.mjs";
 
 // The names from the numbered list in docs/Guides/setup.md.
-const STANDARD_NAMES = {
+export const STANDARD_NAMES = {
 	4: "Every function and component has a test file",
 	6: "ESLint",
 	7: "Prettier",
 	8: "Stylelint",
 	9: "EditorConfig",
 	10: "Node version",
+	11: "Styling",
 	12.1: "Constants",
+	13: "Components live where they are used",
 	15: "Design System Components",
 	18: "Docs",
 	21: "AGENTS.md and the agent skills",
