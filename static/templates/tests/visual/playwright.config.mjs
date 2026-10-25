@@ -2,8 +2,10 @@
 // See "Regression Checks for Refactors" in the code standards.
 import { defineConfig } from "@playwright/test";
 
-// The baseline always comes from the live production site, never from
-// the branch being tested. Set it before running test:visual:update.
+// The baseline comes from the last known-good page, never from the
+// branch being tested: the live production site, or the branch's last
+// commit before the refactor, served on its own. Set it before running
+// test:visual:update.
 const PRODUCTION_URL = process.env.VISUAL_PRODUCTION_URL;
 const isUpdatingBaseline = process.env.VISUAL_UPDATE === "true";
 // The project's own production build, on a port of its own.
@@ -13,7 +15,7 @@ const SERVER_START_TIMEOUT_MILLISECONDS = 300_000;
 
 if (isUpdatingBaseline && !PRODUCTION_URL) {
 	throw new Error(
-		"Set VISUAL_PRODUCTION_URL to the live site before updating the baseline.",
+		"Set VISUAL_PRODUCTION_URL to the last known-good page before updating the baseline: the live site, or the last commit before the refactor, served on its own.",
 	);
 }
 

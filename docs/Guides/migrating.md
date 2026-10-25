@@ -50,7 +50,7 @@ The standards apply to **code we write**, not to packages we pull in. Do not lin
 
 ## Stage 0 — Regression check
 
-Optional, and recommended when Stages 4 to 6 will move a lot of code. Set up the [regression check](/docs/Guides/regression-checks) and take its baseline from the **live production site**, before anything changes. Every later stage must pass it unchanged.
+Optional, and recommended when Stages 4 to 6 will move a lot of code. Set up the [regression check](/docs/Guides/regression-checks) and take its baseline from the **last known-good page**, before anything changes: the live production site, or the branch's last commit before the migration when its page has already changed from production. Record which. Every later stage must pass it unchanged.
 
 **Take the baseline first, then move one kind of thing at a time.** The constants moves (Stage 4) and the folder moves (Stage 5a) are separate steps, each followed by a full regression run. When a run fails, only one kind of move can have caused it.
 
@@ -188,7 +188,7 @@ Applies setup standard 12.1. Move every link into `r`, every piece of text into 
 - **An id moves into the object that uses it.** **CSS written as a string moves to `globals.css`**, never into a constants file. A media query the code reads stays in its object in `animation.ts`.
 - **Only text people see or hear goes in `s`.** Internal strings, such as ids, keys and log messages, stay where they are used: a key in the object that uses them, or a named constant at the top of the file.
 - **A list of items with links** keeps its words in `s` and its links in `r` under the same keys, and a loop looks each one up by its key: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links). Delete any separate lookup object that maps a key to its link.
-- **Every constant except `r` and `s` gets a real type from `lib/types/`**, never `as const`. Move the types it uses there too. `lib/types/` reads a constant's type with `import type` straight from its file. See [Types for constants](/docs/Structure/folder-structure#types-for-constants).
+- **Every object and list constant except `r` and `s` gets a real type from `lib/types/`**, never `as const`. A single number or string needs none. Move the types it uses there too. `lib/types/` reads a constant's type with `import type` straight from its file. See [Types for constants](/docs/Structure/folder-structure#types-for-constants).
 
 ## Stage 5 — Components
 

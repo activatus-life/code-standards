@@ -475,7 +475,9 @@ export const SESSION_TIMEOUT_MILLISECONDS = 900_000;
 **`animation.ts` holds every object that says how and when something moves.**
 
 ```ts title="lib/constants/animation.ts"
-export const ENTRANCE_ANIMATION = {
+import type { EntranceAnimationType } from "@/lib/types";
+
+export const ENTRANCE_ANIMATION: EntranceAnimationType = {
 	delaySeconds: 0.1,
 	durationSeconds: 0.4,
 	offsetPixels: 24,
@@ -492,7 +494,9 @@ export const ENTRANCE_ANIMATION = {
 **`artwork.ts` holds every object that says what is drawn, where it ends up, and how it is grouped.** Where something ends up is artwork; how and when it gets there is animation.
 
 ```ts title="lib/constants/artwork.ts"
-export const ILLUSTRATION_LAYOUT = {
+import type { IllustrationLayoutType } from "@/lib/types";
+
+export const ILLUSTRATION_LAYOUT: IllustrationLayoutType = {
 	heightPixels: 600,
 	widthPixels: 800,
 };
@@ -516,7 +520,7 @@ export const SURFACE_CLASS_NAME =
 
 ### Types for constants {#types-for-constants}
 
-**Every constant gets a real type where it is declared, from `lib/types/`.** `r` and `s` are the exception: their types are read from their values, such as `keyof typeof r.plans`, so they are never typed by hand.
+**Every object and list constant gets a real type where it is declared, from `lib/types/`.** `r` and `s` are the exception: their types are read from their values, such as `keyof typeof r.plans`, so they are never typed by hand. **A single number or string needs no type of its own**: `const COOKIE_DURATION_DAYS = 30;` is already exactly typed, and writing `: number` adds nothing.
 
 ```ts title="lib/types/animation.ts"
 export interface EntranceAnimationType {
