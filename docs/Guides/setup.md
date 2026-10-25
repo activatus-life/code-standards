@@ -151,11 +151,11 @@ to git? Yes or no?
 Then **told about decisions**. **Print this to the person exactly as it is written**:
 
 ```text
-Would you like AI to tell you about each decision it makes
-that the code standards do not cover? Yes or no?
+Would you like AI to tell you about each coding decision
+it makes that the code standards do not cover? Yes or no?
 ```
 
-**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. If they said yes to being told about decisions, write under **Decisions**: "Tell the person about each decision you make that the code standards do not cover, in the summary at the end of the task." If they said no, delete the Decisions line. Write all five answers in `docs/development/coding-standards.md`, under "Details", on one line, so a later update knows not to ask again: `- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no]; told about decisions [yes or no] ([date]).` See [Working with Agents](/docs/Standards/working-with-agents).
+**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. If they said yes to being told about decisions, write under **Decisions**: "Tell the person about each coding decision you make that the code standards do not cover, in the summary at the end of the task." If they said no, delete the Decisions line. Write all five answers in `docs/development/coding-standards.md`, under "Details", on one line, so a later update knows not to ask again: `- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no]; told about decisions [yes or no] ([date]).` See [Working with Agents](/docs/Standards/working-with-agents).
 
 ## 5. Apply the standards
 
@@ -216,7 +216,7 @@ The project already follows the standards, and a newer version is out.
 
 **Every new number can ask for work**, whichever part changed. What each part means is in [How versions are numbered](/docs/version-history#how-versions-are-numbered).
 
-1. **Note the project's version.** Read `**Code standards version:**` in `AGENTS.md`. This is the version the code follows.
+1. **Note the project's version.** Read `**Code standards version:**` in `AGENTS.md`. This is the version the code last applied. If it is only a major number, such as `3`, find the full version first: see [Updating a project to a new version](/docs/version-history#updating-a-project-to-a-new-version).
 2. **Update the package:**
 
    ```bash

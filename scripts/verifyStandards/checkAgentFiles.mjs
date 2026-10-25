@@ -31,23 +31,22 @@ const readStandardsSection = (agentsText) => {
 		: undefined;
 };
 
-// "3" and "3.2" are read as 3.0.0 and 3.2.0, so a project that
-// recorded only the major version is sent to update from its start.
 const toVersionParts = (version) =>
 	Array.from({ length: VERSION_PART_COUNT }, (_unused, index) =>
 		Number(version.split(".")[index] ?? 0),
 	);
 
-const isOlderVersion = ({ projectVersion, packageVersion }) => {
+// Below zero when the project's version is older than the package's,
+// above zero when it is newer, and zero when they match.
+const compareVersions = ({ projectVersion, packageVersion }) => {
 	const projectParts = toVersionParts(projectVersion);
 	const packageParts = toVersionParts(packageVersion);
 	const differentIndex = projectParts.findIndex(
 		(part, index) => part !== packageParts[index],
 	);
-	return (
-		differentIndex !== -1 &&
-		projectParts[differentIndex] < packageParts[differentIndex]
-	);
+	return differentIndex === -1
+		? 0
+		: projectParts[differentIndex] - packageParts[differentIndex];
 };
 
 const checkVersion = ({ agentsText, packageVersion }) => {
@@ -63,12 +62,34 @@ const checkVersion = ({ agentsText, packageVersion }) => {
 		];
 	}
 	const projectVersion = match[1];
-	if (isOlderVersion({ projectVersion, packageVersion })) {
+	if (projectVersion.split(".").length < VERSION_PART_COUNT) {
+		return [
+			{
+				standard: "21",
+				message: `AGENTS.md records version ${projectVersion}, not a full version. Record the full version the project last applied, such as 3.1.0: read the @activatus/code-standards version in pnpm-lock.yaml at the last commit that changed the version line, then update from there`,
+				page: "docs/version-history.md#updating-a-project-to-a-new-version",
+			},
+		];
+	}
+	const comparison = compareVersions({
+		projectVersion,
+		packageVersion,
+	});
+	if (comparison < 0) {
 		return [
 			{
 				standard: "21",
 				message: `AGENTS.md says version ${projectVersion}, and the installed package is version ${packageVersion}. Follow "Updating to a newer version"`,
 				page: "docs/Guides/setup.md#updating-to-a-newer-version",
+			},
+		];
+	}
+	if (comparison > 0) {
+		return [
+			{
+				standard: "21",
+				message: `AGENTS.md says version ${projectVersion}, newer than the installed package, version ${packageVersion}. Correct the version in AGENTS.md, or install the package with @latest`,
+				page: "docs/Guides/setup.md#2-work-out-where-the-project-is",
 			},
 		];
 	}

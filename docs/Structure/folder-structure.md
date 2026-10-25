@@ -320,14 +320,14 @@ lib/constants/
 | A value that is…                                            | Goes in             |
 | ----------------------------------------------------------- | ------------------- |
 | A link                                                      | `r` in `routes.ts`  |
-| Text shown on screen                                        | `s` in `strings.ts` |
+| Text people see or hear                                     | `s` in `strings.ts` |
 | A single number with one job                                | `numbers.ts`        |
 | Fake data shaped like a real response                       | `noData.ts`         |
 | A group of values that together say how something moves     | `animation.ts`      |
 | A group of values that together say what is drawn and where | `artwork.ts`        |
 | A Tailwind class string used by more than one file          | `classNames.ts`     |
 
-**This table is the base, and where each value goes is the project's call.** The table says what each file is for, not where every value in every project goes. The project reads its own values, decides which file each one belongs in, and keeps that choice the same across the codebase. A value that fits none of them is recorded under "Details" in `docs/development/coding-standards.md`, with the person's yes, and the work carries on.
+**This table is the base, and where each value goes is the project's call.** The table says what each file is for, not where every value in every project goes. The project reads its own values, decides which file each one belongs in, and keeps that choice the same across the codebase. A value that fits none of them goes in the closest file, with a comment naming its entry under "Details" in `docs/development/coding-standards.md`, where the project records why. It is a coding decision, so the work carries on without waiting for a yes.
 
 A file outside the folder imports everything it needs in one line:
 
@@ -357,7 +357,7 @@ export const r = {
 
 ### `s`: strings
 
-**`s` holds every piece of static text** shown on screen: headings, buttons, labels, aria-labels, page titles and descriptions, and longer Markdown copy.
+**`s` holds every piece of text people see or hear**: headings, buttons, labels, aria-labels, page titles and descriptions, and longer Markdown copy.
 
 ```ts title="lib/constants/strings.ts"
 export const s = {
@@ -371,6 +371,7 @@ export const s = {
 
 - **The keys of `s` are the site's translation keys.** When a site gets more languages, each key is translated into each language. Name each key after what the text says or does, and never use one key for two different jobs.
 - **Only real copy goes in `s`.** Dummy text belongs in `noData.ts`.
+- **Internal strings are not `s`.** Ids, keys, event names, log messages and media queries are never shown to people. They stay in the object or file that uses them; the code is never pulled apart to move them.
 
 ### A list of items with links
 
@@ -484,6 +485,7 @@ export const ENTRANCE_ANIMATION = {
 - **Each object stays whole.** Values that only mean something together stay in one object, named by their keys. Never lift its numbers out into `numbers.ts`.
 - **Values the animation library reads are not text on screen**, so they stay in the object, never in `s`.
 - **Put the unit in the key**: `durationSeconds`, `offsetPixels`.
+- **Media queries the animation reads stay in its object**, such as `reducedMotionQuery: "(prefers-reduced-motion: reduce)"`. They are read by code, not CSS, so they never move to `globals.css`.
 
 ### Artwork: what is drawn and where
 
@@ -512,15 +514,30 @@ export const SURFACE_CLASS_NAME =
 - **A class name used in one file stays inline in that file.**
 - **Name each export after what it styles, ending in `_CLASS_NAME`**, or `_CLASS_NAMES` for a set keyed by variant.
 
-### Rules
+### Rules {#constants-rules}
 
 - **Named exports only:** `export const r`, `export const s`. No default exports.
 - **Files outside `lib/constants/` import from `@/lib/constants`**, all in one import line.
 - **Files inside `lib/constants/` import each other directly**, `import { s } from "./strings";`, never through `index.ts`. See [Inside a folder, import files directly](/docs/Structure/import-organization#2-inside-a-folder-import-files-directly).
 - **`r` and `s` are the only single-letter names allowed anywhere.** See [Human-Readable Names](/docs/Standards/human-readable-names#r-and-s).
 - **Other constants**, such as numbers, are `SCREAMING_SNAKE_CASE`: see [Naming Conventions](/docs/Structure/naming-conventions#constants).
-- **An id lives in the object that uses it.** A value that picks which item something acts on, such as which item an animation moves to, is a key inside that object, never a loose constant of its own.
-- **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`; a browser without that query misses the fallback, and the standard accepts that.
+- **An id lives in the object that uses it.** A value that picks which item something acts on, such as which item an animation moves to, is a key inside that object, never a loose constant of its own:
+
+  ```ts
+  // Before
+  export const HIGHLIGHTED_PLAN_ID = "team";
+  export const HIGHLIGHT_ANIMATION = { durationSeconds: 0.3 };
+
+  // After
+  export const HIGHLIGHT_ANIMATION = {
+  	durationSeconds: 0.3,
+  	planId: "team",
+  };
+  ```
+
+  A list of keys a loop runs over, such as `planIds` in [A list of items with links](#a-list-of-items-with-links), is not a loose id: it stays a list.
+
+- **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`; a browser without that query misses the fallback, and the standard accepts that. **A media query the code reads is not CSS**, such as the one an animation library matches to switch motion off: it stays in its object in `animation.ts`.
 - **All seven files can run past 300 lines.** They are data only, so ESLint does not apply `max-lines` to them. Keep each one a single file: never split them to get under the limit.
 - **`lib/constants/` never imports from `lib/types/`.** `lib/types/` reads some of its types from the constants (`typeof s`), so an import the other way makes a loop. When a constant needs a type, write the type beside the constant, or read it from the constant.
 

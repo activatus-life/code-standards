@@ -48,4 +48,4 @@ Optional. Setup asks: "Would you like AI to ask you before every commit and push
 
 ## Told about decisions
 
-Optional. Setup asks: "Would you like AI to tell you about each decision it makes that the code standards do not cover?" The code standards are the base, and the agent builds freely from them, so it makes many calls of its own. A person who reads the code may want to hear each one; a person who does not may not care. A yes is written under **Decisions** in Project workflow: the agent lists each such decision in its summary at the end of the task. A no means nothing is written, and the agent decides without reporting.
+Optional. Setup asks: "Would you like AI to tell you about each coding decision it makes that the code standards do not cover?" The code standards are the base, and the agent builds freely from them, so it makes many calls of its own. A person who reads the code may want to hear each one; a person who does not may not care. A yes is written under **Decisions** in Project workflow: the agent lists each such decision in its summary at the end of the task. A no means nothing is written, and the agent decides without reporting.

@@ -7,7 +7,7 @@ sidebar_label: "Version History"
 
 > What changed in each version of the standards, and exactly what a project has to do about it. Written for the AI agent doing the update.
 
-**Every change to the standards gets a new version number.** Each project records the full version it follows in its `AGENTS.md`, under "Code standards", so the project pairs with the package and knows where to start:
+**Every change to the standards gets a new version number.** Each project records the full version it last applied in its `AGENTS.md`, under "Code standards", so the project pairs with the package and knows where to start:
 
 ```md
 **Code standards version:** 3.2.2
@@ -17,17 +17,22 @@ sidebar_label: "Version History"
 
 | Part that changes | Example       | Means                                                                                                     |
 | ----------------- | ------------- | --------------------------------------------------------------------------------------------------------- |
-| First             | 3.2.2 → 4.0.0 | A major update to the standards                                                                           |
+| First             | 3.2.2 → 4.0.0 | A major update: it changes how most of a project's code is written, so every project reworks it           |
 | Middle            | 3.2.2 → 3.3.0 | Files move: the update moves or renames files in a project. Plan it, and take a regression baseline first |
 | Last              | 3.2.2 → 3.2.3 | Changes inside files only. Nothing moves                                                                  |
 
-Every new number can ask for work, whichever part changed. 3.1.1 and 3.2.1 came out before this rule and moved files in a last-number update; their moves are listed under **Structural changes**.
+**The first number goes up only when most projects must rework most of their code**, such as a new framework or a standard replaced by a different one. A rule added, changed or clarified never bumps it. Every new number can ask for work, whichever part changed. 3.1.1 and 3.2.1 came out before this rule and moved files in a last-number update; their moves are listed under **Structural changes**.
 
 ## Updating a project to a new version
 
-**Read only the entries newer than the project's version.** A project on 3.2.1 updating to 3.3.0 reads the 3.2.2 and 3.3.0 entries on this page, and nothing else. A project that recorded only a major number, such as `3`, reads every entry of that version from its start. Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
+**Read only the entries newer than the project's version.** A project on 3.2.1 updating to 3.3.0 reads the 3.2.2 and 3.3.0 entries on this page, and nothing else. **A project that recorded only a major number, such as `3`,** first finds the full version it actually applied: the `@activatus/code-standards` version in `pnpm-lock.yaml` at the last commit that changed its `**Code standards version:**` line. Record that version in `AGENTS.md` and start from there. Only when it cannot tell does it read every entry of that major version from its start:
 
-1. **Find the project's version** in its `AGENTS.md`. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
+````bash
+git show "$(git log -1 --format=%h -G'Code standards version' -- AGENTS.md)":pnpm-lock.yaml \
+	| grep -o "@activatus/code-standards@[0-9.]*" | head -1
+``` Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
+
+1. **Find the project's version** in its `AGENTS.md`. If it is only a major number, find the full one first, as above. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
 2. **Update the package:** `pnpm add -D @activatus/code-standards@latest`, never a typed version number. If pnpm refuses because the version is too new, add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`, as in [Setup](/docs/Guides/setup#1-install-the-standards). The entry is the plain package name, with no version. If pnpm wrote one with versions in it, such as `'@activatus/code-standards@3.0.4 || 3.0.5'`, replace it with the plain name: otherwise pnpm adds another version to it on every update. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
 3. **Read each entry newer than the project's version**, oldest first. For a middle-number entry, take the [regression check](/docs/Guides/regression-checks) baseline before any file moves. Skip any change to a standard the project opted out of: they are listed in `docs/development/coding-standards.md`.
 4. **For each change, do the "What to do" steps**, then run the "How to check" searches. A search that still finds something means the change is not finished. When a change says to copy a line from the `AGENTS.md` template, and the project's `AGENTS.md` records the standards in its own words instead, write the updated rule there in the project's own shape.
@@ -50,8 +55,9 @@ Anyone changing the standards adds a version, alongside the change:
 - **If a project has nothing to do, say so.**
 - **Newest version at the top.**
 - **Work in progress on a major update goes under `## Version N — not released yet`**, with a line saying projects should not apply it yet. Changes can be added to it over time. To release it: drop "not released yet", add the **Released** date and **Updates from** line, set `package.json` to `N.0.0`, then publish.
-- **Changing a released major version** goes under its **Fixes**, as `**Fixes in 3.2.3.**`, newest at the top. Update the version's changes in place where they are now wrong. Write each entry so a project already on the version before it knows what to do.
-- **A middle-number entry lists its moves first.** Each change that moves or renames files in a project, with a rough size, such as "one move per file", so a project can plan the work and take a [regression check](/docs/Guides/regression-checks) baseline first. A last-number entry never moves files.
+- **Changing a released major version** goes under its version, newest at the top. Update the version's changes in place where they are now wrong. Write each entry so a project already on the version before it knows what to do.
+- **Every entry is headed `**Fixes in 3.2.3.**`**, with its number, followed by "If the project already applied 3.2.2, check these:".
+- **A middle-number entry adds `**Structural changes in 3.3.0.**` straight under its heading**, listing each change that moves or renames files in a project, with a rough size, such as "one move per file", so a project can plan the work and take a [regression check](/docs/Guides/regression-checks) baseline first. A last-number entry never moves files.
 - **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.2.2 — full version numbers`, so releases are easy to find in the git log.
 - **Every number is published.** Publish each one to npm as soon as its entry is written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
@@ -64,25 +70,29 @@ Anyone changing the standards adds a version, alongside the change:
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
 
-**Fixes in 3.2.2.** If the project already applied 3.2.1, check these. Nothing moves in this version.
+**Fixes in 3.2.2.** If the project already applied 3.2.1, check these:
 
-- **The project records the full version.** `**Code standards version:**` in `AGENTS.md` is now the installed package's full version, such as `3.2.2`, not the major number alone, so the project and the package pair up and the next update knows where to start. Versions are now numbered by what they do: see [How versions are numbered](#how-versions-are-numbered). `pnpm standards:check` reads the full version, and flags a project that recorded only `3`.
+- **The project records the full version.** `**Code standards version:**` in `AGENTS.md` is now the full version last applied, such as `3.1.0`, not the major number alone, so the project and the package pair up and the next update knows where to start. Versions are now numbered by what they do: see [How versions are numbered](#how-versions-are-numbered). `pnpm standards:check` reads the full version, and flags a project that recorded only `3`, an older version, or a version newer than the installed package.
 
-  **What to do:** copy the Code standards section of `AGENTS.md` from the template again, and set the version to the installed package's full version.
+  **What to do:** if `AGENTS.md` records only a major number, find the full version the project applied from its lockfile, as in [Updating a project to a new version](#updating-a-project-to-a-new-version), and start this update from there. Copy the Code standards section of `AGENTS.md` from the template again. When the update is done, set the version to the installed package's full version.
 
 - **The standards are the base, and agents build freely from there.** The `AGENTS.md` template now says so: most code is something the standards never mention, and the agent decides it and keeps it the same across the codebase. Only skipping, loosening or changing a standard needs the person's yes; the agent then records it and keeps going, never stopping to wait for a new version of the standards. Copied in with the section above.
 
 - **Where each constant goes is the project's call.** The [Constants table](/docs/Structure/folder-structure#constants) says what each file is for, not where every value in every project goes. 3.2.1's examples and check named values from one project; they are now neutral, and `pnpm standards:check` no longer guesses a value's file from its name. It lists the file, and the project decides.
 
-  **What to do:** best practice is every value in `lib/constants/` in the file the table says fits, with ids and CSS following the two rules below. Bring the project's values in line with that. Record any value that fits none under "Details" in `coding-standards.md`, with the person's yes.
+  **What to do:** best practice is every value in `lib/constants/` in the file the table says fits, with ids and CSS following the two rules below. Bring the project's values in line with that. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`.
 
-- **An id lives in the object that uses it.** A value that picks which item something acts on is a key inside that object, never a loose constant.
+- **An id lives in the object that uses it.** A value that picks which item something acts on is a key inside that object, never a loose constant. A list of keys a loop runs over stays a list. See the [before and after](/docs/Structure/folder-structure#constants-rules).
 
   **What to do:** move each loose id constant into the object that uses it.
 
-- **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`.
+- **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`. A media query the code reads, such as one an animation library matches, is not CSS: it stays in its object in `animation.ts`.
 
   **What to do:** move any CSS string out of `lib/constants/` and components into `globals.css`.
+
+- **`s` holds only text people see or hear.** Internal strings, such as ids, keys, event names and log messages, are not `s`: they stay in the object or file that uses them.
+
+  **What to do:** nothing, unless the project moved internal strings into `s`. Move those back beside the code that uses them.
 
 - **`animation.ts` and `artwork.ts` are split by one question.** Where something ends up is artwork; how and when it gets there is animation. Drawing data the code reads goes in `artwork.ts`; a static drawing nothing reads goes in an `.svg` file or an icon component. `classNames.ts` can hold a set of class names keyed by variant, named `_CLASS_NAMES`. Nothing to move unless the project placed a value by the old wording.
 
@@ -90,11 +100,18 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 
 - **`pnpm standards:check` reports headings for standards 11 and 13**, which 3.2.1 printed blank. Nothing to do.
 
-- **Setup asks a fifth agent question:** does the person want to be told about decisions the agent makes that the code standards do not cover? Someone who reads the code may want to hear each one; someone who does not may not care. See [Told about decisions](/docs/Standards/working-with-agents#told-about-decisions).
+- **Setup asks a fifth agent question:** does the person want to be told about coding decisions the agent makes that the code standards do not cover? Someone who reads the code may want to hear each one; someone who does not may not care. See [Told about decisions](/docs/Standards/working-with-agents#told-about-decisions).
 
   **What to do:** ask the person the question in [setup step 4](/docs/Guides/setup#4-working-with-the-agent), and add the answer to the "Working with the agent" line under "Details" in `coding-standards.md`. If they said yes, add the rule under **Decisions** in the Project workflow section of `AGENTS.md`.
 
-**How to check:** `AGENTS.md` records the full installed version; `pnpm standards:check` passes, or lists only recorded exceptions; no CSS string or loose id constant is left in `lib/constants/`.
+**How to check:** `AGENTS.md` records the full installed version; `pnpm standards:check` passes, or lists only recorded exceptions; these searches find nothing, or only values the project has recorded:
+
+```bash
+# CSS written as a string: a property, a colon, a value and a semicolon
+grep -rnE "\"[^\"]*[a-z-]+: *[^\";]+;" lib/constants/ app/ components/
+# A loose id constant
+grep -rnE "export const [A-Z_]+_ID = " lib/constants/
+````
 
 **Fixes in 3.2.1.** If the project already applied 3.2.0, check these:
 

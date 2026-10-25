@@ -12,7 +12,8 @@ import {
 const PACKAGE_VERSION = "3.2.2";
 const OLDER_PATCH_VERSION = "3.2.1";
 const MAJOR_ONLY_VERSION = "3";
-const NEWER_VERSION = "3.10.0";
+const OLDER_MIDDLE_VERSION = "3.1.9";
+const NEWER_VERSION = "3.20.0";
 
 const agentsFile = ({ version }) =>
 	readFileSync(
@@ -71,20 +72,31 @@ describe("checkAgentFiles", () => {
 		assert.match(findings[0].message, /Updating to a newer version/);
 	});
 
-	it("flags a version recorded as the major number only", () => {
+	it("asks for the full version when only the major is recorded", () => {
 		const findings = check({
 			"AGENTS.md": agentsFile({ version: MAJOR_ONLY_VERSION }),
+			...skillFiles(),
+		});
+		assert.match(findings[0].message, /not a full version/);
+	});
+
+	it("compares each part as a number, not as text", () => {
+		const findings = check({
+			"AGENTS.md": agentsFile({ version: OLDER_MIDDLE_VERSION }),
 			...skillFiles(),
 		});
 		assert.match(findings[0].message, /Updating to a newer version/);
 	});
 
-	it("compares each part as a number, not as text", () => {
+	it("flags a version newer than the installed package", () => {
 		const findings = check({
 			"AGENTS.md": agentsFile({ version: NEWER_VERSION }),
 			...skillFiles(),
 		});
-		assert.deepEqual(findings, []);
+		assert.match(
+			findings[0].message,
+			/newer than the installed package/,
+		);
 	});
 
 	it("flags a rule edited inside the markers", () => {
