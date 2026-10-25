@@ -110,8 +110,8 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 
 ```bash
 # CSS written in TypeScript, however it is quoted, on one line or many
-grep -rnE "@media|@keyframes|!important|var\(--|[a-z-]+: *[^;,]*(px|rem|none|auto|block|flex|grid);" \
-	lib/constants/ app/ components/ --include='*.ts' --include='*.tsx'
+grep -rnE "@media|@keyframes|!important|[a-z-]+: *[^;,]*(px|rem|none|auto|block|flex|grid);" \
+	lib/constants/ app/ components/ --include='*.ts' --include='*.tsx' --exclude='*.test.*'
 # A loose id constant
 grep -rnE "export const [A-Z_]+_ID = " lib/constants/
 ```
@@ -130,7 +130,7 @@ grep -rnE "export const [A-Z_]+_ID = " lib/constants/
 
   Each animation and artwork object stays whole, its values named by their keys. Never lift them out into `numbers.ts`, which keeps loose single numbers only: lifting them out makes long names and splits one object across files. Each file is one file, never split by topic. See [Constants](/docs/Structure/folder-structure#constants).
 
-  **What to do:** move every component `constants.ts`, and every other file in `lib/constants/`, into the seven files. Where each value goes is the project's call: read the [Constants table](/docs/Structure/folder-structure#constants), decide each value's home, and record any value that fits none under "Details" in `coding-standards.md`, with the person's yes. In `eslint.config.mjs`, copy the template over it again: the `max-lines` block now reads `lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts`. Copy the Constants rules into `AGENTS.md` from the template.
+  **What to do:** move every component `constants.ts`, and every other file in `lib/constants/`, into the seven files. Where each value goes is the project's call: read the [Constants table](/docs/Structure/folder-structure#constants), decide each value's home. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`, and the work carries on. In `eslint.config.mjs`, copy the template over it again: the `max-lines` block now reads `lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts`. Copy the Constants rules into `AGENTS.md` from the template.
 
 - **A loop over a list looks each item up by its key.** Write a key out by name when you mean one item, `r.plans.starter`. Inside a loop over the list, use the item's key, typed from `r`: `keyof typeof r.plans`. Delete separate lookup objects that map a key to its link: `r` already is that lookup. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
 
