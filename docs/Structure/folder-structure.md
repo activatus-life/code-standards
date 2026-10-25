@@ -540,7 +540,7 @@ export const ENTRANCE_ANIMATION: EntranceAnimationType = {
 - **A type a constant needs lives in `lib/types/`**, with every type it depends on. Components import it from `@/lib/types`.
 - **`lib/types/` reads a constant's type straight from its file**: `import type { r } from "@/lib/constants/routes";`, never through `@/lib/constants`. It is the one exception to importing constants in one line. `import type` is removed at build, so the two folders reading each other's types never makes a real loop.
 - **No `as const`.** When the code needs the exact values, they go in the type, such as an id typed by its id type: `planId: PlanIdType`. Otherwise use plain `string`, `number` and `boolean`. See [No `as const`](/docs/Standards/readable-code#no-as-const).
-- **A list gets a type for one item, and is read-only**: `ENTRANCE_STEPS: readonly EntranceStepType[]`. A list inside a list item gets its own item type too.
+- **A list gets a type for one item, and is read-only**: `ENTRANCE_STEPS: readonly EntranceStepType[]`. A list inside a list item gets its own item type too, and is read-only as well.
 - **A map keyed by id uses `Record` over the id type**: `PLAN_BADGES: Record<PlanIdType, PlanBadgeType>`, so a missing id fails the type check. When only some ids have a value, use `Partial<Record<PlanIdType, PlanBadgeType>>`.
 - **A lookup inside `r` or `s` that only some ids have** cannot be typed there, because `r` and `s` are never typed by hand. Declare it as a typed constant above `r` or `s` in the same file, then place it inside by name:
 
