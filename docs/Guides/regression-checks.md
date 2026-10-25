@@ -66,6 +66,7 @@ It builds the project and starts the production build on port 3100, then measure
 - **It runs against a production build**, on its own port, never against `pnpm dev`.
 - **An agent never updates the baseline without the person's yes.** A failing check means something visible changed. Find out what, and fix the code. Updating the baseline to make it pass hides the change.
 - **The test files are frozen** for the whole refactor: an agent never edits them to make a check pass.
+- **A code standards update that changes only types may still be applied to a frozen test**, such as replacing `as const` with a real type, with the person's yes. A copy of the template takes the new template whole; a project's own test takes just the typing change. Nothing the test does may change, and the check must still pass against the **existing** baseline, never a new one: passing proves nothing changed.
 
 ## The blind spot
 

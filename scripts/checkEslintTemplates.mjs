@@ -2,7 +2,8 @@
 // 1. Each template passes its own rules.
 // 2. The Next.js template lets route.ts take (request, context),
 //    and still stops two parameters everywhere else.
-// 3. The ESLint page shows each template exactly as it is.
+// 3. Every TypeScript template stops `as const`.
+// 4. The ESLint page shows each template exactly as it is.
 //
 // Run: pnpm check:eslint-templates
 // Copy the templates into the ESLint page: add --update-docs
@@ -139,6 +140,25 @@ const checkNextjsRouteHandlers = async () => {
 	return failures;
 };
 
+const AS_CONST_FIXTURE = "lib/statusNames.ts";
+const AS_CONST_MESSAGE = "not as const";
+
+const checkAsConstBanned = async (templateName) => {
+	const linter = createLinter({
+		templateName,
+		workingDirectory: nextjsFixtureDirectory,
+	});
+	const [result] = await linter.lintFiles([AS_CONST_FIXTURE]);
+	const isAsConstStopped = result.messages.some((message) =>
+		message.message.includes(AS_CONST_MESSAGE),
+	);
+	return isAsConstStopped
+		? []
+		: [
+				`${templateName} should stop as const, but ${AS_CONST_FIXTURE} passed.`,
+			];
+};
+
 const replaceCodeBlock = ({ page, heading, code }) => {
 	const headingIndex = page.indexOf(`\n${heading}\n`);
 	const blockStart =
@@ -157,9 +177,11 @@ const checkEslintPage = async () => {
 	let page = await readFile(eslintPagePath, "utf8");
 	const failures = [];
 	for (const template of TEMPLATES) {
-		const templateCode = (
-			await readFile(getTemplatePath(template.name), "utf8")
-		).trimEnd();
+		const templateText = await readFile(
+			getTemplatePath(template.name),
+			"utf8",
+		);
+		const templateCode = templateText.trimEnd();
 		const { shownCode, updatedPage } = replaceCodeBlock({
 			page,
 			heading: template.heading,
@@ -187,9 +209,15 @@ const templateFailures = await Promise.all(
 		lintTemplateAgainstItself(template.name),
 	),
 );
+const asConstFailures = await Promise.all(
+	TEMPLATES.filter((template) => template.name !== "base").map(
+		(template) => checkAsConstBanned(template.name),
+	),
+);
 const failures = [
 	...templateFailures.flat(),
 	...(await checkNextjsRouteHandlers()),
+	...asConstFailures.flat(),
 	...(await checkEslintPage()),
 ];
 

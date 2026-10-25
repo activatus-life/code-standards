@@ -55,6 +55,14 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
+// Give a value a real type instead. consistent-type-assertions always
+// lets `as const` through, so it is banned here.
+const NO_AS_CONST = {
+	selector: "TSAsExpression[typeAnnotation.typeName.name='const']",
+	message:
+		"Give the value a real type where it is declared, not as const.",
+};
+
 const config = [
 	{
 		ignores: [
@@ -102,6 +110,7 @@ const config = [
 			"no-restricted-syntax": [
 				"error",
 				NO_SATISFIES,
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],
@@ -193,6 +202,7 @@ const config = [
 		rules: {
 			"no-restricted-syntax": [
 				"error",
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],

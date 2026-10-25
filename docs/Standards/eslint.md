@@ -272,6 +272,14 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
+// Give a value a real type instead. consistent-type-assertions always
+// lets `as const` through, so it is banned here.
+const NO_AS_CONST = {
+	selector: "TSAsExpression[typeAnnotation.typeName.name='const']",
+	message:
+		"Give the value a real type where it is declared, not as const.",
+};
+
 const config = [
 	{
 		ignores: [
@@ -319,6 +327,7 @@ const config = [
 			"no-restricted-syntax": [
 				"error",
 				NO_SATISFIES,
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],
@@ -410,6 +419,7 @@ const config = [
 		rules: {
 			"no-restricted-syntax": [
 				"error",
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],
@@ -489,6 +499,14 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
+// Give a value a real type instead. consistent-type-assertions always
+// lets `as const` through, so it is banned here.
+const NO_AS_CONST = {
+	selector: "TSAsExpression[typeAnnotation.typeName.name='const']",
+	message:
+		"Give the value a real type where it is declared, not as const.",
+};
+
 const config = [
 	{
 		ignores: [
@@ -545,6 +563,7 @@ const config = [
 			"no-restricted-syntax": [
 				"error",
 				NO_SATISFIES,
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],
@@ -645,6 +664,7 @@ const config = [
 		rules: {
 			"no-restricted-syntax": [
 				"error",
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],
@@ -727,6 +747,14 @@ const NO_SATISFIES = {
 		"Type a value where it is declared, not with satisfies afterwards.",
 };
 
+// Give a value a real type instead. consistent-type-assertions always
+// lets `as const` through, so it is banned here.
+const NO_AS_CONST = {
+	selector: "TSAsExpression[typeAnnotation.typeName.name='const']",
+	message:
+		"Give the value a real type where it is declared, not as const.",
+};
+
 const config = [
 	{
 		ignores: [
@@ -782,6 +810,7 @@ const config = [
 			"no-restricted-syntax": [
 				"error",
 				NO_SATISFIES,
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],
@@ -886,6 +915,7 @@ const config = [
 		rules: {
 			"no-restricted-syntax": [
 				"error",
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 				...SINGLE_OBJECT_PARAMETER,
 			],
@@ -898,6 +928,7 @@ const config = [
 			"no-restricted-syntax": [
 				"error",
 				NO_SATISFIES,
+				NO_AS_CONST,
 				...RESTRICTED_SYNTAX,
 			],
 		},
@@ -1078,13 +1109,13 @@ Names are full English words: `btn` must be `button`, `e` must be `error` or `ev
 
 The `!` operator tells the compiler a value exists without checking. Check it instead.
 
-### `no-restricted-syntax`: type first, never `satisfies`
+### `no-restricted-syntax`: type first, never `satisfies` or `as const`
 
-A value gets its type where it is declared: `const config: ConfigType = { … }`. `satisfies` attaches the type afterwards, so it is an error in the TypeScript, React and Next.js configs, except in story files (`*.stories.{ts,tsx}`), which follow Storybook's docs. The rule lists live in `RESTRICTED_SYNTAX` and `NO_SATISFIES` at the top of each config, so story files use every other restriction without repeating it. See [Type first, never `satisfies`](/docs/Standards/readable-code#type-first-never-satisfies).
+A value gets its type where it is declared: `const config: ConfigType = { … }`. `satisfies` attaches the type afterwards, so it is an error in the TypeScript, React and Next.js configs, except in story files (`*.stories.{ts,tsx}`), which follow Storybook's docs. `as const` is an error everywhere, story files included: see [No `as const`](/docs/Standards/readable-code#no-as-const). The rule lists live in `RESTRICTED_SYNTAX`, `NO_SATISFIES` and `NO_AS_CONST` at the top of each config, so story files use every other restriction without repeating it. See [Type first, never `satisfies`](/docs/Standards/readable-code#type-first-never-satisfies).
 
 ### `@typescript-eslint/consistent-type-assertions: never`
 
-`as` casts are errors (`as const` is still allowed). When a cast is genuinely needed, disable the rule on that line **with the reason** — which is exactly the comment the [standard](/docs/Standards/readable-code#no-any-no--no-unexplained-as) requires:
+`as` casts are errors. This rule always lets `as const` through, so `NO_AS_CONST` in `no-restricted-syntax` stops it instead. When a cast is genuinely needed, disable the rule on that line **with the reason** — which is exactly the comment the [standard](/docs/Standards/readable-code#no-any-no--no-unexplained-as) requires:
 
 ```ts
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- the API returns untyped JSON; validated by parseUser below
