@@ -301,7 +301,7 @@ Add the export to `utils/index.ts` whenever you add a function.
 
 ## 🔤 Constants: `r`, `s`, numbers, noData, animation, artwork and class names {#constants}
 
-Every link, every piece of text on screen, every named number, every piece of stand-in data, and every motion, drawing and shared class name lives in `lib/constants/`, never written straight into a component. **There is no component-level `constants.ts`**: even a value only one file uses goes here, so every piece of text is in one place when the site is translated into other languages, and every project finds its values in the same seven files.
+Every link, every piece of text on screen, every named number, every piece of stand-in data, and every motion, drawing and shared class name lives in `lib/constants/`, never written straight into a component. **There is no component-level `constants.ts`**: even a value only one file uses goes here, so every piece of text is in one place when the site is translated into other languages, and every project finds its values in the same seven files. Internal strings people never see are the one exception: see [`s`: strings](#s-strings).
 
 ```text
 lib/constants/
@@ -315,17 +315,19 @@ lib/constants/
 └── index.ts       # Exports all of them
 ```
 
-**These seven files are the only ones.** Each is one file, never split by topic: no `durations.ts`, `motion.ts` or `layout.ts`. `routes.ts`, `strings.ts`, `numbers.ts` and `index.ts` exist from the start; the other four are created only once the project has something to put in them.
+**These seven files are the only ones.** Each is one file, never split by topic. `routes.ts`, `strings.ts`, `numbers.ts` and `index.ts` exist from the start; the other four are created only once the project has something to put in them.
 
 | A value that is…                                            | Goes in             |
 | ----------------------------------------------------------- | ------------------- |
 | A link                                                      | `r` in `routes.ts`  |
-| Text shown on screen                                        | `s` in `strings.ts` |
+| Text people see or hear                                     | `s` in `strings.ts` |
 | A single number with one job                                | `numbers.ts`        |
 | Fake data shaped like a real response                       | `noData.ts`         |
 | A group of values that together say how something moves     | `animation.ts`      |
 | A group of values that together say what is drawn and where | `artwork.ts`        |
 | A Tailwind class string used by more than one file          | `classNames.ts`     |
+
+**This table is the base, and where each value goes is the project's call.** The table says what each file is for, not where every value in every project goes. The project reads its own values, decides which file each one belongs in, and keeps that choice the same across the codebase. A value that fits none of them goes in the closest file, with a comment naming its entry under "Details" in `docs/development/coding-standards.md`, where the project records why. It is a coding decision, so the work carries on without waiting for a yes.
 
 A file outside the folder imports everything it needs in one line:
 
@@ -355,7 +357,7 @@ export const r = {
 
 ### `s`: strings
 
-**`s` holds every piece of static text** shown on screen: headings, buttons, labels, aria-labels, page titles and descriptions, and longer Markdown copy.
+**`s` holds every piece of text people see or hear**: headings, buttons, labels, aria-labels, page titles and descriptions, and longer Markdown copy.
 
 ```ts title="lib/constants/strings.ts"
 export const s = {
@@ -369,6 +371,7 @@ export const s = {
 
 - **The keys of `s` are the site's translation keys.** When a site gets more languages, each key is translated into each language. Name each key after what the text says or does, and never use one key for two different jobs.
 - **Only real copy goes in `s`.** Dummy text belongs in `noData.ts`.
+- **Internal strings are not `s`.** Ids, keys, event names, log messages and media queries are never shown to people. Each is a key in the object that uses it, or a named constant at the top of the file that uses it, such as `const CLOSE_EVENT = "close";`. The code is never pulled apart to move them into `lib/constants/`.
 
 ### A list of items with links
 
@@ -399,24 +402,24 @@ export const r = {
 
 **Write each key out by name** when you mean one item: `r.plans.starter`, never `r.plans[planId]`. A reader can see exactly which words and which link each line uses.
 
-**Inside a loop over the list, look each item up by its key.** A loop cannot name its items, so it reads `r` and `s` with the item's id, typed from `r` itself:
+**Inside a loop over the list, look each item up by its key.** A loop cannot name its items, so it reads `r` and `s` with the item's key, typed from `r` itself:
 
 ```ts title="lib/types/index.ts"
 import type { r } from "@/lib/constants";
 
-export type SourceIdType = keyof typeof r.sources;
+export type PlanIdType = keyof typeof r.plans;
 ```
 
-```tsx title="app/(homepage)/components/sourceList/SourceList.tsx"
-{sourceIds.map((sourceId) => (
-	<Link key={sourceId} href={r.sources[sourceId]}>
-		{s.sources[sourceId].title}
+```tsx
+{planIds.map((planId) => (
+	<Link key={planId} href={r.plans[planId]}>
+		{s.plans[planId].action}
 	</Link>
 ))}
 ```
 
-- **The type comes from `r`**, so a missing or misspelt id fails the type check.
-- **No separate lookup objects**, such as `SOURCE_ROUTES` or `PLAN_ROUTES` mapping an id to its link. `r.sources` already is that lookup: a second one is a copy that drifts out of step.
+- **The type comes from `r`**, so a missing or misspelt key fails the type check.
+- **No separate lookup objects** that map a key to its link. `r` already is that lookup: a second one is a copy that drifts out of step.
 
 ### noData: stand-in data for local development
 
@@ -460,73 +463,81 @@ const insights =
 export const COOKIE_DURATION_DAYS = 30;
 export const MAXIMUM_RETRY_ATTEMPTS = 3;
 export const SESSION_TIMEOUT_MILLISECONDS = 900_000;
-export const TOOLTIP_SIDE_OFFSET_PIXELS = 8;
 ```
 
 - **One file, never split by topic.** `numbers.ts` can run past 300 lines, like `r` and `s`.
-- **Loose numbers only.** A number that only means something beside other values, such as one swing in a choreography, stays inside its object in `animation.ts` or `artwork.ts`. It is never lifted out into `numbers.ts`.
+- **Loose numbers only.** A number that only means something beside other values stays inside its object in `animation.ts` or `artwork.ts`. It is never lifted out into `numbers.ts`.
 - **Config files and scripts outside the app**, such as `eslint.config.mjs`, keep their numbers at the top of the file: they are not part of the app and do not import from it.
 - **Put the unit in the name**: `_MILLISECONDS`, `_DAYS`, `_PIXELS`.
 
 ### Animation: how things move
 
-**`animation.ts` holds every object that says how something moves**: motion and choreography (`*_MOTION`), entrances, scroll stops, drift, zoom, scroll pacing, and motion media queries.
+**`animation.ts` holds every object that says how and when something moves.**
 
 ```ts title="lib/constants/animation.ts"
-export const CONFIDENCE_MOTION = {
-	pivot: "bearing-west",
-	ease: "easeInOut",
-	rounds: [
-		{ degrees: 12, seconds: 0.6 },
-		{ degrees: -8, seconds: 0.4 },
-	],
-	snapSeconds: 0.2,
+export const ENTRANCE_ANIMATION = {
+	delaySeconds: 0.1,
+	durationSeconds: 0.4,
+	offsetPixels: 24,
 };
-
-export const REDUCED_MOTION_QUERY =
-	"(prefers-reduced-motion: reduce)";
 ```
 
-- **Each object stays whole.** Its numbers, part names and eases only mean something together, so they stay in one object, named by their keys (`snapSeconds`). Never lift its numbers out into `numbers.ts`: `CONFIDENCE_ROUND_ONE_SWING_ONE_DEGREES` is harder to read, and splits one movement across files.
-- **Part names and eases are not text on screen.** They are never shown or translated, so they stay in the object, not in `s`.
-- **Put the unit in the key**: `seconds`, `degrees`, `snapSeconds`.
+- **Each object stays whole.** Values that only mean something together stay in one object, named by their keys. Never lift its numbers out into `numbers.ts`.
+- **Values the animation library reads are not text on screen**, so they stay in the object, never in `s`.
+- **Put the unit in the key**: `durationSeconds`, `offsetPixels`.
+- **Media queries the animation reads stay in its object**, such as `reducedMotionQuery: "(prefers-reduced-motion: reduce)"`. They are read by code, not CSS, so they never move to `globals.css`.
 
 ### Artwork: what is drawn and where
 
-**`artwork.ts` holds every object that says what is drawn and where**: card layouts and pieces, backdrop tiles, canvas sizes, shape positions and image paths.
+**`artwork.ts` holds every object that says what is drawn, where it ends up, and how it is grouped.** Where something ends up is artwork; how and when it gets there is animation.
 
 ```ts title="lib/constants/artwork.ts"
-export const HERO_CANVAS = { widthPixels: 1440, heightPixels: 900 };
-
-export const BACKDROP_TILES = [
-	{ image: "/images/backdrop/tileOne.webp", x: 0, y: 0 },
-	{ image: "/images/backdrop/tileTwo.webp", x: 480, y: 0 },
-];
+export const ILLUSTRATION_LAYOUT = {
+	heightPixels: 600,
+	widthPixels: 800,
+};
 ```
 
 - **Each object stays whole**, the same as in `animation.ts`.
-- **An SVG drawing is a component or a file, never a string here.** Long SVG paths go in an `.svg` file in `public/` or in an icon component in `components/ui/`. `artwork.ts` says where a drawing goes, not what its path is.
+- **Drawing data the code reads goes here.** A static drawing that nothing reads goes in an `.svg` file in `public/` or in an icon component.
 
 ### Class names shared between files
 
-**`classNames.ts` holds a Tailwind class string that more than one file uses**, such as the face of a card that a card and its sub-components all draw.
+**`classNames.ts` holds Tailwind class names that more than one file uses**: a single class string, or a set of them keyed by variant.
 
 ```ts title="lib/constants/classNames.ts"
-export const CARD_FACE_CLASS_NAME =
-	"rounded-2xl border border-border bg-card shadow-sm";
+export const SURFACE_CLASS_NAME =
+	"rounded-2xl border border-border bg-card";
 ```
 
 - **Make a component first.** A class string repeated across files usually means a component is missing, and the component is what makes the styling reusable. Use `classNames.ts` only when a component cannot hold the classes and they still repeat, such as when they go on different elements.
 - **A class name used in one file stays inline in that file.**
-- **Name each export after what it styles, ending in `_CLASS_NAME`.**
+- **Name each export after what it styles, ending in `_CLASS_NAME`**, or `_CLASS_NAMES` for a set keyed by variant.
 
-### Rules
+### Rules {#constants-rules}
 
 - **Named exports only:** `export const r`, `export const s`. No default exports.
 - **Files outside `lib/constants/` import from `@/lib/constants`**, all in one import line.
 - **Files inside `lib/constants/` import each other directly**, `import { s } from "./strings";`, never through `index.ts`. See [Inside a folder, import files directly](/docs/Structure/import-organization#2-inside-a-folder-import-files-directly).
 - **`r` and `s` are the only single-letter names allowed anywhere.** See [Human-Readable Names](/docs/Standards/human-readable-names#r-and-s).
 - **Other constants**, such as numbers, are `SCREAMING_SNAKE_CASE`: see [Naming Conventions](/docs/Structure/naming-conventions#constants).
+- **An id lives in the object that uses it.** A value that picks which item something acts on, such as which item an animation moves to, is a key inside that object, never a loose constant of its own:
+
+  ```ts
+  // Before
+  export const HIGHLIGHTED_PLAN_ID = "team";
+  export const HIGHLIGHT_ANIMATION = { durationSeconds: 0.3 };
+
+  // After
+  export const HIGHLIGHT_ANIMATION = {
+  	durationSeconds: 0.3,
+  	planId: "team",
+  };
+  ```
+
+  A list of keys a loop runs over, such as `planIds` in [A list of items with links](#a-list-of-items-with-links), is not a loose id: it stays a list.
+
+- **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`; a browser without that query misses the fallback, and the standard accepts that. **A media query the code reads is not CSS**, such as the one an animation library matches to switch motion off: it stays in its object in `animation.ts`.
 - **All seven files can run past 300 lines.** They are data only, so ESLint does not apply `max-lines` to them. Keep each one a single file: never split them to get under the limit.
 - **`lib/constants/` never imports from `lib/types/`.** `lib/types/` reads some of its types from the constants (`typeof s`), so an import the other way makes a loop. When a constant needs a type, write the type beside the constant, or read it from the constant.
 

@@ -1,4 +1,4 @@
-// What setup asks the person and writes down: the four agent answers
+// What setup asks the person and writes down: the five agent answers
 // (standard 21) and the colour palette (standard 11).
 import {
 	CODING_STANDARDS_PATH,
@@ -12,6 +12,10 @@ const AGENT_ANSWERS = [
 	{ name: "the Linear project", pattern: /linear/i },
 	{ name: "the status circles", pattern: /status circles?/i },
 	{ name: "asking before committing", pattern: /commit/i },
+	{
+		name: "being told about decisions",
+		pattern: /told about decisions/i,
+	},
 ];
 // The template's unfilled line: "[link or None]", "[yes or no]".
 const UNFILLED_ANSWER_PATTERN = /\[[^\]]+ or [^\]]+\]/;

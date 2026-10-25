@@ -9,8 +9,11 @@ import {
 	TEMPLATES_DIRECTORY,
 } from "./testProject.mjs";
 
-const PACKAGE_MAJOR_VERSION = 3;
-const OLDER_VERSION = 2;
+const PACKAGE_VERSION = "3.2.2";
+const OLDER_PATCH_VERSION = "3.2.1";
+const MAJOR_ONLY_VERSION = "3";
+const OLDER_MIDDLE_VERSION = "3.1.9";
+const NEWER_VERSION = "3.20.0";
 
 const agentsFile = ({ version }) =>
 	readFileSync(
@@ -41,13 +44,13 @@ const check = (files) =>
 	checkAgentFiles({
 		projectDirectory: createTestProject({ files }),
 		templatesDirectory: TEMPLATES_DIRECTORY,
-		packageMajorVersion: PACKAGE_MAJOR_VERSION,
+		packageVersion: PACKAGE_VERSION,
 	});
 
 describe("checkAgentFiles", () => {
 	it("passes the template with its version filled in", () => {
 		const findings = check({
-			"AGENTS.md": agentsFile({ version: PACKAGE_MAJOR_VERSION }),
+			"AGENTS.md": agentsFile({ version: PACKAGE_VERSION }),
 			...skillFiles(),
 		});
 		assert.deepEqual(findings, []);
@@ -55,24 +58,51 @@ describe("checkAgentFiles", () => {
 
 	it("allows project sections outside the markers", () => {
 		const findings = check({
-			"AGENTS.md": `<!-- Next.js block -->\n${agentsFile({ version: PACKAGE_MAJOR_VERSION })}\n## Our own notes\n`,
+			"AGENTS.md": `<!-- Next.js block -->\n${agentsFile({ version: PACKAGE_VERSION })}\n## Our own notes\n`,
 			...skillFiles(),
 		});
 		assert.deepEqual(findings, []);
 	});
 
-	it("flags an older version", () => {
+	it("flags an older patch version", () => {
 		const findings = check({
-			"AGENTS.md": agentsFile({ version: OLDER_VERSION }),
+			"AGENTS.md": agentsFile({ version: OLDER_PATCH_VERSION }),
 			...skillFiles(),
 		});
 		assert.match(findings[0].message, /Updating to a newer version/);
 	});
 
+	it("asks for the full version when only the major is recorded", () => {
+		const findings = check({
+			"AGENTS.md": agentsFile({ version: MAJOR_ONLY_VERSION }),
+			...skillFiles(),
+		});
+		assert.match(findings[0].message, /not a full version/);
+	});
+
+	it("compares each part as a number, not as text", () => {
+		const findings = check({
+			"AGENTS.md": agentsFile({ version: OLDER_MIDDLE_VERSION }),
+			...skillFiles(),
+		});
+		assert.match(findings[0].message, /Updating to a newer version/);
+	});
+
+	it("flags a version newer than the installed package", () => {
+		const findings = check({
+			"AGENTS.md": agentsFile({ version: NEWER_VERSION }),
+			...skillFiles(),
+		});
+		assert.match(
+			findings[0].message,
+			/newer than the installed package/,
+		);
+	});
+
 	it("flags a rule edited inside the markers", () => {
 		const findings = check({
 			"AGENTS.md": agentsFile({
-				version: PACKAGE_MAJOR_VERSION,
+				version: PACKAGE_VERSION,
 			}).replace("Arrow functions everywhere", "Any functions"),
 			...skillFiles(),
 		});
@@ -81,7 +111,7 @@ describe("checkAgentFiles", () => {
 
 	it("flags missing skills", () => {
 		const findings = check({
-			"AGENTS.md": agentsFile({ version: PACKAGE_MAJOR_VERSION }),
+			"AGENTS.md": agentsFile({ version: PACKAGE_VERSION }),
 		});
 		assert.ok(findings.length > 0);
 		assert.ok(findings.every((finding) => finding.standard === "21"));

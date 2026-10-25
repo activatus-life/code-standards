@@ -17,16 +17,12 @@ import {
 	readRecordedExceptions,
 } from "./projectFiles.mjs";
 
-const readPackageMajorVersion = () => {
+const readPackageVersion = () => {
 	const packageText = readFileSync(
 		path.join(PACKAGE_DIRECTORY, "package.json"),
 		"utf8",
 	);
-	const [majorVersion] = JSON.parse(packageText).version.split(
-		".",
-		1,
-	);
-	return Number(majorVersion);
+	return JSON.parse(packageText).version;
 };
 
 export const runChecks = ({ projectDirectory }) => {
@@ -43,11 +39,11 @@ export const runChecks = ({ projectDirectory }) => {
 		...checkAgentFiles({
 			projectDirectory,
 			templatesDirectory,
-			packageMajorVersion: readPackageMajorVersion(),
+			packageVersion: readPackageVersion(),
 		}),
 		...checkConfigFiles({ projectDirectory, templatesDirectory }),
 		...checkRequiredFiles({ templatesDirectory, projectFiles }),
-		...checkConstants({ projectDirectory, projectFiles }),
+		...checkConstants({ projectFiles }),
 		...checkStructure({ projectFiles }),
 		...checkRecordedAnswers({ projectDirectory }),
 		...checkComponents({

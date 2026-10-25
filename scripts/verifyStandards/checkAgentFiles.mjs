@@ -8,7 +8,9 @@ import { readTextFile } from "./projectFiles.mjs";
 const SECTION_START = "<!-- code-standards:start -->";
 const SECTION_END = "<!-- code-standards:end -->";
 const VERSION_LINE_START = "**Code standards version:**";
-const VERSION_PATTERN = /\*\*Code standards version:\*\*\s*(\d+)/;
+const VERSION_PATTERN =
+	/\*\*Code standards version:\*\*\s*(\d+(?:\.\d+){0,2})/;
+const VERSION_PART_COUNT = 3;
 const SKILL_FOLDERS = [".agents/skills", ".claude/commands"];
 const PAGE = "docs/Standards/agent-specs.md";
 
@@ -29,25 +31,65 @@ const readStandardsSection = (agentsText) => {
 		: undefined;
 };
 
-const checkVersion = ({ agentsText, packageMajorVersion }) => {
+const toVersionParts = (version) =>
+	Array.from({ length: VERSION_PART_COUNT }, (_unused, index) =>
+		Number(version.split(".")[index] ?? 0),
+	);
+
+// Below zero when the project's version is older than the package's,
+// above zero when it is newer, and zero when they match.
+const compareVersions = ({ projectVersion, packageVersion }) => {
+	const projectParts = toVersionParts(projectVersion);
+	const packageParts = toVersionParts(packageVersion);
+	const differentIndex = projectParts.findIndex(
+		(part, index) => part !== packageParts[index],
+	);
+	return differentIndex === -1
+		? 0
+		: projectParts[differentIndex] - packageParts[differentIndex];
+};
+
+const checkVersion = ({ agentsText, packageVersion }) => {
 	const match = VERSION_PATTERN.exec(agentsText);
 	if (!match) {
 		return [
 			{
 				standard: "21",
 				message:
-					"AGENTS.md has no code standards version. Set **Code standards version:** to the major version the code follows",
+					"AGENTS.md has no code standards version. Set **Code standards version:** to the full version the code follows, such as 3.2.2",
 				page: "docs/Guides/setup.md",
 			},
 		];
 	}
-	const projectVersion = Number(match[1]);
-	if (projectVersion < packageMajorVersion) {
+	const projectVersion = match[1];
+	if (projectVersion.split(".").length < VERSION_PART_COUNT) {
 		return [
 			{
 				standard: "21",
-				message: `AGENTS.md says version ${projectVersion}, and the installed package is version ${packageMajorVersion}. Follow "Updating to a newer version"`,
+				message: `AGENTS.md records version ${projectVersion}, not a full version. Record the full version the project last applied, such as 3.1.0: read the @activatus/code-standards version in pnpm-lock.yaml at the last commit that changed the version line, then update from there`,
+				page: "docs/version-history.md#updating-a-project-to-a-new-version",
+			},
+		];
+	}
+	const comparison = compareVersions({
+		projectVersion,
+		packageVersion,
+	});
+	if (comparison < 0) {
+		return [
+			{
+				standard: "21",
+				message: `AGENTS.md says version ${projectVersion}, and the installed package is version ${packageVersion}. Follow "Updating to a newer version"`,
 				page: "docs/Guides/setup.md#updating-to-a-newer-version",
+			},
+		];
+	}
+	if (comparison > 0) {
+		return [
+			{
+				standard: "21",
+				message: `AGENTS.md says version ${projectVersion}, newer than the installed package, version ${packageVersion}. Correct the version in AGENTS.md, or install the package with @latest`,
+				page: "docs/Guides/setup.md#2-work-out-where-the-project-is",
 			},
 		];
 	}
@@ -125,7 +167,7 @@ const checkSkills = ({ projectDirectory, templatesDirectory }) => {
 export const checkAgentFiles = ({
 	projectDirectory,
 	templatesDirectory,
-	packageMajorVersion,
+	packageVersion,
 }) => {
 	const agentsText = readTextFile({
 		projectDirectory,
@@ -141,7 +183,7 @@ export const checkAgentFiles = ({
 		];
 	}
 	return [
-		...checkVersion({ agentsText, packageMajorVersion }),
+		...checkVersion({ agentsText, packageVersion }),
 		...checkStandardsSection({ agentsText, templatesDirectory }),
 		...checkSkills({ projectDirectory, templatesDirectory }),
 	];

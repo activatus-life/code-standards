@@ -5,7 +5,7 @@ sidebar_label: "Working with Agents"
 
 # Working with Agents
 
-> How an AI agent links a project's work, reports on it and asks before committing. The GitHub repo, the Linear project, the status circles and asking before every commit and push are all optional. [Setup](/docs/Guides/setup#4-working-with-the-agent) offers all four every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
+> How an AI agent links a project's work, reports on it, asks before committing and tells the person about its decisions. The GitHub repo, the Linear project, the status circles, asking before every commit and push, and being told about decisions are all optional. [Setup](/docs/Guides/setup#4-working-with-the-agent) offers all five every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
 
 Whatever the project chooses is written into the **Project workflow** section of its `AGENTS.md`, from the [template](/docs/templates#agents), so every agent in the project follows it.
 
@@ -45,3 +45,7 @@ Optional. An agent reports the state of every ticket or piece of work as one lin
 ## Ask before committing
 
 Optional. Setup asks: "Would you like AI to ask you before every commit and push to git?" A yes is written under **Who commits** in Project workflow: ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only. A no means nothing is written, and the agent uses its own judgement.
+
+## Told about decisions
+
+Optional. Setup asks: "Would you like AI to tell you about each coding decision it makes that the code standards do not cover?" The code standards are the base, and the agent builds freely from them, so it makes many calls of its own. A person who reads the code may want to hear each one; a person who does not may not care. A yes is written under **Decisions** in Project workflow: the agent lists each such decision in its summary at the end of the task. A no means nothing is written, and the agent decides without reporting.

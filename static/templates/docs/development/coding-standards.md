@@ -16,7 +16,7 @@ Every Activatus project follows the same standards, so people and agents can mov
 
 [For each standard this project skips or changes, at setup or later: its number and name from the setup list, what is different, why, and the date the person agreed. For example: "7. Prettier — skipped: the project uses Biome for formatting (2026-10-23)." Every rule in `eslint.overrides.mjs` has an entry here. If nothing differs, write "No differences".]
 
-- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no] ([YYYY-MM-DD]).
+- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no]; told about decisions [yes or no] ([YYYY-MM-DD]).
 
 ## Components for the standards
 
