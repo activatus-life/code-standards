@@ -186,7 +186,7 @@ Applies setup standard 12.1. Move every link into `r`, every piece of text into 
 - **Move animation and artwork objects whole.** Never pull their numbers out into `numbers.ts`. Any other file in `lib/constants/` is folded into the standard file that fits.
 - **Where each value goes is the project's call.** Read the [Constants table](/docs/Structure/folder-structure#constants) and decide. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`.
 - **An id moves into the object that uses it.** **CSS written as a string moves to `globals.css`**, never into a constants file. A media query the code reads stays in its object in `animation.ts`.
-- **Only text people see or hear goes in `s`.** Internal strings, such as ids, keys and log messages, stay where they are used.
+- **Only text people see or hear goes in `s`.** Internal strings, such as ids, keys and log messages, stay where they are used: a key in the object that uses them, or a named constant at the top of the file.
 - **A list of items with links** keeps its words in `s` and its links in `r` under the same keys, and a loop looks each one up by its key: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links). Delete any separate lookup object that maps a key to its link.
 - **Shared types move to `lib/types/`.** `lib/constants/` never imports from `lib/types/`.
 

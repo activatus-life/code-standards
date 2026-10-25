@@ -27,10 +27,12 @@ sidebar_label: "Version History"
 
 **Read only the entries newer than the project's version.** A project on 3.2.1 updating to 3.3.0 reads the 3.2.2 and 3.3.0 entries on this page, and nothing else. **A project that recorded only a major number, such as `3`,** first finds the full version it actually applied: the `@activatus/code-standards` version in `pnpm-lock.yaml` at the last commit that changed its `**Code standards version:**` line. Record that version in `AGENTS.md` and start from there. Only when it cannot tell does it read every entry of that major version from its start:
 
-````bash
+```bash
 git show "$(git log -1 --format=%h -G'Code standards version' -- AGENTS.md)":pnpm-lock.yaml \
 	| grep -o "@activatus/code-standards@[0-9.]*" | head -1
-``` Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
+```
+
+Do not re-read every standard or check the whole codebase: each version lists every change that matters, and how to find the code it affects.
 
 1. **Find the project's version** in its `AGENTS.md`. If it is only a major number, find the full one first, as above. If there is none, the project has never followed the standards: follow [Setup](/docs/Guides/setup) instead.
 2. **Update the package:** `pnpm add -D @activatus/code-standards@latest`, never a typed version number. If pnpm refuses because the version is too new, add the package to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`, as in [Setup](/docs/Guides/setup#1-install-the-standards). The entry is the plain package name, with no version. If pnpm wrote one with versions in it, such as `'@activatus/code-standards@3.0.4 || 3.0.5'`, replace it with the plain name: otherwise pnpm adds another version to it on every update. Then read this page from `node_modules/@activatus/code-standards/docs/version-history.md`.
@@ -90,7 +92,7 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 
   **What to do:** move any CSS string out of `lib/constants/` and components into `globals.css`.
 
-- **`s` holds only text people see or hear.** Internal strings, such as ids, keys, event names and log messages, are not `s`: they stay in the object or file that uses them.
+- **`s` holds only text people see or hear.** Internal strings, such as ids, keys, event names and log messages, are not `s`: each is a key in the object that uses it, or a named constant at the top of the file that uses it.
 
   **What to do:** nothing, unless the project moved internal strings into `s`. Move those back beside the code that uses them.
 
@@ -107,11 +109,12 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 **How to check:** `AGENTS.md` records the full installed version; `pnpm standards:check` passes, or lists only recorded exceptions; these searches find nothing, or only values the project has recorded:
 
 ```bash
-# CSS written as a string: a property, a colon, a value and a semicolon
-grep -rnE "\"[^\"]*[a-z-]+: *[^\";]+;" lib/constants/ app/ components/
+# CSS written in TypeScript, however it is quoted, on one line or many
+grep -rnE "@media|@keyframes|!important|var\(--|[a-z-]+: *[^;,]*(px|rem|none|auto|block|flex|grid);" \
+	lib/constants/ app/ components/ --include='*.ts' --include='*.tsx'
 # A loose id constant
 grep -rnE "export const [A-Z_]+_ID = " lib/constants/
-````
+```
 
 **Fixes in 3.2.1.** If the project already applied 3.2.0, check these:
 

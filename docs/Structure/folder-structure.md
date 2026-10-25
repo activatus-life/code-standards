@@ -301,7 +301,7 @@ Add the export to `utils/index.ts` whenever you add a function.
 
 ## 🔤 Constants: `r`, `s`, numbers, noData, animation, artwork and class names {#constants}
 
-Every link, every piece of text on screen, every named number, every piece of stand-in data, and every motion, drawing and shared class name lives in `lib/constants/`, never written straight into a component. **There is no component-level `constants.ts`**: even a value only one file uses goes here, so every piece of text is in one place when the site is translated into other languages, and every project finds its values in the same seven files.
+Every link, every piece of text on screen, every named number, every piece of stand-in data, and every motion, drawing and shared class name lives in `lib/constants/`, never written straight into a component. **There is no component-level `constants.ts`**: even a value only one file uses goes here, so every piece of text is in one place when the site is translated into other languages, and every project finds its values in the same seven files. Internal strings people never see are the one exception: see [`s`: strings](#s-strings).
 
 ```text
 lib/constants/
@@ -371,7 +371,7 @@ export const s = {
 
 - **The keys of `s` are the site's translation keys.** When a site gets more languages, each key is translated into each language. Name each key after what the text says or does, and never use one key for two different jobs.
 - **Only real copy goes in `s`.** Dummy text belongs in `noData.ts`.
-- **Internal strings are not `s`.** Ids, keys, event names, log messages and media queries are never shown to people. They stay in the object or file that uses them; the code is never pulled apart to move them.
+- **Internal strings are not `s`.** Ids, keys, event names, log messages and media queries are never shown to people. Each is a key in the object that uses it, or a named constant at the top of the file that uses it, such as `const CLOSE_EVENT = "close";`. The code is never pulled apart to move them into `lib/constants/`.
 
 ### A list of items with links
 
