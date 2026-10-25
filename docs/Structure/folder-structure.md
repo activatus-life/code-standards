@@ -405,7 +405,7 @@ export const r = {
 **Inside a loop over the list, look each item up by its key.** A loop cannot name its items, so it reads `r` and `s` with the item's key, typed from `r` itself:
 
 ```ts title="lib/types/index.ts"
-import type { r } from "@/lib/constants";
+import type { r } from "@/lib/constants/routes";
 
 export type PlanIdType = keyof typeof r.plans;
 ```
@@ -514,6 +514,38 @@ export const SURFACE_CLASS_NAME =
 - **A class name used in one file stays inline in that file.**
 - **Name each export after what it styles, ending in `_CLASS_NAME`**, or `_CLASS_NAMES` for a set keyed by variant.
 
+### Types for constants {#types-for-constants}
+
+**Every constant gets a real type where it is declared, from `lib/types/`.** `r` and `s` are the exception: their types are read from their values, such as `keyof typeof r.plans`, so they are never typed by hand.
+
+```ts title="lib/types/animation.ts"
+export interface EntranceAnimationType {
+	delaySeconds: number;
+	durationSeconds: number;
+	offsetPixels: number;
+}
+```
+
+```ts title="lib/constants/animation.ts"
+import type { EntranceAnimationType } from "@/lib/types";
+
+export const ENTRANCE_ANIMATION: EntranceAnimationType = {
+	delaySeconds: 0.1,
+	durationSeconds: 0.4,
+	offsetPixels: 24,
+};
+```
+
+- **Types live in `lib/types/`, in files named by topic**, such as `animation.ts` and `artwork.ts`. A types file is not exempt from the 300-line limit: split it by topic when it grows.
+- **A type a constant needs lives in `lib/types/`**, with every type it depends on. Components import it from `@/lib/types`.
+- **`lib/types/` reads a constant's type straight from its file**: `import type { r } from "@/lib/constants/routes";`, never through `@/lib/constants`. It is the one exception to importing constants in one line. `import type` is removed at build, so the two folders reading each other's types never makes a real loop.
+- **No `as const`.** When the code needs the exact values, they go in the type, such as an id typed by its id type: `planId: PlanIdType`. Otherwise use plain `string`, `number` and `boolean`. See [No `as const`](/docs/Standards/readable-code#no-as-const).
+- **A list gets a type for one item, and is read-only**: `ENTRANCE_STEPS: readonly EntranceStepType[]`. A list inside a list item gets its own item type too.
+- **A map keyed by id uses `Record` over the id type**: `PLAN_BADGES: Record<PlanIdType, PlanBadgeType>`, so a missing id fails the type check. When only some ids have a value, use `Partial<Record<PlanIdType, PlanBadgeType>>`.
+- **A list that must hold every id** is checked with a `Record`, or with a test. A typed list checks that each item is a real id, not that none is missing.
+- **A `.map` that builds typed items gets a return type**: `planIds.map((planId): PlanBadgeType => ({ … }))`, never a cast on a field.
+- **When a function's `Props` and a constant share a shape**, the shape is a type in `lib/types/` and the `Props` is an alias of it: `export type GetFramePathProps = FrameShapeType;`.
+
 ### Rules {#constants-rules}
 
 - **Named exports only:** `export const r`, `export const s`. No default exports.
@@ -539,7 +571,6 @@ export const SURFACE_CLASS_NAME =
 
 - **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`; a browser without that query misses the fallback, and the standard accepts that. **A media query the code reads is not CSS**, such as the one an animation library matches to switch motion off: it stays in its object in `animation.ts`.
 - **All seven files can run past 300 lines.** They are data only, so ESLint does not apply `max-lines` to them. Keep each one a single file: never split them to get under the limit.
-- **`lib/constants/` never imports from `lib/types/`.** `lib/types/` reads some of its types from the constants (`typeof s`), so an import the other way makes a loop. When a constant needs a type, write the type beside the constant, or read it from the constant.
 
 ---
 

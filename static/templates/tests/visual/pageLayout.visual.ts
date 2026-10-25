@@ -28,6 +28,14 @@ type ElementMeasurementType = {
 	opacity: number;
 };
 
+// The sides of a box that must not move.
+const BOX_SIDES: readonly (keyof ElementMeasurementType)[] = [
+	"x",
+	"y",
+	"width",
+	"height",
+];
+
 type PageProps = { page: Page };
 
 type ScrollStopType = {
@@ -116,7 +124,7 @@ const describeDifferences = ({
 			differences.push(`${key} is missing`);
 			continue;
 		}
-		const isBoxMoved = (["x", "y", "width", "height"] as const).some(
+		const isBoxMoved = BOX_SIDES.some(
 			(side) =>
 				Math.abs(before[side] - after[side]) > BOX_TOLERANCE_PIXELS,
 		);

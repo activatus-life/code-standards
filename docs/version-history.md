@@ -68,9 +68,37 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.2.2
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.0
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.0.** If the project already applied 3.2.2, check these:
+
+**Structural changes in 3.3.0.** These move files. Plan them, and take a [regression check](/docs/Guides/regression-checks) baseline first:
+
+- Every type a constant needs moves into `lib/types/`, with the types it depends on: one move per type. A component's `types.ts` left empty is deleted.
+- Every value found outside `lib/constants/`, other than in a test, moves into the constants file that fits: one move per value.
+
+- **Constants get real types, from `lib/types/`.** Every constant except `r` and `s` is typed where it is declared, with a type from `lib/types/`. "`lib/constants/` never imports from `lib/types/`" is withdrawn: it only ever guarded against a loop of types, which `import type` removes at build, and it pushed projects into `as const` and into retyping values wherever they were read. `lib/types/` now reads a constant's type with `import type` straight from its file, never through `@/lib/constants`. See [Types for constants](/docs/Structure/folder-structure#types-for-constants).
+
+  **What to do:** change every import in `lib/types/` from `@/lib/constants` to the constant's own file, as `import type`. Give every constant except `r` and `s` a type from `lib/types/`, in files named by topic, and move the types it uses there with what they depend on. Point imports at `@/lib/types`, delete component `types.ts` files left empty, and remove imports left unused. Then remove the workarounds: values retyped where they are read, test values retyped or bent around missing properties. Keep `readonly` on list types. Copy the Code standards section of `AGENTS.md` from the template again.
+
+- **No `as const` anywhere.** A written type is the contract; when the code needs exact values, they go in the type. Each list's type is `readonly`. A list that must hold every id is checked with a `Record` or a test. ESLint now reports `as const` as an error: `consistent-type-assertions` always let it through, so the configs ban it with `no-restricted-syntax`. See [No `as const`](/docs/Standards/readable-code#no-as-const).
+
+  **What to do:** copy the project's ESLint template over `eslint.config.mjs` again. Replace each `as const` with a real type where the value is declared. A value found outside `lib/constants/` moves into the matching constants file with its type; a value in a test stays in the test, with a type. Copy `static/templates/skills/typescript.md` into `.agents/skills/` and `.claude/commands/` again. Where one `as const` is genuinely unavoidable, disable the rule on that line with the reason.
+
+- **The regression test template has no `as const`**, and a frozen test may take a change that touches only types. A code standards update that changes only types may be applied to a frozen test with the person's yes. Nothing the test does changes, and the check must still pass against the existing baseline. See [Regression Checks](/docs/Guides/regression-checks).
+
+  **What to do:** if the project has a copy of `static/templates/tests/visual/pageLayout.visual.ts`, copy the new one over it. In a project's own visual test, replace any `as const` with a real type. Run the regression check against the existing baseline: it must pass unchanged.
+
+**How to check:** `pnpm lint` and `pnpm typecheck` pass; these searches find nothing:
+
+```bash
+# lib/types/ reading constants through the barrel
+grep -rn 'from "@/lib/constants"' lib/types/
+# as const anywhere in code we write
+grep -rn "as const" --include='*.ts' --include='*.tsx' --exclude-dir=node_modules --exclude-dir=vendor .
+```
 
 **Fixes in 3.2.2.** If the project already applied 3.2.1, check these:
 
@@ -191,7 +219,7 @@ grep -rnE "export const [A-Z_]+_ID = " lib/constants/
 - **No component-level `constants.ts`.** Every link, piece of text and number goes in `lib/constants/`, even if one file uses it, so all the text is in one place for translation. Move any component's `constants.ts` into `r`, `s` and `numbers.ts`. _Changed in 3.2.1: there are seven constants files to move into. Do the 3.2.1 step instead._
 - **Write `r` and `s` keys out by name**, `r.plans.starter`, never `r.plans[planId]`. A list of items keeps its words in `s` and its links in `r` under the same keys. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
 - **No `"#"` placeholder links.** Show the text without a link and put `{/* TODO: … */}` above it until the page exists. Unfinished work is marked `// TODO: Message`.
-- **`lib/constants/` never imports from `lib/types/`.** Move any type it imports from there beside the constant.
+- **`lib/constants/` never imports from `lib/types/`.** Move any type it imports from there beside the constant. _Withdrawn in 3.3.0: constants now take their types from `lib/types/`. Do the 3.3.0 step instead._
 - **Create `noData.ts` only once the data's shape is decided.** An empty `noData.ts` can be deleted. Stand-in data asked for earlier carries the comment `// Not the real schema: a basic shape to finish the task.`
 - **A component's sub-components sit flat in its one `components/` folder**, two levels at most. Move any sub-component folder sitting directly in its parent, or nested inside another sub-component, into the parent's `components/` folder.
 - **The palette is listed in `docs/design/design-system.md`**: each colour's name, value, class names and use. `globals.css` holds only colours Tailwind does not have. Copy the Colour palette section from the template and fill it in.

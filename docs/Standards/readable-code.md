@@ -456,7 +456,7 @@ const getUserName = (user: any) => {
 };
 ```
 
-`as const` is fine. See the [ESLint configuration](/docs/Standards/eslint#typescript-eslintconsistent-type-assertions-never) for how to record the reason for a cast.
+`as const` is never used either: see [No `as const`](#no-as-const). See the [ESLint configuration](/docs/Standards/eslint#typescript-eslintconsistent-type-assertions-never) for how to record the reason for a cast.
 
 ---
 
@@ -592,6 +592,35 @@ const config = {
 ESLint reports `satisfies` as an error.
 
 **Story files are the one exception.** Storybook's own docs type stories with `satisfies Meta<typeof Component>`, because it lets Storybook see which props are already set for every story, so each story only sets the props that change. Story files (`*.stories.tsx`) follow Storybook's docs as they are, and ESLint allows `satisfies` there. See [Storybook stories](/docs/Structure/component-organization#-componentstoriestsx).
+
+---
+
+### No `as const` {#no-as-const}
+
+**Give a value a real type where it is declared, never `as const`.** `as const` makes the value the source of truth and leaves TypeScript to work out the type. A written type is the contract a reader sees first, and the value is checked against it.
+
+```ts
+// ✅ Good — the exact values are in the type
+type RoleType = "admin" | "editor";
+
+interface AccessType {
+  roles: readonly RoleType[];
+}
+
+const ACCESS: AccessType = { roles: ["admin", "editor"] };
+```
+
+```ts
+// ❌ Bad — the type is worked out from the value
+const ACCESS = { roles: ["admin", "editor"] } as const;
+```
+
+- **A written type widens each value to the type.** When the code needs the exact values, put them in the type, as `RoleType` does above.
+- **A list is `readonly` in its type**, so nothing changes it by accident.
+- **A list that must hold every value** is checked with a `Record` over the values' type, or with a test. A typed list checks that each item is a real value, not that none is missing.
+- **`r` and `s` are never typed by hand.** Their types are read from their values (`keyof typeof r.plans`), and they need no `as const` either.
+
+ESLint reports `as const` as an error. If one is genuinely unavoidable, disable the rule on that line with the reason, as for a cast: `// eslint-disable-next-line no-restricted-syntax -- <reason>`.
 
 ---
 
