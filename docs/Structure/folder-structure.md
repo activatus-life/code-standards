@@ -542,6 +542,22 @@ export const ENTRANCE_ANIMATION: EntranceAnimationType = {
 - **No `as const`.** When the code needs the exact values, they go in the type, such as an id typed by its id type: `planId: PlanIdType`. Otherwise use plain `string`, `number` and `boolean`. See [No `as const`](/docs/Standards/readable-code#no-as-const).
 - **A list gets a type for one item, and is read-only**: `ENTRANCE_STEPS: readonly EntranceStepType[]`. A list inside a list item gets its own item type too.
 - **A map keyed by id uses `Record` over the id type**: `PLAN_BADGES: Record<PlanIdType, PlanBadgeType>`, so a missing id fails the type check. When only some ids have a value, use `Partial<Record<PlanIdType, PlanBadgeType>>`.
+- **A lookup inside `r` or `s` that only some ids have** cannot be typed there, because `r` and `s` are never typed by hand. Declare it as a typed constant above `r` or `s` in the same file, then place it inside by name:
+
+  ```ts title="lib/constants/routes.ts"
+  import type { FeatureIdType } from "@/lib/types";
+
+  const FEATURE_GUIDE_LINKS: Partial<Record<FeatureIdType, string>> = {
+  	sharing: "/guides/sharing",
+  };
+
+  export const r = {
+  	featureGuideLinks: FEATURE_GUIDE_LINKS,
+  };
+  ```
+
+  The id type must not be read from the object the lookup sits in: TypeScript rejects that as a loop. Here `FeatureIdType` is `keyof typeof s.features`, read from `s`, so it can be used inside `r`.
+
 - **A list that must hold every id** is checked with a `Record`, or with a test. A typed list checks that each item is a real id, not that none is missing.
 - **A `.map` that builds typed items gets a return type**: `planIds.map((planId): PlanBadgeType => ({ … }))`, never a cast on a field.
 - **When a function's `Props` and a constant share a shape**, the shape is a type in `lib/types/` and the `Props` is an alias of it: `export type GetFramePathProps = FrameShapeType;`.

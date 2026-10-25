@@ -616,7 +616,7 @@ const ACCESS = { roles: ["admin", "editor"] } as const;
 ```
 
 - **A written type widens each value to the type.** When the code needs the exact values, put them in the type, as `RoleType` does above.
-- **A list is `readonly` in its type**, so nothing changes it by accident.
+- **A constant's list is `readonly` in its type**, so nothing changes it by accident. Lists in props, parameters and state need not be.
 - **A list that must hold every value** is checked with a `Record` over the values' type, or with a test. A typed list checks that each item is a real value, not that none is missing.
 - **`r` and `s` are never typed by hand.** Their types are read from their values (`keyof typeof r.plans`), and they need no `as const` either.
 
