@@ -68,9 +68,25 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.0
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.1
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.1.** If the project already applied 3.3.0, check these:
+
+- **A single number or string needs no type of its own.** 3.3.0 said every constant gets a type from `lib/types/`. It means every object and list constant: `const COOKIE_DURATION_DAYS = 30;` is already exactly typed. The Animation and Artwork examples now have their types. Nothing to do, unless the project added `: number` or `: string` only to follow 3.3.0: those can stay or go.
+- **The `readonly` search also finds `string[]`, `number[]` and `boolean[]` lists.** 3.3.0's search only found named types.
+
+  **What to do:** run the new search in 3.3.0's How to check, and make each hit that a constant uses `readonly`.
+
+- **The regression baseline comes from the last known-good page.** That is the live production site, unless the branch's page has already changed from production, such as a redesign not yet live: then it is the branch's last commit before the refactor, built and served on its own. Record where the baseline came from in `docs/testing/regression.md`. See [Regression Checks](/docs/Guides/regression-checks). The comment and error message in the `playwright.config.mjs` template say the same; a project's frozen copy need not change.
+
+  **What to do:** if the project's `docs/testing/regression.md` does not say where its baseline came from, add it: the production URL, or the commit and the date.
+
+- **`AGENTS.md`: an `as const` that cannot be avoided is one of the allowed lint disables**, beside `let` and a type cast, as 3.3.0 already said. Copy the Code standards section from the template again.
+- **3.3.0's What to do had a step joined onto the end of a list.** "Copy the TypeScript skill again" and the disable-with-reason line now sit in their own paragraph. Nothing new to do.
+
+**How to check:** the 3.3.0 How to check searches find nothing; `docs/testing/regression.md` says where the baseline came from.
 
 **Fixes in 3.3.0.** If the project already applied 3.2.2, check these:
 
@@ -84,9 +100,9 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
   - a class name only one file uses
   - numbers in config files
 
-- **Constants get real types, from `lib/types/`.** Every constant except `r` and `s` is typed where it is declared, with a type from `lib/types/`. "`lib/constants/` never imports from `lib/types/`" is withdrawn: it only ever guarded against a loop of types, which `import type` removes at build, and it pushed projects into `as const` and into retyping values wherever they were read. `lib/types/` now reads a constant's type with `import type` straight from its file, never through `@/lib/constants`. See [Types for constants](/docs/Structure/folder-structure#types-for-constants).
+- **Constants get real types, from `lib/types/`.** Every object and list constant except `r` and `s` is typed where it is declared, with a type from `lib/types/`. _Changed in 3.3.1: a single number or string needs no type of its own._ "`lib/constants/` never imports from `lib/types/`" is withdrawn: it only ever guarded against a loop of types, which `import type` removes at build, and it pushed projects into `as const` and into retyping values wherever they were read. `lib/types/` now reads a constant's type with `import type` straight from its file, never through `@/lib/constants`. See [Types for constants](/docs/Structure/folder-structure#types-for-constants).
 
-  **What to do:** change every import in `lib/types/` from `@/lib/constants` to the constant's own file, as `import type`. Give every constant except `r` and `s` a type from `lib/types/`, in files named by topic, and move the types it uses there with what they depend on. Point imports at `@/lib/types`, delete component `types.ts` files left empty, and remove imports left unused. Then remove the workarounds: values retyped where they are read, test values retyped or bent around missing properties. Make every list in a constant's type `readonly`, including lists inside an item. Copy the Code standards section of `AGENTS.md` from the template again.
+  **What to do:** change every import in `lib/types/` from `@/lib/constants` to the constant's own file, as `import type`. Give every object and list constant except `r` and `s` a type from `lib/types/`, in files named by topic, and move the types it uses there with what they depend on. Point imports at `@/lib/types`, delete component `types.ts` files left empty, and remove imports left unused. Then remove the workarounds: values retyped where they are read, test values retyped or bent around missing properties. Make every list in a constant's type `readonly`, including lists inside an item. Copy the Code standards section of `AGENTS.md` from the template again.
 
 - **No `as const` anywhere.** A written type is the contract; when the code needs exact values, they go in the type. Each constant's list type is `readonly`. A list that must hold every id is checked with a `Record` or a test. ESLint now reports `as const` as an error: `consistent-type-assertions` always let it through, so the configs ban it with `no-restricted-syntax`. See [No `as const`](/docs/Standards/readable-code#no-as-const).
 
@@ -95,7 +111,9 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
   - values in tests
   - internal strings, as a named constant at the top of the file that uses them
   - a class name only one file uses
-  - numbers in config files Copy `static/templates/skills/typescript.md` into `.agents/skills/` and `.claude/commands/` again. Where one `as const` is genuinely unavoidable, disable the rule on that line with the reason.
+  - numbers in config files
+
+  Copy `static/templates/skills/typescript.md` into `.agents/skills/` and `.claude/commands/` again. Where one `as const` is genuinely unavoidable, disable the rule on that line with the reason.
 
 - **The regression test template has no `as const`**, and a frozen test may take a change that touches only types. A code standards update that changes only types may be applied to a frozen test with the person's yes. Nothing the test does changes, and the check must still pass against the existing baseline. See [Regression Checks](/docs/Guides/regression-checks).
 
@@ -113,7 +131,7 @@ grep -rn "as const" --include='*.ts' --include='*.tsx' --exclude-dir=node_module
 This search lists types in `lib/types/` with a list that is not `readonly`. Fix each hit that a constant uses; a type only props or parameters use can stay as it is:
 
 ```bash
-grep -rnE "(^|[^y] )[A-Z][A-Za-z]*Type\[\]" lib/types/
+grep -rnE "(^|[^y] )([A-Z][A-Za-z]*Type|string|number|boolean)\[\]" lib/types/
 ```
 
 **Fixes in 3.2.2.** If the project already applied 3.2.1, check these:

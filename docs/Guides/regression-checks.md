@@ -44,13 +44,19 @@ So every run sees the same thing, the page clock is frozen and moved on by hand,
    ```
 
 4. **Freeze the test files.** Add `tests/visual/` to `.prettierignore`, and add this line to the project's `AGENTS.md`, outside the code standards section: "Never edit `tests/visual/` or update its baseline without the person's yes."
-5. **Take the baseline from the live production site**, before the refactor starts:
+5. **Take the baseline before the refactor starts, from the last known-good page.** That is the live production site, unless the branch's page has already changed from production for another reason, such as a redesign not yet live. Then it is the branch's last commit before the refactor: build that commit in a separate worktree, serve it, and point the baseline at it.
 
    ```bash
+   # From production
    VISUAL_PRODUCTION_URL=https://example.com pnpm test:visual:update
+
+   # From the last commit before the refactor: build and serve it in its
+   # own worktree, then point the baseline at it
+   git worktree add ../before-refactor <commit>
+   VISUAL_PRODUCTION_URL=http://localhost:3200 pnpm test:visual:update
    ```
 
-   Commit `tests/visual/baseline/`.
+   Commit `tests/visual/baseline/`, and **record where it came from** in `docs/testing/regression.md`: the production URL, or the commit and the date.
 
 ## Running it
 
@@ -62,7 +68,7 @@ It builds the project and starts the production build on port 3100, then measure
 
 ## Rules
 
-- **The baseline comes from the live production site**, never from the branch being tested. A baseline taken from the branch would only prove the branch matches itself.
+- **The baseline comes from the last known-good page**, never from the branch being tested: the live production site, or the branch's last commit before the refactor when its page has already changed from production. A baseline taken from the branch under test would only prove the branch matches itself.
 - **It runs against a production build**, on its own port, never against `pnpm dev`.
 - **An agent never updates the baseline without the person's yes.** A failing check means something visible changed. Find out what, and fix the code. Updating the baseline to make it pass hides the change.
 - **The test files are frozen** for the whole refactor: an agent never edits them to make a check pass.
