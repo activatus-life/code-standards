@@ -73,6 +73,7 @@ const checkUiComponents = ({
 		)
 		.map((folder) => ({
 			standard: "15",
+			file: `components/ui/${folder}/`,
 			message: `components/ui/${folder} is not on the Design System Components list. If it takes everything through props, record it under "Components for the standards" in docs/development/coding-standards.md; otherwise move it out of components/ui/`,
 			page: "docs/design-system-components.md",
 		}));
@@ -109,6 +110,7 @@ const checkTestFiles = ({ projectDirectory, projectFiles }) => {
 		.filter((filePath) => !findTestFile({ filePath, projectFileSet }))
 		.map((filePath) => ({
 			standard: "4",
+			file: filePath,
 			message: `${filePath} has no test file beside it`,
 			page: "docs/Standards/readable-code.md#every-function-and-component-has-a-test-file",
 		}));

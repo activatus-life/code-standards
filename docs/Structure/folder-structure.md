@@ -71,11 +71,9 @@ project-root/
 │   ├── constants/                                   # Constants shared across the app: see Constants below
 │   │   ├── routes.ts                                # r: every link
 │   │   ├── strings.ts                               # s: every piece of static text
-│   │   ├── numbers.ts                               # Every loose named number
+│   │   ├── numbers.ts                               # Numbers more than one file uses
 │   │   ├── noData.ts                                # Stand-in data for local development
-│   │   ├── animation.ts                             # How things move, once there is any
-│   │   ├── artwork.ts                               # What is drawn and where, once there is any
-│   │   ├── classNames.ts                            # Class names shared between files, once there are any
+│   │   ├── status.ts                                # Statuses the app shares, once there are any
 │   │   └── index.ts
 │   ├── errors/                                      # Error types and handlers shared across the app
 │   └── types/                                       # Types shared across the app; a component's own types stay in its types.ts
@@ -299,25 +297,29 @@ Add the export to `utils/index.ts` whenever you add a function.
 
 ---
 
-## 🔤 Constants: `r`, `s`, numbers, noData, animation, artwork and class names {#constants}
+## 🔤 Constants: `r`, `s` and shared values {#constants}
 
-Every link, every piece of text on screen, every named number, every piece of stand-in data, and every motion, drawing and shared class name lives in `lib/constants/`, never written straight into a component. **There is no component-level `constants.ts`**: even a value only one file uses goes here, so every piece of text is in one place when the site is translated into other languages, and every project finds its values in the same seven files. Internal strings people never see are the one exception: see [`s`: strings](#s-strings).
+**Every link goes in `r`, and every piece of text people see or hear goes in `s`**, both in `lib/constants/`, never written straight into a component. A link then changes in one place, and every piece of text is in one place when the site is translated into other languages.
+
+**Every other value lives with the code that uses it, until it is shared.** A number, list or internal string that one file uses is a named constant at the top of that file. Once more than one file needs it, it moves to `lib/constants/`, into the file that fits it.
 
 ```text
 lib/constants/
-├── routes.ts      # r: every link
-├── strings.ts     # s: every piece of static text
-├── numbers.ts     # Every loose named number
-├── noData.ts      # Stand-in data, once the data's shape is decided
-├── animation.ts   # How things move, once there is any
-├── artwork.ts     # What is drawn and where, once there is any
-├── classNames.ts  # Class names shared between files, once there are any
-└── index.ts       # Exports all of them
+├── routes.ts          # r: every link
+├── strings.ts         # s: every piece of text people see or hear
+├── numbers.ts         # Numbers more than one file uses
+├── noData.ts          # Stand-in data, once the data's shape is decided
+├── animation.ts       # How things move, when more than one file uses it
+├── artwork.ts         # What is drawn and where, when more than one file uses it
+├── classNames.ts      # Class names shared between files
+├── status.ts          # Statuses the app shares
+├── unsortedValues.ts  # Values waiting for the person to say where they go
+└── index.ts           # Exports all of them
 ```
 
-**These seven files are the only ones.** Each is one file, never split by topic. `routes.ts`, `strings.ts`, `numbers.ts` and `index.ts` exist from the start; the other four are created only once the project has something to put in them.
+`routes.ts`, `strings.ts` and `index.ts` exist from the start. Every other file is created only once there is something to put in it. Each is one file, never split by topic.
 
-| A value that is…                                            | Goes in             |
+| A shared value that is…                                     | Goes in             |
 | ----------------------------------------------------------- | ------------------- |
 | A link                                                      | `r` in `routes.ts`  |
 | Text people see or hear                                     | `s` in `strings.ts` |
@@ -326,8 +328,9 @@ lib/constants/
 | A group of values that together say how something moves     | `animation.ts`      |
 | A group of values that together say what is drawn and where | `artwork.ts`        |
 | A Tailwind class string used by more than one file          | `classNames.ts`     |
+| A status more than one part of the app reads                | `status.ts`         |
 
-**This table is the base, and where each value goes is the project's call.** The table says what each file is for, not where every value in every project goes. The project reads its own values, decides which file each one belongs in, and keeps that choice the same across the codebase. A value that fits none of them goes in the closest file, with a comment naming its entry under "Details" in `docs/development/coding-standards.md`, where the project records why. It is a coding decision, so the work carries on without waiting for a yes.
+**This table is the base, and where each value goes is the project's call.** A shared value that fits none of these goes in a file of its own in `lib/constants/`, named after what it holds. When it is not clear where a value goes, it goes in [`unsortedValues.ts`](#unsorted-values) until the person says.
 
 A file outside the folder imports everything it needs in one line:
 
@@ -371,7 +374,7 @@ export const s = {
 
 - **The keys of `s` are the site's translation keys.** When a site gets more languages, each key is translated into each language. Name each key after what the text says or does, and never use one key for two different jobs.
 - **Only real copy goes in `s`.** Dummy text belongs in `noData.ts`.
-- **Internal strings are not `s`.** Ids, keys, event names, log messages and media queries are never shown to people. Each is a key in the object that uses it, or a named constant at the top of the file that uses it, such as `const CLOSE_EVENT = "close";`. The code is never pulled apart to move them into `lib/constants/`.
+- **Internal strings are not `s`.** Ids, keys, event names, log messages and media queries are never shown to people. Each is a key in the object that uses it, or a named constant at the top of the file that uses it, such as `const CLOSE_EVENT = "close";`. A status more than one part of the app reads goes in [`status.ts`](#statuses).
 
 ### A list of items with links
 
@@ -453,11 +456,11 @@ const insights =
 - **Dummy values sit at the top of `noData.ts`** as their own constants, `DUMMY_HEADING` and the rest. They are never added to `s`.
 - **noData is for the whole site.** All of it lives in this one file.
 
-### Numbers: named, in one file {#numbers-named-and-kept-by-topic}
+### Numbers: named, and shared from one file {#numbers-named-and-kept-by-topic}
 
 **A number other than `-1`, `0` or `1` gets a name**, such as `MAXIMUM_RETRY_ATTEMPTS`. Those three mean "nothing", "one more" and "not found", so they read clearly as they are. Any other number was chosen by someone, and its name says what it controls. ESLint checks this with `no-magic-numbers`.
 
-**Every loose named number lives in `lib/constants/numbers.ts`**, even one that only one file uses, so every project finds its numbers in the same place. There is no `n` object: each number is its own `SCREAMING_SNAKE_CASE` export.
+**A number only one file uses is a named constant at the top of that file. A number more than one file uses lives in `lib/constants/numbers.ts`.** There is no `n` object: each number is its own `SCREAMING_SNAKE_CASE` export.
 
 ```ts title="lib/constants/numbers.ts"
 export const COOKIE_DURATION_DAYS = 30;
@@ -518,9 +521,42 @@ export const SURFACE_CLASS_NAME =
 - **A class name used in one file stays inline in that file.**
 - **Name each export after what it styles, ending in `_CLASS_NAME`**, or `_CLASS_NAMES` for a set keyed by variant.
 
+### Statuses {#statuses}
+
+**`status.ts` holds the statuses more than one part of the app reads**, such as the states a review or a workflow can be in. A status only one file reads stays at the top of that file.
+
+```ts title="lib/types/status.ts"
+export type ReviewStatusType = "passed" | "rejected" | "errored";
+```
+
+```ts title="lib/constants/status.ts"
+import type { ReviewStatusType } from "@/lib/types";
+
+export const REVIEW_FAILED_STATUSES: readonly ReviewStatusType[] = [
+	"rejected",
+	"errored",
+];
+```
+
+- **The status is the value the code checks. The words people see stay in `s`**, under the same key: `"rejected"` is what the code compares, and `s.reviewStatuses.rejected` is the "Rejected" on the badge.
+- **Name each export after what it lists**, ending in `_STATUSES` or `_STATES`.
+
+### When it is not clear where a value goes {#unsorted-values}
+
+**Put it in `lib/constants/unsortedValues.ts`, and carry on.** The work never waits for the answer.
+
+**At the end of the work, ask the person about every value in it**, one line each, with where you would put it: at the top of the file that uses it, or in a shared file named after what it holds.
+
+```text
+REVIEW_FAILED_STATUSES (used in runReview and ReviewBadge)
+→ keep it in runReview.ts, or move it to lib/constants/status.ts?
+```
+
+Move each value where the person says, then delete the file. [`pnpm standards:check`](/docs/Guides/setup#checking-a-project) reports `unsortedValues.ts` for as long as it exists, so nothing is left waiting.
+
 ### Types for constants {#types-for-constants}
 
-**Every object and list constant gets a real type where it is declared, from `lib/types/`.** `r` and `s` are the exception: their types are read from their values, such as `keyof typeof r.plans`, so they are never typed by hand. **A single number or string needs no type of its own**: `const COOKIE_DURATION_DAYS = 30;` is already exactly typed, and writing `: number` adds nothing.
+**Every object and list constant in `lib/constants/` gets a real type where it is declared, from `lib/types/`.** `r` and `s` are the exception: their types are read from their values, such as `keyof typeof r.plans`, so they are never typed by hand. **A single number or string needs no type of its own**: `const COOKIE_DURATION_DAYS = 30;` is already exactly typed, and writing `: number` adds nothing.
 
 ```ts title="lib/types/animation.ts"
 export interface EntranceAnimationType {
@@ -540,6 +576,7 @@ export const ENTRANCE_ANIMATION: EntranceAnimationType = {
 };
 ```
 
+- **A constant kept at the top of the file that uses it is typed beside it**, from that file's own `.types.ts`, the same as its `Props`. `lib/types/` is for the shared constants.
 - **Types live in `lib/types/`, in files named by topic**, such as `animation.ts` and `artwork.ts`. A types file is not exempt from the 300-line limit: split it by topic when it grows.
 - **A type a constant needs lives in `lib/types/`**, with every type it depends on. Components import it from `@/lib/types`.
 - **`lib/types/` reads a constant's type straight from its file**: `import type { r } from "@/lib/constants/routes";`, never through `@/lib/constants`. It is the one exception to importing constants in one line. `import type` is removed at build, so the two folders reading each other's types never makes a real loop.
@@ -590,7 +627,7 @@ export const ENTRANCE_ANIMATION: EntranceAnimationType = {
   A list of keys a loop runs over, such as `planIds` in [A list of items with links](#a-list-of-items-with-links), is not a loose id: it stays a list.
 
 - **CSS belongs in a stylesheet, never in a constant.** Styles written as a string in TypeScript move to `globals.css`. Styles for when JavaScript is off go there under `@media (scripting: none)`; a browser without that query misses the fallback, and the standard accepts that. **A media query the code reads is not CSS**, such as the one an animation library matches to switch motion off: it stays in its object in `animation.ts`.
-- **All seven files can run past 300 lines.** They are data only, so ESLint does not apply `max-lines` to them. Keep each one a single file: never split them to get under the limit.
+- **Every file in `lib/constants/` can run past 300 lines.** They are data only, so ESLint does not apply `max-lines` to them. Keep each one a single file: never split them to get under the limit.
 
 ---
 

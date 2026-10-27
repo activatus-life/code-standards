@@ -184,8 +184,8 @@ const config = [
 		},
 	},
 	{
-		// The seven constants files are data, not logic, so they can be long.
-		files: ["lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts"],
+		// The constants files are data, not logic, so they can be long.
+		files: ["lib/constants/*.ts"],
 		rules: { "max-lines": "off" },
 	},
 	{

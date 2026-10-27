@@ -1,5 +1,5 @@
-// Runs every check, and separates the findings for standards the
-// project has recorded as skipped or changed.
+// Runs every check, and separates the findings the project has
+// recorded as skipped or changed.
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
@@ -14,8 +14,11 @@ import { checkStructure } from "./checkStructure.mjs";
 import {
 	listProjectFiles,
 	PACKAGE_DIRECTORY,
-	readRecordedExceptions,
 } from "./projectFiles.mjs";
+import {
+	isRecordedFinding,
+	readRecordedExceptions,
+} from "./recordedExceptions.mjs";
 
 const readPackageVersion = () => {
 	const packageText = readFileSync(
@@ -55,9 +58,24 @@ export const runChecks = ({ projectDirectory }) => {
 		...checkDocs({ projectDirectory, projectFiles }),
 	];
 	const isRecorded = (finding) =>
-		recordedExceptions.standardNumbers.has(finding.standard);
+		isRecordedFinding({
+			finding,
+			exceptions: recordedExceptions.exceptions,
+		});
+	// A line misread as an exception could hide any standard, so it is
+	// never hidden itself.
+	const unreadLineFindings = recordedExceptions.unreadLines.map(
+		(unreadLine) => ({
+			standard: "21",
+			message: `Under "Details" in docs/development/coding-standards.md: ${unreadLine}`,
+			page: "docs/Guides/setup.md#3-agree-the-standards",
+		}),
+	);
 	return {
-		failures: findings.filter((finding) => !isRecorded(finding)),
+		failures: [
+			...unreadLineFindings,
+			...findings.filter((finding) => !isRecorded(finding)),
+		],
 		recorded: findings.filter((finding) => isRecorded(finding)),
 		unfinishedChanges: recordedExceptions.unfinishedChanges,
 	};

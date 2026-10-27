@@ -72,7 +72,16 @@ It builds the project and starts the production build on port 3100, then measure
 - **It runs against a production build**, on its own port, never against `pnpm dev`.
 - **An agent never updates the baseline without the person's yes.** A failing check means something visible changed. Find out what, and fix the code. Updating the baseline to make it pass hides the change.
 - **The test files are frozen** for the whole refactor: an agent never edits them to make a check pass.
+- **Record a check only after it has run.** `docs/testing/regression.md` says what was decided, and gets the baseline's source and each result only once they exist. Never write a URL, commit, date or "passed" for a check that has not happened yet.
 - **A code standards update that changes only types may still be applied to a frozen test**, such as replacing `as const` with a real type, with the person's yes. A copy of the template takes the new template whole; a project's own test takes just the typing change. Nothing the test does may change, and the check must still pass against the **existing** baseline, never a new one: passing proves nothing changed.
+
+## Comparing two local servers instead
+
+A project that skips Playwright can still compare the page before and after: run the last known-good commit and the branch side by side, each with `next dev` on its own port, and compare their rendered HTML or screenshots.
+
+- **Export the old commit to its own folder**, such as with `git worktree add ../before-refactor <commit>`.
+- **Copy `node_modules` into it. Never symlink it.** Turbopack refuses a `node_modules` that points outside the project folder. On macOS, `cp -Rc node_modules ../before-refactor/` makes a copy-on-write clone in seconds that takes almost no extra disk space.
+- **Record what was compared, and the result, only once it has run**, the same as the Playwright check.
 
 ## The blind spot
 

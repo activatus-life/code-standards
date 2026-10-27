@@ -7,53 +7,45 @@ const REQUIRED_FILES = [
 	"lib/constants/index.ts",
 	"lib/constants/routes.ts",
 	"lib/constants/strings.ts",
-	"lib/constants/numbers.ts",
 ];
 
 const check = (projectFiles) => checkConstants({ projectFiles });
 
 describe("checkConstants", () => {
-	it("passes the four starting files", () => {
+	it("passes r, s and the index", () => {
 		assert.deepEqual(check(REQUIRED_FILES), []);
 	});
 
-	it("passes all seven files", () => {
+	it("passes any other shared constants file", () => {
 		assert.deepEqual(
 			check([
 				...REQUIRED_FILES,
-				"lib/constants/noData.ts",
-				"lib/constants/animation.ts",
-				"lib/constants/artwork.ts",
-				"lib/constants/classNames.ts",
+				"lib/constants/numbers.ts",
+				"lib/constants/status.ts",
 			]),
 			[],
 		);
 	});
 
-	it("flags a missing starting file", () => {
+	it("leaves values kept with the code that uses them", () => {
+		assert.deepEqual(
+			check([...REQUIRED_FILES, "components/shared/card/Card.tsx"]),
+			[],
+		);
+	});
+
+	it("flags a missing file", () => {
 		const findings = check(REQUIRED_FILES.slice(0, -1));
 		assert.equal(findings.length, 1);
-		assert.match(findings[0].message, /numbers\.ts is missing/);
+		assert.match(findings[0].message, /strings\.ts is missing/);
 	});
 
-	it("flags any other file in lib/constants/", () => {
+	it("flags values still waiting in unsortedValues.ts", () => {
 		const findings = check([
 			...REQUIRED_FILES,
-			"lib/constants/otherValues.ts",
+			"lib/constants/unsortedValues.ts",
 		]);
 		assert.equal(findings.length, 1);
-		assert.match(findings[0].message, /not one of the seven/);
-	});
-
-	it("flags a component constants file and leaves the choice to the project", () => {
-		const findings = check([
-			...REQUIRED_FILES,
-			"components/shared/card/constants.ts",
-		]);
-		assert.equal(findings.length, 1);
-		assert.match(
-			findings[0].message,
-			/the Constants table says fits/,
-		);
+		assert.match(findings[0].message, /Ask the person/);
 	});
 });

@@ -196,8 +196,8 @@ const config = [
 		rules: { "max-lines": "off", "no-magic-numbers": "off" },
 	},
 	{
-		// The seven constants files are data, not logic, so they can be long.
-		files: ["lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.{js,mjs}"],
+		// The constants files are data, not logic, so they can be long.
+		files: ["lib/constants/*.{js,mjs}"],
 		rules: { "max-lines": "off" },
 	},
 	{
@@ -401,8 +401,8 @@ const config = [
 		},
 	},
 	{
-		// The seven constants files are data, not logic, so they can be long.
-		files: ["lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts"],
+		// The constants files are data, not logic, so they can be long.
+		files: ["lib/constants/*.ts"],
 		rules: { "max-lines": "off" },
 	},
 	{
@@ -646,8 +646,8 @@ const config = [
 		},
 	},
 	{
-		// The seven constants files are data, not logic, so they can be long.
-		files: ["lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts"],
+		// The constants files are data, not logic, so they can be long.
+		files: ["lib/constants/*.ts"],
 		rules: { "max-lines": "off" },
 	},
 	{
@@ -893,8 +893,8 @@ const config = [
 		},
 	},
 	{
-		// The seven constants files are data, not logic, so they can be long.
-		files: ["lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts"],
+		// The constants files are data, not logic, so they can be long.
+		files: ["lib/constants/*.ts"],
 		rules: { "max-lines": "off" },
 	},
 	{
@@ -1054,7 +1054,7 @@ Every `eslint-disable` comment must say why, after `--`. A rule is never switche
 
 ### `max-lines: 300`
 
-No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt, and so are the seven constants files in `lib/constants/` (`routes.ts`, `strings.ts`, `numbers.ts`, `noData.ts`, `animation.ts`, `artwork.ts` and `classNames.ts`), which hold data only. See [Readable Code](/docs/Standards/readable-code#no-file-longer-than-300-lines).
+No file is longer than 300 lines, not counting blank lines and comments. Test files are exempt, and so are the files in `lib/constants/`, which hold data only. See [Readable Code](/docs/Standards/readable-code#no-file-longer-than-300-lines).
 
 ### `max-depth: 3`
 

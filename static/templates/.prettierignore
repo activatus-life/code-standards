@@ -1,0 +1,7 @@
+# pnpm rewrites this on every install, in its own style.
+pnpm-workspace.yaml
+# Copied from the code standards and compared word for word by
+# pnpm standards:check, so Prettier leaves them as they are.
+AGENTS.md
+.agents/skills/
+.claude/commands/

@@ -9,6 +9,7 @@ import eslintReact from "!!raw-loader!@site/static/templates/eslint/react/eslint
 import eslintNextjs from "!!raw-loader!@site/static/templates/eslint/nextjs/eslint.config.mjs";
 import eslintBase from "!!raw-loader!@site/static/templates/eslint/base/eslint.config.mjs";
 import prettier from "!!raw-loader!@site/static/templates/prettier.config.mjs";
+import prettierIgnore from "!!raw-loader!@site/static/templates/.prettierignore";
 import stylelintCss from "!!raw-loader!@site/static/templates/stylelint/css/stylelint.config.mjs";
 import stylelintScss from "!!raw-loader!@site/static/templates/stylelint/scss/stylelint.config.mjs";
 import globalsCss from "!!raw-loader!@site/static/templates/globals.css";
@@ -50,6 +51,7 @@ Each file is also served as a plain file, so a person or an AI agent can fetch i
 | [ESLint — Next.js](#eslintnextjs)                | `eslint.config.mjs` in the project root    | [`/templates/eslint/nextjs/eslint.config.mjs`](pathname:///templates/eslint/nextjs/eslint.config.mjs)         |
 | [ESLint — JavaScript / Node.js](#eslintbase)     | `eslint.config.mjs` in the project root    | [`/templates/eslint/base/eslint.config.mjs`](pathname:///templates/eslint/base/eslint.config.mjs)             |
 | [Prettier](#prettier)                            | `prettier.config.mjs` in the project root  | [`/templates/prettier.config.mjs`](pathname:///templates/prettier.config.mjs)                                 |
+| [Prettier ignore](#prettierignore)               | `.prettierignore` in the project root      | [`/templates/.prettierignore`](pathname:///templates/.prettierignore)                                         |
 | [Stylelint — CSS and CSS Modules](#stylelintcss) | `stylelint.config.mjs` in the project root | [`/templates/stylelint/css/stylelint.config.mjs`](pathname:///templates/stylelint/css/stylelint.config.mjs)   |
 | [Stylelint — SCSS](#stylelintscss)               | `stylelint.config.mjs` in the project root | [`/templates/stylelint/scss/stylelint.config.mjs`](pathname:///templates/stylelint/scss/stylelint.config.mjs) |
 | [Global styles and colour palette](#globalscss)  | `app/globals.css`                          | [`/templates/globals.css`](pathname:///templates/globals.css)                                                 |
@@ -131,6 +133,18 @@ See the [Prettier page](/docs/Standards/prettier).
 
 <CodeBlock language="js" title="prettier.config.mjs">
   {prettier}
+</CodeBlock>
+
+---
+
+## Prettier ignore {#prettierignore}
+
+**Copy to:** `.prettierignore` in the project root, or add its lines to the project's own
+
+See [What Prettier skips](/docs/Standards/prettier#what-prettier-skips).
+
+<CodeBlock language="text" title=".prettierignore">
+  {prettierIgnore}
 </CodeBlock>
 
 ---

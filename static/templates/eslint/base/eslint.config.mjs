@@ -121,8 +121,8 @@ const config = [
 		rules: { "max-lines": "off", "no-magic-numbers": "off" },
 	},
 	{
-		// The seven constants files are data, not logic, so they can be long.
-		files: ["lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.{js,mjs}"],
+		// The constants files are data, not logic, so they can be long.
+		files: ["lib/constants/*.{js,mjs}"],
 		rules: { "max-lines": "off" },
 	},
 	{

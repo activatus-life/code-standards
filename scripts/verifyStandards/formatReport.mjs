@@ -66,7 +66,7 @@ export const formatReport = ({ result, projectDirectory }) => {
 	}
 	if (result.unfinishedChanges) {
 		sections.push(
-			`Unfinished changes, from docs/development/coding-standards.md:\n\n${result.unfinishedChanges}`,
+			`Unfinished changes, from docs/development/coding-standards.md. If none are left, the section says only "None":\n\n${result.unfinishedChanges}`,
 		);
 	}
 	if (result.failures.length === 0) {

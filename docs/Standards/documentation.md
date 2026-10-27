@@ -357,5 +357,6 @@ Converting a doc does not change its decision, so the **Updated** date stays as 
 - **Read the files directly.** Do not start the docs site to read them.
 - **Check the Status.** `Decided` is settled. `Current plan` may change. `Under evaluation` and `Not started` are **not decisions** — do not treat them as one, and do not invent one. Ask.
 - **Update the docs in the same change** as the code, and change the **Updated** date.
+- **Record a check only after it has run.** Never write a URL, commit, date or "passed" for a check that has not happened yet. Write what was decided, and add the result once it exists.
 - **Write into the matching file.** Create a new file only when a topic has no home, in kebab-case, using the [doc format](#-the-doc-format).
 - **Do not edit anything in `docsSite/`** unless the task is about the docs viewer itself.

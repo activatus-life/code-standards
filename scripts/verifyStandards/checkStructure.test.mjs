@@ -78,4 +78,28 @@ describe("checkStructure", () => {
 		assert.equal(findings.length, 1);
 		assert.match(findings[0].message, /app\/\(homepage\)/);
 	});
+
+	it("flags a folder loose in components/", () => {
+		const findings = checkStructure({
+			projectFiles: [
+				"components/ui/button/Button.tsx",
+				"components/layout/siteHeader/SiteHeader.tsx",
+				"components/projectTabs/ProjectTabs.tsx",
+				"components/projectTabs/ProjectTabs.types.ts",
+				"src/components/statusBadge/StatusBadge.tsx",
+				"components/ProjectCard.tsx",
+				"components/index.ts",
+				"app/(billing)/components/invoiceTable/InvoiceTable.tsx",
+			],
+		});
+		assert.deepEqual(
+			findings.map((finding) => finding.file),
+			[
+				"components/projectTabs/",
+				"src/components/statusBadge/",
+				"components/ProjectCard.tsx",
+			],
+		);
+		assert.match(findings[0].message, /loose in components\//);
+	});
 });
