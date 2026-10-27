@@ -13,12 +13,16 @@ const UNGROUPED_HOMEPAGE_PATTERN =
 const TOP_COMPONENTS_FOLDER_PATTERN =
 	/^((?:src\/)?components\/([^/]+))\//;
 const COMPONENTS_HOMES = new Set(["ui", "layout", "shared"]);
+// A component file directly in components/: components/Foo.tsx.
+const LOOSE_COMPONENT_FILE_PATTERN =
+	/^(?:src\/)?components\/[A-Z][A-Za-z0-9]*\.(?:tsx|jsx)$/;
 const WHERE_COMPONENTS_LIVE_PAGE =
 	"docs/Structure/folder-structure.md#-where-components-live";
 const NESTED_PAGE =
 	"docs/Structure/component-organization.md#nested-components";
 
-// A component folder holds a PascalCase component file, Card.tsx.
+// A component folder holds a PascalCase component file, Card.tsx. A
+// components/ folder never is one, even with a file loose in it.
 const listComponentFolders = ({ projectFiles }) =>
 	new Set(
 		projectFiles
@@ -26,7 +30,10 @@ const listComponentFolders = ({ projectFiles }) =>
 			.filter((filePath) =>
 				COMPONENT_FILE_PATTERN.test(path.posix.basename(filePath)),
 			)
-			.map((filePath) => path.posix.dirname(filePath)),
+			.map((filePath) => path.posix.dirname(filePath))
+			.filter(
+				(folder) => path.posix.basename(folder) !== COMPONENTS_FOLDER,
+			),
 	);
 
 // The topmost component folder above this one, or undefined for a
@@ -79,10 +86,15 @@ const checkLooseComponentFolders = ({ projectFiles }) => {
 			.filter((match) => !COMPONENTS_HOMES.has(match[2]))
 			.map((match) => match[1]),
 	);
-	return [...looseFolders].map((folder) => ({
+	const looseFiles = projectFiles.filter((filePath) =>
+		LOOSE_COMPONENT_FILE_PATTERN.test(filePath),
+	);
+	return [...looseFolders, ...looseFiles].map((loosePath) => ({
 		standard: "13",
-		file: `${folder}/`,
-		message: `${folder} is loose in components/, which holds only ui/, layout/ and shared/. Move it to the one that fits, or to the components/ folder of the page or section that uses it`,
+		file: looseFiles.includes(loosePath)
+			? loosePath
+			: `${loosePath}/`,
+		message: `${loosePath} is loose in components/, which holds only ui/, layout/ and shared/. Move it to the one that fits, or to the components/ folder of the page or section that uses it`,
 		page: WHERE_COMPONENTS_LIVE_PAGE,
 	}));
 };

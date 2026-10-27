@@ -78,7 +78,7 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 
   **What to do:** run `pnpm standards:check`. For each line under "Details" it reports, write it in the exception shape, or turn it into a bullet point that does not start with a number. Copy the "Details" and "Unfinished changes" notes from `static/templates/docs/development/coding-standards.md` if the project's still has the old ones.
 
-- **An exception can cover only some files.** Name them in backticks after `for`, as in the [setup example](/docs/Guides/setup#3-agree-the-standards). The check then hides findings for those files only. `**` matches any depth, `*` stays inside one folder, and a path ending in `/` covers the whole folder. An exception that names no files still covers the whole standard.
+- **An exception can cover only some files.** Name them in backticks after `for`, as in the [setup example](/docs/Guides/setup#3-agree-the-standards). The check then hides findings for those files only. `**` matches any depth, `*` stays inside one folder, and a path ending in `/` covers the whole folder. An exception that names no files still covers the whole standard. A `for` with no path in backticks fails the check, because it would otherwise cover every file.
 
   **What to do:** nothing, unless the project skipped a whole standard only to cover some files. Then narrow that exception to the files, with the person's yes.
 
@@ -94,9 +94,9 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 
   If the project wrapped the section in `<!-- prettier-ignore-start -->` and `<!-- prettier-ignore-end -->` to work around this, remove those two comments.
 
-- **`components/` holds only `ui/`, `layout/` and `shared/`**, as [Where components live](/docs/Structure/folder-structure#-where-components-live) already said. `pnpm standards:check` now reports any other folder directly in `components/`.
+- **`components/` holds only `ui/`, `layout/` and `shared/`**, as [Where components live](/docs/Structure/folder-structure#-where-components-live) already said. `pnpm standards:check` now reports any other folder, and any component file, directly in `components/`.
 
-  **What to do:** run `pnpm standards:check`, and move each folder it reports into the home that fits: `components/ui/`, `components/layout/`, `components/shared/`, or the `components/` folder of the page or section that uses it.
+  **What to do:** run `pnpm standards:check`, and move each folder or file it reports into the home that fits: `components/ui/`, `components/layout/`, `components/shared/`, or the `components/` folder of the page or section that uses it.
 
 - **Only `r`, `s` and shared values go in `lib/constants/`.** Every link still goes in `r` and every piece of text people see or hear in `s`, so links change in one place and the text can be translated. Every other value, such as a number, list, status or internal string, now lives at the top of the file that uses it until more than one file needs it, then moves to the file in `lib/constants/` that fits. Forcing a value only one file uses into a global file sent readers across the project to find it. `lib/constants/` may hold any file named after what it holds, such as the new `status.ts` for statuses the app shares; only `routes.ts`, `strings.ts` and `index.ts` are required, and every file in it is exempt from `max-lines`. A constant kept at the top of its file is typed from that file's own `.types.ts`; `lib/types/` is for the shared constants. See [Constants](/docs/Structure/folder-structure#constants).
 

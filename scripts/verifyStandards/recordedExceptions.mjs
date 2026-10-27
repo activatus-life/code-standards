@@ -14,12 +14,13 @@ import {
 const NO_VALUE_WORDS = new Set(["none", "no differences"]);
 
 // Any line that starts with a number, which is read as a standard
-// number: "7. Prettier", "- 12.1. Constants", "**4. Tests**".
+// number: "7. Prettier", "- 12.1. Constants", "**6. ESLint**".
 const NUMBERED_LINE_PATTERN =
 	/^\s*(?:[-*]\s+)?(?:\*\*)?(\d+(?:\.\d+)?)\.\s/;
 
-// A recorded exception: "7. Prettier — skipped: the project uses
-// Biome", or "4. Tests — changed for `app/api/**`: legacy code".
+// A recorded exception, named as in the setup list: "7. Prettier —
+// skipped: the project uses Biome", or "4. Every function and
+// component has a test file — changed for `app/api/**`: legacy code".
 const EXCEPTION_PATTERN =
 	/^\s*(?:[-*]\s+)?(?:\*\*)?(\d+(?:\.\d+)?)\.\s+(.+?)(?:\*\*)?\s+[—–-]+\s+(?:\*\*)?(?:skipped|changed)\b(.*)$/i;
 
@@ -56,14 +57,19 @@ const readStandardNames = () => {
 	);
 };
 
+// The files after "for", each in backticks. Undefined when there is a
+// "for" but no file in backticks: read as no files, it would cover the
+// whole standard.
 const readFileGlobs = (textAfterVerb) => {
 	const filesClause = FILES_CLAUSE_PATTERN.exec(textAfterVerb)?.[1];
-	return filesClause === undefined
-		? []
-		: Array.from(
-				filesClause.matchAll(INLINE_CODE_PATTERN),
-				(match) => match[1],
-			);
+	if (filesClause === undefined) {
+		return [];
+	}
+	const fileGlobs = Array.from(
+		filesClause.matchAll(INLINE_CODE_PATTERN),
+		(match) => match[1],
+	);
+	return fileGlobs.length > 0 ? fileGlobs : undefined;
 };
 
 // One line under Details: an exception, a line that looks like one
@@ -89,9 +95,13 @@ const readDetailsLine = ({ line, standardNames }) => {
 			unreadLine: `"${line.trim()}" names standard ${standard}, which is ${standardName === undefined ? "not on the standards list" : `"${standardName}"`}. Use the number and name from the list in docs/Guides/setup.md`,
 		};
 	}
-	return {
-		exception: { standard, fileGlobs: readFileGlobs(match[3]) },
-	};
+	const fileGlobs = readFileGlobs(match[3]);
+	if (fileGlobs === undefined) {
+		return {
+			unreadLine: `"${line.trim()}" names files after "for", but none in backticks, so it would cover every file. Put each path in backticks: for \`app/api/**\``,
+		};
+	}
+	return { exception: { standard, fileGlobs } };
 };
 
 const hasContent = (sectionText) => {

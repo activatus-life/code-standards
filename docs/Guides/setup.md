@@ -123,7 +123,7 @@ Then wait for the answer.
 - 4. Every function and component has a test file — changed for `app/api/**`: legacy routes, tested when each is replaced (2026-10-27).
 ```
 
-**Start no other line under "Details" with a number.** The [standards check](#checking-a-project) reads a line that starts with a number as an exception to that standard, and fails on one it cannot read. Use bullet points for anything else. If nothing is different, write "No differences". Copy the file from `static/templates/docs/development/coding-standards.md` if it does not exist.
+**Every path after `for` goes in backticks**: a `for` with none fails the check, because it would otherwise cover every file. **Start no other line under "Details" with a number.** The [standards check](#checking-a-project) reads a line that starts with a number as an exception to that standard, and fails on one it cannot read. Use bullet points for anything else. If nothing is different, write "No differences". Copy the file from `static/templates/docs/development/coding-standards.md` if it does not exist.
 
 The list has nothing about branches or commit messages. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/docs/Standards/agent-specs#project-workflow).
 

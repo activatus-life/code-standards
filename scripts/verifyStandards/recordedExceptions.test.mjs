@@ -54,6 +54,15 @@ describe("readRecordedExceptions", () => {
 		]);
 	});
 
+	it("reports files after for that are not in backticks", () => {
+		const recorded = readDetails({
+			details:
+				"- 4. Every function and component has a test file — changed for app/api/**: legacy.",
+		});
+		assert.deepEqual(recorded.exceptions, []);
+		assert.match(recorded.unreadLines[0], /none in backticks/);
+	});
+
 	it("reports a numbered line that is not an exception", () => {
 		const recorded = readDetails({
 			details:
