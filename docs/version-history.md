@@ -68,9 +68,54 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.1
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.2
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.2.** If the project already applied 3.3.1, check these:
+
+- **Only well-formed lines under "Details" count as exceptions.** `pnpm standards:check` used to read any line under "Details" in `docs/development/coding-standards.md` that started with a number as an exception to that standard, so a plain numbered list switched standards off without a word. Now a line counts only in the shape `N. Name — skipped: reason` or `N. Name — changed: reason`, with the number and name from the [setup list](/docs/Guides/setup#3-agree-the-standards). Any other line that starts with a number fails the check, and a misread line can never be hidden as an exception itself.
+
+  **What to do:** run `pnpm standards:check`. For each line under "Details" it reports, write it in the exception shape, or turn it into a bullet point that does not start with a number. Copy the "Details" and "Unfinished changes" notes from `static/templates/docs/development/coding-standards.md` if the project's still has the old ones.
+
+- **An exception can cover only some files.** Name them in backticks after `for`, as in the [setup example](/docs/Guides/setup#3-agree-the-standards). The check then hides findings for those files only. `**` matches any depth, `*` stays inside one folder, and a path ending in `/` covers the whole folder. An exception that names no files still covers the whole standard.
+
+  **What to do:** nothing, unless the project skipped a whole standard only to cover some files. Then narrow that exception to the files, with the person's yes.
+
+- **`AGENTS.md` and the agent skills are Prettier-ignored.** The check compares them word for word with the templates, and Prettier reformatted them, so a formatted project always failed standard 21. There is now a `.prettierignore` template: see [What Prettier skips](/docs/Standards/prettier#what-prettier-skips).
+
+  **What to do:** add these lines to the project's `.prettierignore`, then copy the Code standards section of `AGENTS.md` and the skills from the templates again, so Prettier's changes to them are undone:
+
+  ```text title=".prettierignore"
+  AGENTS.md
+  .agents/skills/
+  .claude/commands/
+  ```
+
+  If the project wrapped the section in `<!-- prettier-ignore-start -->` and `<!-- prettier-ignore-end -->` to work around this, remove those two comments.
+
+- **`components/` holds only `ui/`, `layout/` and `shared/`**, as [Where components live](/docs/Structure/folder-structure#-where-components-live) already said. `pnpm standards:check` now reports any other folder directly in `components/`.
+
+  **What to do:** run `pnpm standards:check`, and move each folder it reports into the home that fits: `components/ui/`, `components/layout/`, `components/shared/`, or the `components/` folder of the page or section that uses it.
+
+- **Only `r`, `s` and shared values go in `lib/constants/`.** Every link still goes in `r` and every piece of text people see or hear in `s`, so links change in one place and the text can be translated. Every other value, such as a number, list, status or internal string, now lives at the top of the file that uses it until more than one file needs it, then moves to the file in `lib/constants/` that fits. Forcing a value only one file uses into a global file sent readers across the project to find it. `lib/constants/` may hold any file named after what it holds, such as the new `status.ts` for statuses the app shares; only `routes.ts`, `strings.ts` and `index.ts` are required, and every file in it is exempt from `max-lines`. A constant kept at the top of its file is typed from that file's own `.types.ts`; `lib/types/` is for the shared constants. See [Constants](/docs/Structure/folder-structure#constants).
+
+  **What to do:** nothing has to move. Copy the Code standards section of `AGENTS.md` from the template again, and copy the project's ESLint template over `eslint.config.mjs` again: the `max-lines` block now reads `lib/constants/*.ts`. A value moved into `lib/constants/` only because the old rule said so may move back to the file that uses it when that file is next changed. Remove any comment that names a "Details" entry for a value that fitted no file: such a value now goes in `unsortedValues.ts`, below.
+
+- **When it is not clear where a value goes, it goes in `lib/constants/unsortedValues.ts`.** The agent carries on, and at the end of the work asks the person where each value in it goes, then moves each one and deletes the file. `pnpm standards:check` reports the file for as long as it exists. See [When it is not clear where a value goes](/docs/Structure/folder-structure#unsorted-values).
+
+  **What to do:** nothing. Copied in with the `AGENTS.md` section above.
+
+- **Record a check only after it has run.** A doc never says a URL, commit, date or "passed" for a check that has not happened yet. Write what was decided, and add the result once it exists. The `AGENTS.md` template, [Docs](/docs/Standards/documentation) and [Regression Checks](/docs/Guides/regression-checks) say so.
+
+  **What to do:** read `docs/testing/regression.md` and any other doc that records a check. Remove any result, URL or commit for a check that has not actually run. Copied into `AGENTS.md` with the section above.
+
+- **Comparing two local servers: copy `node_modules`, never symlink it.** Turbopack refuses a `node_modules` that points outside the project folder. On macOS, `cp -Rc` makes a copy-on-write clone in seconds. See [Comparing two local servers instead](/docs/Guides/regression-checks#comparing-two-local-servers-instead). Nothing to do.
+- **"Unfinished changes" says exactly "None" when nothing is left.** A note after it, such as "None. ESLint was switched on in an earlier ticket.", reads as an unfinished change. The template and the check's report now say so.
+
+  **What to do:** if the project's "Unfinished changes" says "None" with a note after it, leave only "None". The history belongs in the change that did the work.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; `.prettierignore` lists `AGENTS.md`, `.agents/skills/` and `.claude/commands/`; `grep -rn "prettier-ignore" AGENTS.md` finds nothing; `pnpm format:check` passes; `lib/constants/unsortedValues.ts` does not exist.
 
 **Fixes in 3.3.1.** If the project already applied 3.3.0, check these:
 
@@ -144,7 +189,7 @@ grep -rnE "(^|[^y] )([A-Z][A-Za-z]*Type|string|number|boolean)\[\]" lib/types/
 
 - **Where each constant goes is the project's call.** The [Constants table](/docs/Structure/folder-structure#constants) says what each file is for, not where every value in every project goes. 3.2.1's examples and check named values from one project; they are now neutral, and `pnpm standards:check` no longer guesses a value's file from its name. It lists the file, and the project decides.
 
-  **What to do:** best practice is every value in `lib/constants/` in the file the table says fits, with ids and CSS following the two rules below. Bring the project's values in line with that. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`.
+  **What to do:** best practice is every value in `lib/constants/` in the file the table says fits, with ids and CSS following the two rules below. Bring the project's values in line with that. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`. _Changed in 3.3.2: only `r`, `s` and shared values go in `lib/constants/`; a value one file uses stays at the top of that file. Skip this step if the project is updating past 3.3.2._
 
 - **An id lives in the object that uses it.** A value that picks which item something acts on is a key inside that object, never a loose constant. A list of keys a loop runs over stays a list. See the [before and after](/docs/Structure/folder-structure#constants-rules).
 
@@ -192,7 +237,7 @@ grep -rnE "export const [A-Z_]+_ID = " lib/constants/
 
   Each animation and artwork object stays whole, its values named by their keys. Never lift them out into `numbers.ts`, which keeps loose single numbers only: lifting them out makes long names and splits one object across files. Each file is one file, never split by topic. See [Constants](/docs/Structure/folder-structure#constants).
 
-  **What to do:** move every component `constants.ts`, and every other file in `lib/constants/`, into the seven files. Where each value goes is the project's call: read the [Constants table](/docs/Structure/folder-structure#constants), decide each value's home. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`, and the work carries on. In `eslint.config.mjs`, copy the template over it again: the `max-lines` block now reads `lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts`. Copy the Constants rules into `AGENTS.md` from the template.
+  **What to do:** move every component `constants.ts`, and every other file in `lib/constants/`, into the seven files. Where each value goes is the project's call: read the [Constants table](/docs/Structure/folder-structure#constants), decide each value's home. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`, and the work carries on. In `eslint.config.mjs`, copy the template over it again: the `max-lines` block now reads `lib/constants/{routes,strings,numbers,noData,animation,artwork,classNames}.ts`. Copy the Constants rules into `AGENTS.md` from the template. _Changed in 3.3.2: only `r`, `s` and shared values go in `lib/constants/`; a value one file uses stays at the top of that file. Skip this step if the project is updating past 3.3.2._
 
 - **A loop over a list looks each item up by its key.** Write a key out by name when you mean one item, `r.plans.starter`. Inside a loop over the list, use the item's key, typed from `r`: `keyof typeof r.plans`. Delete separate lookup objects that map a key to its link: `r` already is that lookup. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
 
@@ -249,8 +294,8 @@ grep -rnE "export const [A-Z_]+_ID = " lib/constants/
 - **The site frame lives in `components/layout/`**: navigation, header, footer and anything else that frames the pages. It may read `r` and `s`. Move those components there from `components/shared/` or `app/components/`. Layout primitives such as Duplex stay in `components/ui/`.
 - **A props-only component that is not on the Design System Components list stays in `components/ui/`.** Record it, with its props, in `docs/development/coding-standards.md`, under a new "Components for the standards" heading (copy it from the template), and tell the person. Move back into `components/ui/` any such component that was moved out only because it was not listed.
 - **Four components joined the list:** Brand Logo, Notification Card, Scroll Cue and Dropdown Menu. If the project has them, check their props match the [list](/docs/design-system-components).
-- **Every named number lives in `lib/constants/numbers.ts`**, even one only one file uses, in one file that is never split. Move numbers from the tops of app files and from any topic files (`durations.ts`, `limits.ts`) into it. _Changed in 3.2.1: motion and artwork objects stay whole in `animation.ts` and `artwork.ts`. Do the 3.2.1 step instead of moving their numbers here._ Config files and scripts outside the app keep theirs at the top.
-- **No component-level `constants.ts`.** Every link, piece of text and number goes in `lib/constants/`, even if one file uses it, so all the text is in one place for translation. Move any component's `constants.ts` into `r`, `s` and `numbers.ts`. _Changed in 3.2.1: there are seven constants files to move into. Do the 3.2.1 step instead._
+- **Every named number lives in `lib/constants/numbers.ts`**, even one only one file uses, in one file that is never split. Move numbers from the tops of app files and from any topic files (`durations.ts`, `limits.ts`) into it. _Changed in 3.2.1: motion and artwork objects stay whole in `animation.ts` and `artwork.ts`. Do the 3.2.1 step instead of moving their numbers here._ Config files and scripts outside the app keep theirs at the top. _Changed in 3.3.2: only `r`, `s` and shared values go in `lib/constants/`; a value one file uses stays at the top of that file. Skip this step if the project is updating past 3.3.2._
+- **No component-level `constants.ts`.** Every link, piece of text and number goes in `lib/constants/`, even if one file uses it, so all the text is in one place for translation. Move any component's `constants.ts` into `r`, `s` and `numbers.ts`. _Changed in 3.2.1: there are seven constants files to move into. Do the 3.2.1 step instead._ _Changed in 3.3.2: only `r`, `s` and shared values go in `lib/constants/`; a value one file uses stays at the top of that file. Skip this step if the project is updating past 3.3.2._
 - **Write `r` and `s` keys out by name**, `r.plans.starter`, never `r.plans[planId]`. A list of items keeps its words in `s` and its links in `r` under the same keys. See [A list of items with links](/docs/Structure/folder-structure#a-list-of-items-with-links).
 - **No `"#"` placeholder links.** Show the text without a link and put `{/* TODO: … */}` above it until the page exists. Unfinished work is marked `// TODO: Message`.
 - **`lib/constants/` never imports from `lib/types/`.** Move any type it imports from there beside the constant. _Withdrawn in 3.3.0: constants now take their types from `lib/types/`. Do the 3.3.0 step instead._

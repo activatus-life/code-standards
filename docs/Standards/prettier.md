@@ -72,11 +72,15 @@ Both scripts work on the same list of files: every file git tracks, plus every n
 | One person's local tool files, such as `.claude/settings.local.json`      | That person's `.git/info/exclude` or global git ignore. Never `.prettierignore` |
 | Files the whole project keeps out of git, such as `build/`                | `.gitignore`                                                                    |
 | Files in git that Prettier must not format, such as `pnpm-workspace.yaml` | `.prettierignore`, shared by the whole project                                  |
+| `AGENTS.md`, `.agents/skills/` and `.claude/commands/`                    | `.prettierignore`, shared by the whole project                                  |
 
-pnpm rewrites `pnpm-workspace.yaml` in its own style on every install, so it always goes in `.prettierignore`:
+pnpm rewrites `pnpm-workspace.yaml` in its own style on every install, so it always goes in `.prettierignore`. So do `AGENTS.md` and the agent skills: they are copied from the standards, and `pnpm standards:check` compares them word for word, so a Prettier rewrite would fail it. The template has all four: copy `static/templates/.prettierignore`.
 
 ```text title=".prettierignore"
 pnpm-workspace.yaml
+AGENTS.md
+.agents/skills/
+.claude/commands/
 ```
 
 ## Tailwind class sorting

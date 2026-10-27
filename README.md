@@ -32,9 +32,9 @@ pnpm add -D @activatus/code-standards@latest
 
 Then tell your agent: **"Follow the Activatus Code Standards. Start with `node_modules/@activatus/code-standards/docs/Guides/setup.md`."** It prints a numbered list of the standards, you say which ones you don't want, and it sets up the rest. You never touch the terminal.
 
-The package version is the standards version: `3.0.0` is version 3.
+The package version is the standards version, and a project records it in full, such as `3.3.2`, so the agent always knows where the project's up to.
 
-> 🔢 **Updating a project to newer standards?** Run `pnpm add -D @activatus/code-standards@latest`, then point the agent at the **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**: it reads only the versions newer than the project's, does exactly what each one says, and bumps the number. Cheaper than shouting the whole pub a round.
+> 🔢 **Updating a project to newer standards?** Run `pnpm add -D @activatus/code-standards@latest`, then point the agent at the **[Version History](https://activatus-code-standards.vercel.app/docs/version-history)**: it reads only the entries newer than the project's version, does exactly what each one says, and records the new version. Cheaper than shouting the whole pub a round.
 
 ---
 
@@ -97,6 +97,7 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 - 📦 **One parameter per function.** Need more? Pass an object, so the call explains itself.
 - 🚪 **Return early.** Deal with the dodgy cases up top instead of nesting four `if`s deep like a set of Russian dolls.
 - 🔢 **No magic numbers.** `MAXIMUM_RETRY_ATTEMPTS`, not a random `3` sitting there like it owns the place.
+- 🗃️ **Links go in `r`, words people see go in `s`.** Everything else sits at the top of the file that uses it until something else needs it too. Not sure where a value goes? The agent parks it in `unsortedValues.ts` and asks you at the end, instead of stopping the job to have a yarn about it.
 - 🏷️ **Type names end in `Props` or `Type`.** So you can tell what you're looking at.
 - 💬 **Comments explain why, not what.** And no commented-out code. Git remembers, you don't have to.
 
@@ -115,6 +116,28 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 ### 🤖 Workflow is the project's call
 
 - 🧭 **Branches, commit messages, Pull Requests and whether AI agents may commit are up to each project.** Every team runs its work differently, so it goes in the project's own `AGENTS.md` and docs, not here. These standards are the base for the code itself.
+
+### 🚦 Status circles
+
+Setup asks if you want them. Say yes, and the agent reports every ticket or piece of work as one line, with a circle that tells you at a glance whether you need to lift a finger:
+
+| Circle | Means                                                                        |
+| ------ | ---------------------------------------------------------------------------- |
+| ✅     | Merged, in UAT or done. Nothing to do                                        |
+| 🟢     | Pull Request ready for you to review and merge. The link is the Pull Request |
+| 🟣     | The agent's working on it                                                    |
+| 🟡     | Done and checked, but not committed yet. You commit it, or tell the agent to |
+| 🟠     | Waiting on another ticket or Pull Request first                              |
+| 🔴     | Blocked, or you need to do something. It says what                           |
+| ⚪     | Not started                                                                  |
+
+A line looks like this:
+
+```text
+🟢 ACT-12 Short title: #19
+```
+
+The ticket ID links to the ticket and the number links to the Pull Request. Only what you need to act on makes the list: no essay about what it did while you were at smoko. Full detail in [Working with Agents](https://activatus-code-standards.vercel.app/docs/Standards/working-with-agents#status-circles).
 
 ### 📦 Third-party code
 
@@ -144,6 +167,7 @@ static/templates/
 ├── eslint/                 # 🚨 Four flavours: base, typescript, react, nextjs
 ├── stylelint/              # 💅 CSS and SCSS
 ├── prettier.config.mjs     # ✨ Formatting
+├── .prettierignore         # 🙈 What Prettier leaves alone
 ├── globals.css             # 🎨 Tailwind + starter colour palette
 ├── .editorconfig           # ⌨️ Editor whitespace rules
 └── .nvmrc / .envrc         # 🟢 Node version switching
@@ -180,7 +204,7 @@ Reckon a rule's wrong, or there's one missing? Good. Standards that never change
 1. 🌿 **Branch off `main`**, named after the ticket (`ACT-14-update-eslint-page`), or `type/short-description` if there's no ticket (`docs/update-eslint-page`).
 2. 📝 **Edit or add a Markdown file in `docs/`.** Name it in kebab-case (`naming-conventions.md`, not `namingConventions.md`), because the file name becomes the page's URL. Yes, we follow our own rules here.
 3. 📋 **Changing a config?** Edit the file in `static/templates/` and the matching page in `docs/Standards/` so the two don't drift apart. For an ESLint config, run `pnpm check:eslint-templates`: it lints each config against itself and fails if the ESLint page shows an old copy. Add `--update-docs` to copy the configs onto the page.
-4. 🔢 **Add a version** to `docs/version-history.md`: what changed, and what a project has to do about it. Bump the major version in `package.json` to match (version 3 is `3.0.0`), and publish it to npm (npmjs.com) once it's merged. We use pnpm for everything, so that's `pnpm publish`, which lands in the same npm registry as `npm publish`. Projects read only the new versions, so if it's not in there, nobody hears about it.
+4. 🔢 **Add a version** to `docs/version-history.md`: what changed, and what a project has to do about it. Bump `package.json` to match: the first number when most projects rework most of their code, the middle when files move, the last when only the inside of files changes. See [How versions are numbered](https://activatus-code-standards.vercel.app/docs/version-history#how-versions-are-numbered). Publish it to npm (npmjs.com) once it's merged. We use pnpm for everything, so that's `pnpm publish`, which lands in the same npm registry as `npm publish`. Projects read only the new versions, so if it's not in there, nobody hears about it.
 5. 🔨 **Run `pnpm build`.** It fails on broken links, so you'll know quick smart if you've stuffed one.
 6. 🚀 **Open a pull request** and say why the change makes life better.
 

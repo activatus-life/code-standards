@@ -179,16 +179,16 @@ node node_modules/@activatus/code-standards/scripts/renameSymbol.mjs --list rena
 
 ## Stage 4 — Constants
 
-Applies setup standard 12.1. Move every link into `r`, every piece of text into `s`, every loose number into `numbers.ts`, motion into `animation.ts`, drawing layouts into `artwork.ts`, and class names shared between files into `classNames.ts`, all in `lib/constants/`. See [Constants](/docs/Structure/folder-structure#constants).
+Applies setup standard 12.1. Move every link into `r` and every piece of text people see or hear into `s`, in `lib/constants/`. Every other value stays with the code that uses it until more than one file needs it; a shared value moves to the file in `lib/constants/` that fits. See [Constants](/docs/Structure/folder-structure#constants).
 
 - **Move the values, nothing else.** The page must look and work exactly as before.
-- **No component-level `constants.ts` survives this stage.**
-- **Move animation and artwork objects whole.** Never pull their numbers out into `numbers.ts`. Any other file in `lib/constants/` is folded into the standard file that fits.
-- **Where each value goes is the project's call.** Read the [Constants table](/docs/Structure/folder-structure#constants) and decide. A value that fits none goes in the closest file, with a comment naming its entry under "Details" in `coding-standards.md`.
+- **A value one file uses moves to the top of that file.** A component's own constants file is folded into the files that use it, or into `lib/constants/` for the values more than one file shares.
+- **Move animation and artwork objects whole.** Never pull their numbers out into `numbers.ts`.
+- **Where each value goes is the project's call.** Read the [Constants table](/docs/Structure/folder-structure#constants) and decide. When it is not clear, put the value in `lib/constants/unsortedValues.ts`, carry on, and ask the person at the end of the stage: see [When it is not clear where a value goes](/docs/Structure/folder-structure#unsorted-values).
 - **An id moves into the object that uses it.** **CSS written as a string moves to `globals.css`**, never into a constants file. A media query the code reads stays in its object in `animation.ts`.
 - **Only text people see or hear goes in `s`.** Internal strings, such as ids, keys and log messages, stay where they are used: a key in the object that uses them, or a named constant at the top of the file.
 - **A list of items with links** keeps its words in `s` and its links in `r` under the same keys, and a loop looks each one up by its key: see [the example](/docs/Structure/folder-structure#a-list-of-items-with-links). Delete any separate lookup object that maps a key to its link.
-- **Every object and list constant except `r` and `s` gets a real type from `lib/types/`**, never `as const`. A single number or string needs none. Move the types it uses there too. `lib/types/` reads a constant's type with `import type` straight from its file. See [Types for constants](/docs/Structure/folder-structure#types-for-constants).
+- **Every object and list constant in `lib/constants/` except `r` and `s` gets a real type from `lib/types/`**, never `as const`. A constant at the top of the file that uses it is typed from that file's own `.types.ts`. A single number or string needs none. Move the types it uses there too. `lib/types/` reads a constant's type with `import type` straight from its file. See [Types for constants](/docs/Structure/folder-structure#types-for-constants).
 
 ## Stage 5 — Components
 

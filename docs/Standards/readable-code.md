@@ -43,7 +43,7 @@ A file over 300 lines is doing more than one job. Split it before it gets there:
 
 Blank lines and comments do not count towards the limit. **Test files are exempt** — a thorough test file can run long.
 
-**The seven constants files in `lib/constants/` are exempt too**: `routes.ts`, `strings.ts`, `numbers.ts`, `noData.ts`, `animation.ts`, `artwork.ts` and `classNames.ts`. They are lists of data, not logic, and a big app has a lot of links, text and motion. Splitting them would mean more places to look for one label. They stay data only: no functions in them. See [Constants](/docs/Structure/folder-structure#constants).
+**The files in `lib/constants/` are exempt too**, such as `routes.ts`, `strings.ts` and `numbers.ts`. They are lists of data, not logic, and a big app has a lot of links, text and motion. Splitting them would mean more places to look for one label. They stay data only: no functions in them. See [Constants](/docs/Structure/folder-structure#constants).
 
 ---
 
@@ -313,7 +313,7 @@ if (order.status === "shipped") {
 
 **`-1`, `0` and `1` are allowed**, because they are part of how code works rather than a choice anyone makes: `0` is the start or nothing (`items[0]`, `length === 0`), `1` is one more or one less (`index + 1`), and `-1` is "not found" (`indexOf`). Any other number was chosen by someone, so its name says what it controls. Even `2` gets a name.
 
-Every loose named number lives in `lib/constants/numbers.ts`, even one only one file uses. Numbers that only mean something together, such as the steps of an animation, stay whole as one object in `animation.ts` or `artwork.ts`. See [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic) for where they go, and [Naming Conventions](/docs/Structure/naming-conventions#constants) for how to name them.
+A number only one file uses is a named constant at the top of that file; a number more than one file uses lives in `lib/constants/numbers.ts`. Numbers that only mean something together, such as the steps of an animation, stay whole as one object in `animation.ts` or `artwork.ts`. See [Numbers](/docs/Structure/folder-structure#numbers-named-and-kept-by-topic) for where they go, and [Naming Conventions](/docs/Structure/naming-conventions#constants) for how to name them.
 
 ---
 
