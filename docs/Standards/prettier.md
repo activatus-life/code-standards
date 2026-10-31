@@ -18,7 +18,9 @@ pnpm add -D prettier @ianvs/prettier-plugin-sort-imports prettier-plugin-tailwin
 Create `prettier.config.mjs` in your project root:
 
 ```js title="prettier.config.mjs"
-/** @type {import("prettier").Config & import("@ianvs/prettier-plugin-sort-imports").PluginConfig & import("prettier-plugin-tailwindcss").PluginOptions} */
+/**
+@type {import("prettier").Config & import("@ianvs/prettier-plugin-sort-imports").PluginConfig & import("prettier-plugin-tailwindcss").PluginOptions}
+*/
 const config = {
 	// Short lines, so code reads well on a phone.
 	printWidth: 70,

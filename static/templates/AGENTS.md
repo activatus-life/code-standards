@@ -121,7 +121,7 @@ Follow these rules in every change:
 - **Always `const`.** Never `var`. Use `let` only when a value must be reassigned, with `// eslint-disable-next-line no-restricted-syntax -- <reason>` on the line above.
 - **Arrow functions everywhere.** Never use the `function` keyword: `export const Button = () => {}`, not `export function Button() {}`.
 - **Never sort imports by hand.** Prettier sorts them on `pnpm format`. Side-effect imports, such as CSS, go after every other import.
-- **Import components from their category:** `import { Button } from "@/components/ui";`. There is no `components/index.ts`. A category's `index.ts` exports only components a Client Component can import: a component that reaches server-only code starts with `import "server-only";`, is left out of it, and is imported from its own folder, such as `@/components/layout/siteHeader`.
+- **Import components from their category:** `import { Button } from "@/components/ui";`. There is no `components/index.ts`. A category's `index.ts` exports only components a Client Component can import: a component that reaches server-only code starts with `import "server-only";`, is left out of it, and is imported from its own folder, such as `@/components/layout/siteHeader`. Tests mock it: `vi.mock("server-only", () => ({}));` in the Vitest setup file.
 - **No circular imports, ever.** A file never imports a file that imports it back. Inside a folder, import files directly — never through the folder's own `index.ts` — and never import a parent component from its sub-component.
 - **Define before use.** A function or variable is written above the code that uses it.
 - **A function does one thing.**

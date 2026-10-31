@@ -53,6 +53,16 @@ import { Button, Card } from "@/components/ui";
 
   `import "server-only";` makes a mistake fail the build with a clear error, instead of sending server code to the browser.
 
+- **Tests mock `server-only`.** Outside a Next.js build, `import "server-only";` always throws, so a Vitest test of the component, or of anything that imports it, fails before it runs. Mock it once in the Vitest setup file, and list that file in `setupFiles` in `vitest.config.mjs`:
+
+  ```js
+  // vitest.setup.mjs
+  import { vi } from "vitest";
+
+  // server-only throws outside a Next.js build.
+  vi.mock("server-only", () => ({}));
+  ```
+
 ## Import Safety
 
 These four rules **are** enforced, and they are not about tidiness. They stop a whole class of bug: code that runs before the thing it needs exists.

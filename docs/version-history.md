@@ -61,6 +61,7 @@ Anyone changing the standards adds a version, alongside the change:
 - **Every entry is headed `**Fixes in 3.2.3.**`**, with its number, followed by "If the project already applied 3.2.2, check these:".
 - **A middle-number entry adds `**Structural changes in 3.3.0.**` straight under its heading**, listing each change that moves or renames files in a project, with a rough size, such as "one move per file", so a project can plan the work and take a [regression check](/docs/Guides/regression-checks) baseline first. A last-number entry never moves files.
 - **Anything a version can change in the `AGENTS.md` template lives between the `code-standards` markers.** A project copies only that section on an update, and `pnpm standards:check` compares only that section, so a rule outside the markers never reaches a project that is already set up.
+- **`pnpm devtest` must pass before publishing.** Run it, then `pnpm publish`. It checks the lint packages are the latest a project would install, then runs the tests, lints every template the way a project does, and checks formatting, types and the site build.
 - **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.2.2 — full version numbers`, so releases are easy to find in the git log.
 - **Every number is published.** Publish each one to npm as soon as its entry is written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
@@ -69,9 +70,21 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.3
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.4
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.4.** If the project already applied 3.3.3, check these:
+
+- **The config templates now pass the template ESLint config.** `prettier.config.mjs`, `next.config.mjs`, both `stylelint.config.mjs` templates and the regression check's `playwright.config.mjs` started with a one-line `/** @type … */` comment, which `unicorn/single-line-block-comment-style` rejects. They now use a JSDoc comment over three lines, with no `*` at the start of each line, which TypeScript reads the same way. The regression check's `playwright.config.mjs` and `pageLayout.visual.ts` had three more lint errors, now fixed. The code standards now lint every template the way a project does, with the latest lint packages, before every release, so this cannot ship again.
+
+  **What to do:** copy each of these templates the project uses over its own again: `prettier.config.mjs`, `next.config.mjs`, `stylelint.config.mjs`, and, if the project has a regression check, `tests/visual/playwright.config.mjs` and `tests/visual/pageLayout.visual.ts`. If the project turned a lint rule off for one of them while waiting for this version, remove that from `eslint.overrides.mjs` and from `docs/development/coding-standards.md`.
+
+- **Tests mock `server-only`.** `import "server-only";` always throws outside a Next.js build, so any Vitest test that imports a server-only component fails before it runs. See [Importing components](/docs/Structure/import-organization#importing-components).
+
+  **What to do:** if any file imports `server-only`, add `vi.mock("server-only", () => ({}));` to the Vitest setup file, and make sure `vitest.config.mjs` lists that file in `setupFiles`. Copy the Code standards section of `AGENTS.md` from the template again.
+
+**How to check:** `pnpm lint` passes with no rule turned off for a template; `pnpm test` passes; `pnpm standards:check` passes, or lists only recorded exceptions.
 
 **Fixes in 3.3.3.** If the project already applied 3.3.2, check these:
 

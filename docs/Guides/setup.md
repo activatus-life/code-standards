@@ -171,7 +171,7 @@ it makes that the code standards do not cover? Yes or no?
 
 Do only the standards the person agreed to. Copy every file from `node_modules/@activatus/code-standards/static/templates/` — never write a config file from scratch.
 
-**Every config file is `.mjs`, even in a TypeScript project.** Never convert one to `.ts` or `.mts`. `.mjs` works in both, so every project looks the same. If the project has a config as `.js`, `.ts` or `.mts`, such as `next.config.ts` from `create-next-app` or `vitest.config.mts`, rename it to `.mjs`, removing any TypeScript-only syntax: a type annotation becomes a JSDoc comment, for example `/** @type {import("next").NextConfig} */`. A tool that cannot read `.mjs` keeps its own format.
+**Every config file is `.mjs`, even in a TypeScript project.** Never convert one to `.ts` or `.mts`. `.mjs` works in both, so every project looks the same. If the project has a config as `.js`, `.ts` or `.mts`, such as `next.config.ts` from `create-next-app` or `vitest.config.mts`, rename it to `.mjs`, removing any TypeScript-only syntax: a type annotation becomes a JSDoc comment over three lines, `/**`, then `@type {import("next").NextConfig}`, then `*/`, as in the templates. ESLint rejects the one-line form and a `*` at the start of each line. A tool that cannot read `.mjs` keeps its own format.
 
 **An existing project with code already in it** also needs its code brought up to the standards. Do that with [Migrating an Existing Project](/docs/Guides/migrating), one stage at a time, after the config files below are in place.
 
