@@ -2,7 +2,16 @@
 @type {import("stylelint").Config}
 */
 const config = {
-	ignoreFiles: ["**/vendor/**"],
+	// Generated CSS, and the docs viewer, which is the standard template
+	// with its own build. Only the project's hand-written CSS is linted.
+	ignoreFiles: [
+		".next/**",
+		"out/**",
+		"build/**",
+		"coverage/**",
+		"docsSite/**",
+		"**/vendor/**",
+	],
 	extends: [
 		"stylelint-config-standard-scss",
 		"stylelint-config-recess-order",

@@ -1,9 +1,10 @@
 // Measures every page at every half-screen scroll stop: each element's
 // box and opacity, the element count, the page height and a screenshot.
 // A refactor passes only when every measurement matches the baseline.
-import { expect, type Page, test } from "@playwright/test";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+
+import { expect, test, type Page } from "@playwright/test";
 
 import { VISUAL_PAGES } from "./visualPages.mjs";
 
@@ -138,7 +139,9 @@ const describeDifferences = ({
 };
 
 const toFileName = (pagePath: string) =>
-	pagePath === "/" ? "home" : pagePath.replaceAll(/[^a-z0-9]+/gi, "-");
+	pagePath === "/"
+		? "home"
+		: pagePath.replaceAll(/[^a-z0-9]+/gi, "-");
 
 for (const pagePath of VISUAL_PAGES) {
 	test(`${pagePath} looks exactly as before`, async ({

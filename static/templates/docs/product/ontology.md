@@ -10,18 +10,18 @@ These are this product's words. Code, docs, tickets and copy all use them exactl
 
 ## Product words
 
-| Word | What it means | Not to be confused with |
-| --- | --- | --- |
+| Word   | What it means                   | Not to be confused with                             |
+| ------ | ------------------------------- | --------------------------------------------------- |
 | [Word] | [What it means in this product] | [A word that sounds close but means something else] |
 
 ## How we speak
 
-| | |
-| --- | --- |
-| **Tone** | [How the product sounds, such as "plain, warm and direct"] |
-| **Words we use** | [Words that fit, such as "start" rather than "commence"] |
-| **Words we avoid** | [Words that do not fit, and what to say instead] |
-| **Audience** | [Who reads the copy, and what they already know] |
+|                    |                                                            |
+| ------------------ | ---------------------------------------------------------- |
+| **Tone**           | [How the product sounds, such as "plain, warm and direct"] |
+| **Words we use**   | [Words that fit, such as "start" rather than "commence"]   |
+| **Words we avoid** | [Words that do not fit, and what to say instead]           |
+| **Audience**       | [Who reads the copy, and what they already know]           |
 
 ## Why
 

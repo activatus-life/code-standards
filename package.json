@@ -1,6 +1,6 @@
 {
 	"name": "@activatus/code-standards",
-	"version": "3.3.5",
+	"version": "3.3.6",
 	"description": "The Activatus code standards: the rules as Markdown, and the config files to copy. Install it so an AI agent can read the standards from node_modules.",
 	"repository": {
 		"type": "git",
@@ -29,6 +29,7 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"check:eslint-templates": "node scripts/checkEslintTemplates.mjs",
+		"check:template-formatting": "node scripts/checkTemplateFormatting.mjs",
 		"devtest": "node scripts/developmentTest.mjs",
 		"test": "node --test \"scripts/verifyStandards/*.test.mjs\""
 	},
@@ -44,6 +45,7 @@
 		"@eslint/js": "^10.0.1",
 		"@getcanary/docusaurus-theme-search-pagefind": "1.0.2",
 		"@getcanary/web": "^1.0.0",
+		"@ianvs/prettier-plugin-sort-imports": "^4.7.1",
 		"@mdx-js/react": "^3.0.0",
 		"clsx": "^2.0.0",
 		"eslint": "^10.13.0",
@@ -58,10 +60,12 @@
 		"next": "^16.4.2",
 		"pagefind": "^1.3.0",
 		"prettier": "^3.9.10",
+		"prettier-plugin-tailwindcss": "^0.8.1",
 		"prism-react-renderer": "^2.3.0",
 		"raw-loader": "^4.0.2",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
+		"tailwindcss": "^4.3.3",
 		"typescript": "~5.6.2",
 		"typescript-eslint": "^8.72.1"
 	},

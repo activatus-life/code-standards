@@ -1,5 +1,6 @@
-// Checks the standards are ready to publish: lint, tests, templates,
-// formatting, types and the site build. Run it before every publish.
+// Checks the standards are ready to publish: lint, tests, templates
+// (linted and formatted as a project would), formatting, types and
+// the site build. Run it before every publish.
 //
 // Run: pnpm devtest
 import { spawnSync } from "node:child_process";
@@ -27,6 +28,10 @@ const STEPS = [
 	{
 		name: "Lint: scripts and templates pass the code standards",
 		command: ["check:eslint-templates"],
+	},
+	{
+		name: "Templates are formatted as a project formats them",
+		command: ["check:template-formatting"],
 	},
 	{ name: "Formatting", command: ["format:check"] },
 	{ name: "Type check", command: ["typecheck"] },
