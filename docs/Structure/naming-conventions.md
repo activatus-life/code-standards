@@ -330,7 +330,7 @@ Code files are camelCase or PascalCase. A short list of things are kebab-case in
 Use ESLint and Prettier to enforce these conventions automatically:
 
 - **eslint-plugin-react** - React naming conventions
-- **simple-import-sort** - Import ordering
+- **@ianvs/prettier-plugin-sort-imports** - Import ordering, run by Prettier
 - **@typescript-eslint** - TypeScript naming rules
 
 See [ESLint](/docs/Standards/eslint) and [Prettier](/docs/Standards/prettier) configuration for setup.

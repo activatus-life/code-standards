@@ -1091,7 +1091,7 @@ Named exports only. Default exports are allowed where a tool requires them: conf
 
 ### Import order is not linted
 
-There is deliberately no import-**order** rule (circular imports are a different matter — see above). Follow the [Import Organization](/docs/Structure/import-organization) pattern for consistency, but ESLint will not complain about it.
+There is deliberately no import-**order** rule (circular imports are a different matter — see above). Prettier sorts imports instead, every time a file is formatted: see [Import sorting](/docs/Standards/prettier#import-sorting).
 
 ### `unicorn/filename-case: camelCase or PascalCase`
 

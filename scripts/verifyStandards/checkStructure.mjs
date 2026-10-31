@@ -13,6 +13,10 @@ const UNGROUPED_HOMEPAGE_PATTERN =
 const TOP_COMPONENTS_FOLDER_PATTERN =
 	/^((?:src\/)?components\/([^/]+))\//;
 const COMPONENTS_HOMES = new Set(["ui", "layout", "shared"]);
+// The project's components/ has no index.ts of its own: code imports
+// from a category, "@/components/ui".
+const COMPONENTS_INDEX_PATTERN =
+	/^(?:src\/)?components\/index\.(?:ts|tsx|js|jsx)$/;
 // A component file directly in components/: components/Foo.tsx.
 const LOOSE_COMPONENT_FILE_PATTERN =
 	/^(?:src\/)?components\/[A-Z][A-Za-z0-9]*\.(?:tsx|jsx)$/;
@@ -99,6 +103,16 @@ const checkLooseComponentFolders = ({ projectFiles }) => {
 	}));
 };
 
+const checkComponentsIndex = ({ projectFiles }) =>
+	projectFiles
+		.filter((filePath) => COMPONENTS_INDEX_PATTERN.test(filePath))
+		.map((filePath) => ({
+			standard: "13",
+			file: filePath,
+			message: `${filePath} should not exist. Import from a category instead, such as "@/components/ui", and delete it`,
+			page: "docs/Structure/import-organization.md#importing-components",
+		}));
+
 const checkHomepage = ({ projectFiles }) =>
 	projectFiles
 		.filter((filePath) => UNGROUPED_HOMEPAGE_PATTERN.test(filePath))
@@ -113,6 +127,7 @@ export const checkStructure = ({ projectFiles }) => {
 	const componentFolders = listComponentFolders({ projectFiles });
 	return [
 		...checkLooseComponentFolders({ projectFiles }),
+		...checkComponentsIndex({ projectFiles }),
 		...checkSubComponentFolders({ componentFolders }),
 		...checkHomepage({ projectFiles }),
 	];

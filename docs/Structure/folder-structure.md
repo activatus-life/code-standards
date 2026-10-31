@@ -146,10 +146,11 @@ project-root/
 | **The site frame** — navigation, header, footer                                                 | `components/layout/`                                 | `components/layout/siteHeader/`                |
 | **Three or more pages** of this project                                                         | `components/shared/`                                 | `components/shared/pricingTable/`              |
 | **Three or more pages in one section**                                                          | A `components/` folder in that section's route group | `app/(billing)/components/invoiceTable/`       |
+| **Three or more pages in a section that already shares a folder**                               | A `components/` folder in that shared folder         | `app/orders/[id]/components/orderSummary/`     |
 | **One or two pages**                                                                            | A `components/` folder in that page's route folder   | `app/account-settings/components/accountForm/` |
 | **The homepage**                                                                                | `app/(homepage)/components/`                         | `app/(homepage)/components/heroSection/`       |
 
-A route group is a folder in brackets, such as `(billing)`. It groups pages without changing their URLs: `app/(billing)/invoices/page.tsx` is served at `/invoices`.
+A route group is a folder in brackets, such as `(billing)`. It groups pages without changing their URLs: `app/(billing)/invoices/page.tsx` is served at `/invoices`. **A route group is only needed when a section's pages do not already share a folder.** When they all sit under one URL folder, such as `app/orders/[id]/`, that folder is the section, and its components go in its own `components/` folder. Never move pages just to make a route group.
 
 **The homepage is a route group too: `app/(homepage)/`.** It holds the homepage's `page.tsx` and its own `components/` and `utils/` folders, and is served at `/`. Without it, the homepage's components sit loose in `app/components/` beside the root layout, with no clean place for the next page's. `app/` keeps only the root `layout.tsx` and the files Next.js needs there, such as `globals.css`. A folder inside `app/` is only a route when it holds a `page.tsx` or `route.ts`, so `components/` and `utils/` folders inside `app/` are safe: they never become URLs.
 

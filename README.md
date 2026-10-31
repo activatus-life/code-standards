@@ -90,6 +90,7 @@ The full detail's on the site. This is the version you'd tell someone over a sch
 - 🗣️ **Every name is real English words.** Variables, props, form fields, types, files, folders, the lot. `button`, not `btn`. We're not paying by the letter. The one exception: names someone else owns, like Linear's `id` or Node's `cwd` option.
 - 🔒 **Always `const`.** Need `let`? Fine, but leave a comment saying why, or the linter knocks it back.
 - 🏹 **Arrow functions everywhere.** `const Button = () => {}`. The word `function` is clutter, so we don't use it.
+- 🧹 **Imports sort themselves.** Prettier puts them in order every time you format, so nobody burns an afternoon shuffling them by hand.
 - 🔄 **No circular imports. Ever.** If two files import each other, pull the shared bit into a third file.
 - 🎯 **A function does one thing.** If you need the word "and" to describe it, it's two functions.
 - 🧪 **Every function and component gets a test file.** One test file, one thing tested. No test, not finished.

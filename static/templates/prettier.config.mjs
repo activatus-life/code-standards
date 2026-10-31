@@ -1,4 +1,4 @@
-/** @type {import("prettier").Config & import("prettier-plugin-tailwindcss").PluginOptions} */
+/** @type {import("prettier").Config & import("@ianvs/prettier-plugin-sort-imports").PluginConfig & import("prettier-plugin-tailwindcss").PluginOptions} */
 const config = {
 	// Short lines, so code reads well on a phone.
 	printWidth: 70,
@@ -12,7 +12,25 @@ const config = {
 	arrowParens: "always",
 	semi: true,
 	endOfLine: "lf",
-	plugins: ["prettier-plugin-tailwindcss"],
+	// The Tailwind plugin must stay last.
+	plugins: [
+		"@ianvs/prettier-plugin-sort-imports",
+		"prettier-plugin-tailwindcss",
+	],
+	// Node's own modules, packages, the project's @/ aliases, then
+	// ../ and ./, with a blank line between groups. Side-effect
+	// imports, such as CSS, never move.
+	importOrder: [
+		"<BUILTIN_MODULES>",
+		"",
+		"<THIRD_PARTY_MODULES>",
+		"",
+		"^@/",
+		"",
+		"^[.][.]/",
+		"",
+		"^[.]/",
+	],
 	tailwindStylesheet: "./app/globals.css",
 	overrides: [
 		{

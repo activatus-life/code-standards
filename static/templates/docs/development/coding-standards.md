@@ -24,7 +24,7 @@ Every Activatus project follows the same standards, so people and agents can mov
 
 ## Unfinished changes
 
-[Changes from a code standards version that are not done yet, each with its version and number, what is left, and where it is being done. For example: "Version 2, change 4: the standard ESLint config is not switched on yet. Being done in ACT-120." If there are none, write exactly "None", with nothing after it: a note after "None" reads as an unfinished change.]
+[Changes from a code standards version that are not done yet, each with its version and number, what is left, and where it is being done. For example: "Version 2, change 4: the standard ESLint config is not switched on yet. Being done in ACT-120." If there are none, write "None", with no note after it: a note after "None" reads as an unfinished change.]
 
 ## Related
 
