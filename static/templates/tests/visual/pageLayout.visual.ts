@@ -56,9 +56,9 @@ const settlePage = async ({ page }: PageProps) => {
 		for (const animation of finiteAnimations) {
 			animation.finish();
 		}
-		const images = [...document.images];
-		await Promise.all(
-			images.map((image) => image.decode().catch(() => null)),
+		// An image that fails to load does not stop the check.
+		await Promise.allSettled(
+			[...document.images].map((image) => image.decode()),
 		);
 	});
 };

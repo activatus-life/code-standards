@@ -8,10 +8,6 @@ import { defineConfig } from "@playwright/test";
 // test:visual:update.
 const PRODUCTION_URL = process.env.VISUAL_PRODUCTION_URL;
 const isUpdatingBaseline = process.env.VISUAL_UPDATE === "true";
-// The project's own production build, on a port of its own.
-const LOCAL_PORT = 3100;
-const LOCAL_URL = `http://localhost:${LOCAL_PORT}`;
-const SERVER_START_TIMEOUT_MILLISECONDS = 300_000;
 
 if (isUpdatingBaseline && !PRODUCTION_URL) {
 	throw new Error(
@@ -19,7 +15,14 @@ if (isUpdatingBaseline && !PRODUCTION_URL) {
 	);
 }
 
-/** @type {import("@playwright/test").PlaywrightTestConfig} */
+// The project's own production build, on a port of its own.
+const LOCAL_PORT = 3100;
+const LOCAL_URL = `http://localhost:${LOCAL_PORT}`;
+const SERVER_START_TIMEOUT_MILLISECONDS = 300_000;
+
+/**
+@type {import("@playwright/test").PlaywrightTestConfig}
+*/
 const config = {
 	testDir: ".",
 	testMatch: "*.visual.ts",

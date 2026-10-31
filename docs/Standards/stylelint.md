@@ -31,7 +31,9 @@ Create `stylelint.config.mjs` in your project root:
 ### Plain CSS and CSS Modules
 
 ```js title="stylelint.config.mjs"
-/** @type {import("stylelint").Config} */
+/**
+@type {import("stylelint").Config}
+*/
 const config = {
   ignoreFiles: ["**/vendor/**"],
   extends: [
@@ -78,7 +80,9 @@ export default config;
 ### SCSS
 
 ```js title="stylelint.config.mjs"
-/** @type {import("stylelint").Config} */
+/**
+@type {import("stylelint").Config}
+*/
 const config = {
   ignoreFiles: ["**/vendor/**"],
   extends: [

@@ -1,6 +1,8 @@
 const DOCS_URL = process.env.DOCS_URL;
 
-/** @type {import("next").NextConfig} */
+/**
+@type {import("next").NextConfig}
+*/
 const nextConfig = {
 	async rewrites() {
 		// The docs are only served when DOCS_URL is set. It is never set in production.

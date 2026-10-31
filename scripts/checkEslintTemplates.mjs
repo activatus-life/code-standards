@@ -3,7 +3,10 @@
 // 2. The Next.js template lets route.ts take (request, context),
 //    and still stops two parameters everywhere else.
 // 3. Every TypeScript template stops `as const`.
-// 4. The ESLint page shows each template exactly as it is.
+// 4. Every other template a project copies in, such as
+//    prettier.config.mjs, passes the rules it meets in the project.
+// 5. This repo's own scripts pass the base template.
+// 6. The ESLint page shows each template exactly as it is.
 //
 // Run: pnpm check:eslint-templates
 // Copy the templates into the ESLint page: add --update-docs
@@ -11,7 +14,9 @@ import { ESLint } from "eslint";
 import {
 	copyFile,
 	mkdir,
+	readdir,
 	readFile,
+	rm,
 	writeFile,
 } from "node:fs/promises";
 import path from "node:path";
@@ -45,6 +50,11 @@ const overridesTemplatePath = path.join(
 	repoDirectory,
 	"static/templates/eslint.overrides.mjs",
 );
+const allTemplatesDirectory = path.join(
+	repoDirectory,
+	"static/templates",
+);
+const projectDirectory = path.join(stagedDirectory, "project");
 const shouldUpdateDocs = process.argv.includes("--update-docs");
 
 const TEMPLATES = [
@@ -55,6 +65,9 @@ const TEMPLATES = [
 ];
 const CONFIG_FILE_NAME = "eslint.config.mjs";
 const OVERRIDES_FILE_NAME = "eslint.overrides.mjs";
+const CODE_FILE_PATTERN = /\.(?:mjs|js|ts|tsx)$/;
+// The ESLint templates are checked on their own, above.
+const ESLINT_TEMPLATE_PATTERN = /^eslint[./]/;
 const CODE_BLOCK_START = '```js title="eslint.config.mjs"\n';
 const CODE_BLOCK_END = "\n```";
 
@@ -80,12 +93,17 @@ const stageTemplate = async (templateName) => {
 // A project has one config. This script loads four in one process,
 // so typescript-eslint is told each one's folder. The Next.js rules
 // look for an app folder, so they are pointed at the fixture.
-const createLinter = ({ templateName, workingDirectory }) =>
+const createLinter = ({
+	templateName,
+	workingDirectory,
+	rules = {},
+}) =>
 	new ESLint({
 		cwd: workingDirectory,
 		overrideConfigFile: getStagedPath(templateName),
 		overrideConfig: {
 			settings: { next: { rootDir: nextjsFixtureDirectory } },
+			rules,
 			...(templateName !== "base" && {
 				languageOptions: {
 					parserOptions: { tsconfigRootDir: workingDirectory },
@@ -113,6 +131,62 @@ const lintTemplateAgainstItself = async (templateName) => {
 	]);
 	return describeProblems(results).map(
 		(problem) => `${templateName} fails its own rules:\n${problem}`,
+	);
+};
+
+// Each template a project copies in, at its path under
+// static/templates, beside the Next.js config: the template with the
+// most rules. Its ignores apply, so docsSite/ is skipped as it is in a
+// project.
+const stageProject = async () => {
+	await rm(projectDirectory, { recursive: true, force: true });
+	const allTemplateFiles = await readdir(allTemplatesDirectory, {
+		recursive: true,
+	});
+	const templateFiles = allTemplateFiles.filter(
+		(filePath) =>
+			CODE_FILE_PATTERN.test(filePath) &&
+			!ESLINT_TEMPLATE_PATTERN.test(filePath),
+	);
+	await Promise.all(
+		templateFiles.map(async (filePath) => {
+			const stagedFilePath = path.join(projectDirectory, filePath);
+			await mkdir(path.dirname(stagedFilePath), { recursive: true });
+			await copyFile(
+				path.join(allTemplatesDirectory, filePath),
+				stagedFilePath,
+			);
+		}),
+	);
+};
+
+const lintProjectTemplates = async () => {
+	await stageProject();
+	const linter = createLinter({
+		templateName: "nextjs",
+		workingDirectory: projectDirectory,
+		// A project installs the packages a template imports, such as
+		// @playwright/test. This repo does not, so only paths are checked.
+		rules: {
+			"import-x/no-unresolved": ["error", { ignore: ["^[^./]"] }],
+		},
+	});
+	const results = await linter.lintFiles(["."]);
+	return describeProblems(results).map(
+		(problem) =>
+			`A template fails the rules it meets in a project:\n${problem.replace(path.relative(repoDirectory, projectDirectory), "static/templates")}`,
+	);
+};
+
+// This repo's own scripts follow the standards too.
+const lintRepoScripts = async () => {
+	const linter = createLinter({
+		templateName: "base",
+		workingDirectory: repoDirectory,
+	});
+	const results = await linter.lintFiles(["scripts/**/*.mjs"]);
+	return describeProblems(results).map(
+		(problem) => `A script fails the base template:\n${problem}`,
 	);
 };
 
@@ -218,6 +292,8 @@ const failures = [
 	...templateFailures.flat(),
 	...(await checkNextjsRouteHandlers()),
 	...asConstFailures.flat(),
+	...(await lintProjectTemplates()),
+	...(await lintRepoScripts()),
 	...(await checkEslintPage()),
 ];
 
@@ -226,6 +302,6 @@ if (failures.length > 0) {
 	process.exitCode = 1;
 } else {
 	console.log(
-		"All four ESLint templates pass their own rules, and the ESLint page matches them.",
+		"All four ESLint templates pass their own rules, every other template passes the rules it meets in a project, this repo's scripts pass the base template, and the ESLint page matches them.",
 	);
 }
