@@ -1,7 +1,8 @@
 build/
 .docusaurus/
 pnpm-lock.yaml
-# The templates are copied into projects and formatted there, with the project's own Prettier setup.
+# The templates are formatted with the template Prettier config,
+# as a project formats them: pnpm check:template-formatting.
 static/templates/
 # pnpm rewrites this on every install, in its own style.
 pnpm-workspace.yaml

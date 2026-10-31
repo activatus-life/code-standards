@@ -73,8 +73,8 @@ Create `eslint.config.mjs` in your project root. Each config passes its own rule
 ### Base (JavaScript / Node.js)
 
 ```js title="eslint.config.mjs"
-import js from "@eslint/js";
 import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
@@ -215,8 +215,8 @@ export default config;
 ### TypeScript
 
 ```js title="eslint.config.mjs"
-import js from "@eslint/js";
 import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
@@ -440,8 +440,8 @@ TypeScript files are checked by the compiler, so `no-undef` is off for them. The
 Start from the [TypeScript](#typescript) config and make five changes:
 
 ```js title="eslint.config.mjs"
-import js from "@eslint/js";
 import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
@@ -690,10 +690,10 @@ Keep `settings.react.version` set rather than `"detect"`; change the number in `
 
 ```js title="eslint.config.mjs"
 import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
-import prettier from "eslint-config-prettier";
-import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
+import prettier from "eslint-config-prettier";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";

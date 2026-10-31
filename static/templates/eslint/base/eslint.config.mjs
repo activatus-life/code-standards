@@ -1,5 +1,5 @@
-import js from "@eslint/js";
 import { recommended as eslintCommentsRecommended } from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
 import unicorn from "eslint-plugin-unicorn";

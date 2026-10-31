@@ -61,7 +61,7 @@ Anyone changing the standards adds a version, alongside the change:
 - **Every entry is headed `**Fixes in 3.2.3.**`**, with its number, followed by "If the project already applied 3.2.2, check these:".
 - **A middle-number entry adds `**Structural changes in 3.3.0.**` straight under its heading**, listing each change that moves or renames files in a project, with a rough size, such as "one move per file", so a project can plan the work and take a [regression check](/docs/Guides/regression-checks) baseline first. A last-number entry never moves files.
 - **Anything a version can change in the `AGENTS.md` template lives between the `code-standards` markers.** A project copies only that section on an update, and `pnpm standards:check` compares only that section, so a rule outside the markers never reaches a project that is already set up.
-- **`pnpm devtest` must pass before publishing.** Run it, then `pnpm publish`. It checks the lint packages are the latest a project would install, then runs the tests, lints every template the way a project does, and checks formatting, types and the site build.
+- **`pnpm devtest` must pass before publishing.** Run it, then `pnpm publish`. It checks the lint packages are the latest a project would install, then runs the tests, lints and formats every template the way a project does, and checks formatting, types and the site build.
 - **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.2.2 — full version numbers`, so releases are easy to find in the git log.
 - **Every number is published.** Publish each one to npm as soon as its entry is written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
@@ -70,9 +70,21 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.5
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.6
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.6.** If the project already applied 3.3.5, check these:
+
+- **The templates are now formatted with the template Prettier config.** The import sorting added in 3.3.3 reordered the imports in the four `eslint.config.mjs` templates, so after `pnpm format` a project's copy no longer matched the template, and `pnpm standards:check` failed standard 6. `pageLayout.visual.ts`, the docs site's `index.tsx`, and the tables in the `ontology.md` and `design-system.md` templates changed the same way. Every template is now already formatted, and the code standards check this before each release, so `pnpm format` leaves a copied template as it is.
+
+  **What to do:** copy the project's ESLint template over `eslint.config.mjs` again, and, if the project has a regression check, `tests/visual/pageLayout.visual.ts`. Run `pnpm format`: neither should change. If the project recorded a standard 6 exception or an unfinished change only because the copied ESLint config was reformatted, remove it.
+
+- **The Stylelint templates ignore generated CSS.** They only ignored `vendor/`, so `pnpm lint:css` also linted `.next/`, `out/`, `build/`, `coverage/` and `docsSite/`, and reported errors in CSS nobody wrote. They now ignore the same folders as the ESLint templates.
+
+  **What to do:** copy the Stylelint template over `stylelint.config.mjs` again. If the project added a `.stylelintignore` for those folders, delete it, and remove its line from "Unfinished changes" in `docs/development/coding-standards.md`.
+
+**How to check:** `pnpm format` changes no copied template; `pnpm standards:check` passes, or lists only recorded exceptions; `pnpm lint:css` passes with no `.stylelintignore`.
 
 **Fixes in 3.3.5.** If the project already applied 3.3.4, check these:
 
