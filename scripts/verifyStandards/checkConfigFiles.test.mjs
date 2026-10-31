@@ -38,6 +38,7 @@ const check = (files) =>
 	checkConfigFiles({
 		projectDirectory: createTestProject({ files }),
 		templatesDirectory: TEMPLATES_DIRECTORY,
+		projectFiles: Object.keys(files),
 	});
 
 describe("checkConfigFiles", () => {
@@ -49,7 +50,7 @@ describe("checkConfigFiles", () => {
 		const files = standardFiles();
 		files["prettier.config.mjs"] = files[
 			"prettier.config.mjs"
-		].replace("/** @type", "/**\n@type");
+		].replace(/\/\*\*\n(@type .*)\n\*\//, "/** $1 */");
 		assert.deepEqual(check(files), []);
 	});
 
@@ -79,10 +80,38 @@ describe("checkConfigFiles", () => {
 		assert.equal(findings.length, 2);
 	});
 
-	it("only checks Stylelint when the project has it", () => {
+	it("flags a Stylelint config that differs from both templates", () => {
 		const files = standardFiles();
 		files["stylelint.config.mjs"] = "export default {};\n";
 		const findings = check(files);
 		assert.equal(findings[0].standard, "8");
+	});
+
+	it("passes a copy of the Stylelint template", () => {
+		const files = standardFiles();
+		files["app/globals.css"] = '@import "tailwindcss";\n';
+		files["stylelint.config.mjs"] = readTemplate(
+			"stylelint/css/stylelint.config.mjs",
+		);
+		assert.deepEqual(check(files), []);
+	});
+
+	it("flags hand-written CSS with no Stylelint config", () => {
+		const files = standardFiles();
+		files["app/globals.css"] = '@import "tailwindcss";\n';
+		const findings = check(files);
+		assert.equal(findings.length, 1);
+		assert.equal(findings[0].standard, "8");
+		assert.match(
+			findings[0].message,
+			/stylelint\.config\.mjs is missing/,
+		);
+	});
+
+	it("needs no Stylelint for CSS in vendor/ or docsSite/", () => {
+		const files = standardFiles();
+		files["vendor/library/library.css"] = "a {}\n";
+		files["docsSite/src/css/custom.css"] = ":root {}\n";
+		assert.deepEqual(check(files), []);
 	});
 });
