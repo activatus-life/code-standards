@@ -10,7 +10,7 @@ A single shared Prettier config keeps formatting consistent and eliminates "styl
 ## Installation
 
 ```bash
-pnpm add -D prettier prettier-plugin-tailwindcss
+pnpm add -D prettier @ianvs/prettier-plugin-sort-imports prettier-plugin-tailwindcss
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ pnpm add -D prettier prettier-plugin-tailwindcss
 Create `prettier.config.mjs` in your project root:
 
 ```js title="prettier.config.mjs"
-/** @type {import("prettier").Config & import("prettier-plugin-tailwindcss").PluginOptions} */
+/** @type {import("prettier").Config & import("@ianvs/prettier-plugin-sort-imports").PluginConfig & import("prettier-plugin-tailwindcss").PluginOptions} */
 const config = {
 	// Short lines, so code reads well on a phone.
 	printWidth: 70,
@@ -32,7 +32,25 @@ const config = {
 	arrowParens: "always",
 	semi: true,
 	endOfLine: "lf",
-	plugins: ["prettier-plugin-tailwindcss"],
+	// The Tailwind plugin must stay last.
+	plugins: [
+		"@ianvs/prettier-plugin-sort-imports",
+		"prettier-plugin-tailwindcss",
+	],
+	// Node's own modules, packages, the project's @/ aliases, then
+	// ../ and ./, with a blank line between groups. Side-effect
+	// imports, such as CSS, never move.
+	importOrder: [
+		"<BUILTIN_MODULES>",
+		"",
+		"<THIRD_PARTY_MODULES>",
+		"",
+		"^@/",
+		"",
+		"^[.][.]/",
+		"",
+		"^[.]/",
+	],
 	tailwindStylesheet: "./app/globals.css",
 	overrides: [
 		{
@@ -97,7 +115,36 @@ The config includes [`prettier-plugin-tailwindcss`](https://github.com/tailwindl
 
 - **It is part of the standard**, not a project extra. Every project that uses Tailwind has it.
 - **`tailwindStylesheet` points at the project's global stylesheet**, so the plugin knows the project's own colours. Change the path if `globals.css` lives somewhere else.
-- **A project with no Tailwind** (a plain Node.js service) removes the `plugins` and `tailwindStylesheet` lines.
+- **A project with no Tailwind** (a plain Node.js service) removes `prettier-plugin-tailwindcss` from `plugins`, and the `tailwindStylesheet` line.
+
+## Import sorting {#import-sorting}
+
+The config includes [`@ianvs/prettier-plugin-sort-imports`](https://github.com/IanVS/prettier-plugin-sort-imports). It sorts the imports of every file when the file is formatted, so **nobody sorts imports by hand, and agents never reorder them themselves**: `pnpm format`, or saving in the editor, does it.
+
+```tsx
+"use client";
+
+import { readFileSync } from "node:fs";
+
+import Link from "next/link";
+import { useState } from "react";
+
+import { Button } from "@/components/ui";
+import { r, s } from "@/lib/constants";
+
+import { formatDate } from "../utils/formatDate";
+
+import type { SampleProps } from "./Sample.types";
+
+import "./sample.css";
+```
+
+- **The groups, in order:** Node's own modules (`node:fs`), packages, the project's `@/` aliases, parent folders (`../`), then the same folder (`./`). Each group is alphabetical, with a blank line between groups.
+- **Directives such as `"use client"` stay at the top.**
+- **Side-effect imports never move**, such as `import "./globals.css";`, because the order they load in can matter. The plugin sorts the imports above and below one separately. **Put them after every other import**, so the rest sort as one block. Never add a setting that moves them.
+- **Type imports stay on their own line**, `import type { CardProps } from "./Card.types";`. Leave `importOrderTypeScriptVersion` unset: setting it to 4.5 or above merges type imports into value imports.
+- **`prettier-plugin-tailwindcss` stays last in `plugins`.** The Tailwind plugin needs that to work beside other plugins.
+- **Switching it on reorders the imports in most files.** Do it in a commit of its own, with nothing else in it, so the reordering never hides a real change in a review.
 
 ## Settings reference
 

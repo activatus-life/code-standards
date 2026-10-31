@@ -60,6 +60,7 @@ Anyone changing the standards adds a version, alongside the change:
 - **Changing a released major version** goes under its version, newest at the top. Update the version's changes in place where they are now wrong. Write each entry so a project already on the version before it knows what to do.
 - **Every entry is headed `**Fixes in 3.2.3.**`**, with its number, followed by "If the project already applied 3.2.2, check these:".
 - **A middle-number entry adds `**Structural changes in 3.3.0.**` straight under its heading**, listing each change that moves or renames files in a project, with a rough size, such as "one move per file", so a project can plan the work and take a [regression check](/docs/Guides/regression-checks) baseline first. A last-number entry never moves files.
+- **Anything a version can change in the `AGENTS.md` template lives between the `code-standards` markers.** A project copies only that section on an update, and `pnpm standards:check` compares only that section, so a rule outside the markers never reaches a project that is already set up.
 - **Every release commit is titled `docs: version N.N.N — <what changed>`**, such as `docs: version 3.2.2 — full version numbers`, so releases are easy to find in the git log.
 - **Every number is published.** Publish each one to npm as soon as its entry is written. A Fixes entry for a version that was never published sends a project to install something that does not exist.
 - **Judgement calls after release are fixes, not workarounds.** When a project's update needed a call the steps did not cover, add it under the version's Fixes so every other project gets it too. A project should never keep a private workaround for an unclear step.
@@ -68,9 +69,38 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.2
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.3
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.3.** If the project already applied 3.3.2, check these:
+
+- **The Ontology and Documentation sections of `AGENTS.md` are now inside the `code-standards` markers.** They were above them, so copying the Code standards section on an update never brought them in, and `pnpm standards:check` never noticed a project without them. 3.3.2's "Record a check only after it has run" rule was one of the rules that never arrived. Anything a version can change now lives inside the markers. The Documentation section's line about `docsSite/` now starts "If the project has a `docsSite/`".
+
+  **What to do:** copy the Code standards section of `AGENTS.md` from the template again: everything from `<!-- code-standards:start -->` to `<!-- code-standards:end -->`. It now ends with the Ontology and Documentation sections. Then delete the project's old Ontology and Documentation sections above the markers, so neither appears twice. Anything project-specific in them moves to a section of its own, outside the markers.
+
+- **A section whose pages already share a folder needs no route group.** When all a section's pages sit under one URL folder, such as `app/orders/[id]/`, that folder is the section, and components three or more of its pages use go in its own `components/` folder. Never move pages just to make a route group. See [Where components live](/docs/Structure/folder-structure#-where-components-live). Nothing to do.
+- **Prettier sorts imports.** The Prettier template adds `@ianvs/prettier-plugin-sort-imports`: Node's own modules, then packages, `@/` aliases, `../`, then `./`, with a blank line between groups. Directives such as `"use client"` stay at the top, type imports stay on their own line, and side-effect imports, such as CSS, never move. Nobody sorts imports by hand. The seven-step order on [Import Organization](/docs/Structure/import-organization) is gone. See [Import sorting](/docs/Standards/prettier#import-sorting).
+
+  **What to do:**
+
+  1. `pnpm add -D @ianvs/prettier-plugin-sort-imports`.
+  2. Copy `static/templates/prettier.config.mjs` over the project's again. A project without Tailwind removes `prettier-plugin-tailwindcss` and `tailwindStylesheet` as before.
+  3. Move each side-effect import, such as `import "./globals.css";`, below the file's other imports.
+  4. Run `pnpm format`, and **commit the result on its own**, with nothing else in it, so the reordering never hides a real change in a review.
+
+- **Components are imported from their category.** `components/ui/`, `components/layout/` and `components/shared/` each have an `index.ts`, and code outside a category imports from it: `import { Button } from "@/components/ui";`. There is no `components/index.ts`, and `pnpm standards:check` now reports one. **A category's `index.ts` exports only components a Client Component can import**: a Client Component that imports a category pulls in everything it exports, so one server-only component in it breaks the build. A component that reaches server-only code, such as authentication, the database, secrets or `next/headers`, starts with `import "server-only";`, is left out of the `index.ts`, and is imported from its own folder, such as `@/components/layout/siteHeader`. Tested with a Next.js 16 build: the build fails with a server-only component in the category's `index.ts`, and passes once it is imported from its own folder. See [Importing components](/docs/Structure/import-organization#importing-components).
+
+  **What to do:**
+
+  1. Delete any `components/index.ts`, and point its imports at the category: `@/components/ui`, `@/components/layout` or `@/components/shared`.
+  2. Give each category an `index.ts` if it has none.
+  3. For each component that reaches server-only code, add `import "server-only";` at the top, take it out of its category's `index.ts`, and import it from its own folder.
+  4. Copy the Code standards section of `AGENTS.md` from the template again, if not already done for the first fix above.
+
+- **"Unfinished changes": write "None", with no note after it.** 3.3.2 said "exactly None", but the check also accepts "None." with a full stop. The template now says what the check does. Nothing to do.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; `AGENTS.md` has one Ontology and one Documentation section, both inside the markers; `pnpm format:check` passes; `git ls-files components/index.ts` finds nothing; no category's `index.ts` exports a file that `grep -rln "server-only" components` lists.
 
 **Fixes in 3.3.2.** If the project already applied 3.3.1, check these:
 
@@ -108,7 +138,7 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
 
 - **Record a check only after it has run.** A doc never says a URL, commit, date or "passed" for a check that has not happened yet. Write what was decided, and add the result once it exists. The `AGENTS.md` template, [Docs](/docs/Standards/documentation) and [Regression Checks](/docs/Guides/regression-checks) say so.
 
-  **What to do:** read `docs/testing/regression.md` and any other doc that records a check. Remove any result, URL or commit for a check that has not actually run. Copied into `AGENTS.md` with the section above.
+  **What to do:** read `docs/testing/regression.md` and any other doc that records a check. Remove any result, URL or commit for a check that has not actually run. Copied into `AGENTS.md` with the section above. _Changed in 3.3.3: the rule was in the template's Documentation section, outside the markers, so copying the section did not bring it in. Do the 3.3.3 step._
 
 - **Comparing two local servers: copy `node_modules`, never symlink it.** Turbopack refuses a `node_modules` that points outside the project folder. On macOS, `cp -Rc` makes a copy-on-write clone in seconds. See [Comparing two local servers instead](/docs/Guides/regression-checks#comparing-two-local-servers-instead). Nothing to do.
 - **"Unfinished changes" says exactly "None" when nothing is left.** A note after it, such as "None. ESLint was switched on in an earlier ticket.", reads as an unfinished change. The template and the check's report now say so.

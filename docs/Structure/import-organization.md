@@ -6,63 +6,52 @@ sidebar_position: 4
 
 Consistent import organization makes code easier to read and understand.
 
-## Import Order
+## Import order is sorted for you
 
-Follow this order in all files:
-
-1. **React and core packages**
-2. **Internal workspace packages** (the project's own scope, e.g. `@acme/*`)
-3. **External packages**
-4. **Side effect imports**
-5. **Parent imports** (`../`)
-6. **Same-folder imports** (`./`)
-7. **Style imports** (`.css`, `.module.css`)
-
-## Example
+**Prettier sorts the imports of every file** with `@ianvs/prettier-plugin-sort-imports`, the same way it sorts Tailwind classes. Nobody sorts imports by hand, and agents never reorder them themselves: `pnpm format`, or saving in the editor, does it. See [Import sorting](/docs/Standards/prettier#import-sorting).
 
 ```tsx
-// 1. React and core packages
-import React, { useState, useEffect } from "react";
-import { Link } from "@radix-ui/react-navigation-menu";
+"use client";
 
-// 2. Internal workspace packages
-import { Button } from "@acme/ui";
-import { useAuthentication } from "@acme/authentication";
+import { readFileSync } from "node:fs";
 
-// 3. External packages
-import { format } from "date-fns";
-import clsx from "clsx";
+import Link from "next/link";
+import { useState } from "react";
 
-// 4. Side effect imports
-import "prismjs/themes/prism-tomorrow.css";
+import { Button } from "@/components/ui";
+import { r, s } from "@/lib/constants";
 
-// 5. Parent imports
-import { formatDate } from "../utils";
+import { formatDate } from "../utils/formatDate";
 
-// 6. Same-folder imports
-import { Header } from "./Header";
-import { useUserData } from "./useUserData";
+import type { SampleProps } from "./Sample.types";
 
-// 7. Style imports
-import "./UserProfile.css";
-import styles from "./styles.module.css";
+import "./sample.css";
 ```
 
-## Why This Order?
+Node's own modules, then packages, the project's `@/` aliases, parent folders (`../`), and the same folder (`./`). **Side-effect imports, such as CSS, go after every other import**: the sorter never moves them, because the order they load in can matter.
 
-1. **React first** - Most important dependency, immediately visible
-2. **Internal packages** - Your team's code, separate from third-party
-3. **External packages** - Third-party dependencies
-4. **Side effects** - Imports that don't export values (CSS, polyfills)
-5. **Parent imports** - Code from parent directories
-6. **Same-folder** - Code from the current directory
-7. **Styles last** - Visual separation, easy to find style imports
+## Importing components
 
-## Rules
+**`components/ui/`, `components/layout/` and `components/shared/` each have an `index.ts`**, and code outside a category imports from it, so imports stay short:
 
-- ✅ **Alphabetized** within each group
-- ✅ **Blank lines** between groups
-- ✅ **No duplicates** - Import each module once
+```tsx
+import { Button, Card } from "@/components/ui";
+```
+
+- **No `index.ts` directly in `components/`.** The import shows whether a component is a Design System Component, part of the site frame, or shared.
+- **Inside a category, components import each other by file**, never through the category's own `index.ts`. See [Inside a folder, import files directly](#2-inside-a-folder-import-files-directly).
+- **A category's `index.ts` exports only components a Client Component can import.** A Client Component that imports a category pulls in everything its `index.ts` exports, so one server-only component in it breaks the build for every Client Component that imports the category.
+- **A component that reaches server-only code**, such as authentication, the database, secrets or `next/headers`, starts with `import "server-only";`. It is left out of its category's `index.ts`, and imported from its own folder:
+
+  ```tsx
+  // components/layout/siteHeader/SiteHeader.tsx
+  import "server-only";
+
+  // app/layout.tsx
+  import { SiteHeader } from "@/components/layout/siteHeader";
+  ```
+
+  `import "server-only";` makes a mistake fail the build with a clear error, instead of sending server code to the browser.
 
 ## Import Safety
 
@@ -152,7 +141,3 @@ export const database = createConnection(DATABASE_URL);
 Code that runs on import makes the order files load in matter. Code that only defines things does not.
 
 Enforced by ESLint `unicorn/no-top-level-side-effects`.
-
-## Import Order Is Not Enforced
-
-The **order of the import lines** is a convention, not a lint rule. Follow the same pattern in every file so imports are easy to read, but ESLint will not report an error if the order differs.

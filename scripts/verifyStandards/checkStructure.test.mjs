@@ -88,7 +88,6 @@ describe("checkStructure", () => {
 				"components/projectTabs/ProjectTabs.types.ts",
 				"src/components/statusBadge/StatusBadge.tsx",
 				"components/ProjectCard.tsx",
-				"components/index.ts",
 				"app/(billing)/components/invoiceTable/InvoiceTable.tsx",
 			],
 		});
@@ -101,5 +100,15 @@ describe("checkStructure", () => {
 			],
 		);
 		assert.match(findings[0].message, /loose in components\//);
+	});
+
+	it("flags an index.ts directly in components/", () => {
+		const findings = checkStructure({
+			projectFiles: ["components/index.ts", "components/ui/index.ts"],
+		});
+		assert.deepEqual(
+			findings.map((finding) => finding.file),
+			["components/index.ts"],
+		);
 	});
 });

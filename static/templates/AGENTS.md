@@ -80,34 +80,11 @@ Example: `🟢 [ABC-12](https://linear.app/[workspace]/issue/ABC-12) Short title
 | --- | --- | --- |
 | `[VARIABLE_NAME]` | [Yes / No] | [What it is for] |
 
-## Ontology
-
-Activatus uses a fixed vocabulary, the ontology, in two parts:
-
-- **Code words** — component, utils, Decision Doc and the rest — are defined in the code standards: https://activatus-code-standards.vercel.app/docs/ontology
-- **Product words** — what this project builds and how its work is planned — are defined in `docs/product/ontology.md`.
-
-- **Read both before starting work.** If the project's ontology gives a code word a different meaning, the code standards win — point the difference out.
-- **Use their terms** in code, docs, database names and messages — never a synonym. It is `utils`, not `helpers` or `utilities`.
-- **Never use a term either ontology has removed.**
-- If a person uses a word loosely, work out which ontology term they mean and use that term. **If you are not sure what a term means, ask.** Do not guess and do not invent a new term.
-
-## Documentation
-
-The project's docs are plain Markdown in `docs/`. **Every file is a Decision Doc**: it states one decision and why it was made.
-
-- **Read them before starting work** — the three docs in `docs/overview/` first, then the docs for the area being changed. Read the files directly; do not start the docs site to read them.
-- **Check each doc's Status.** `Decided` is settled. `Current plan` may change. `Under evaluation` and `Not started` are **not decisions** — do not treat them as one and do not invent one. Ask.
-- **Never invent a product decision to unblock yourself.** If the docs do not answer it, stop and ask.
-- **Record a check only after it has run.** Never write a URL, commit, date or "passed" for a check that has not happened yet. Write what was decided, and add the result once it exists.
-- **Update the docs in the same change.** If a change makes a doc wrong, fix the doc and change its Updated date.
-- Do not edit `docsSite/` unless the task is about the docs viewer itself.
-
 <!-- code-standards:start -->
 
 ## Code standards
 
-**This section is copied from the code standards and replaced on every update.** Never edit it to describe a project exception: record exceptions in `docs/development/coding-standards.md`. Anything else the project adds, such as the block a framework writes, goes outside this section.
+**This section, and the Ontology and Documentation sections after it, are copied from the code standards and replaced on every update.** Never edit it to describe a project exception: record exceptions in `docs/development/coding-standards.md`. Anything else the project adds, such as the block a framework writes, goes outside this section.
 
 This project follows the Activatus Code Standards. They are installed as the `@activatus/code-standards` dev dependency: **read them in `node_modules/@activatus/code-standards/docs/`**, which is the exact version this project uses. The same pages are at https://activatus-code-standards.vercel.app for people.
 
@@ -143,6 +120,8 @@ Follow these rules in every change:
 - **The linter only checks some names.** Folders, props, form fields, database columns, routes and environment variables are not linted — check every one of them yourself.
 - **Always `const`.** Never `var`. Use `let` only when a value must be reassigned, with `// eslint-disable-next-line no-restricted-syntax -- <reason>` on the line above.
 - **Arrow functions everywhere.** Never use the `function` keyword: `export const Button = () => {}`, not `export function Button() {}`.
+- **Never sort imports by hand.** Prettier sorts them on `pnpm format`. Side-effect imports, such as CSS, go after every other import.
+- **Import components from their category:** `import { Button } from "@/components/ui";`. There is no `components/index.ts`. A category's `index.ts` exports only components a Client Component can import: a component that reaches server-only code starts with `import "server-only";`, is left out of it, and is imported from its own folder, such as `@/components/layout/siteHeader`.
 - **No circular imports, ever.** A file never imports a file that imports it back. Inside a folder, import files directly — never through the folder's own `index.ts` — and never import a parent component from its sub-component.
 - **Define before use.** A function or variable is written above the code that uses it.
 - **A function does one thing.**
@@ -177,6 +156,29 @@ Follow these rules in every change:
 **Never switch a lint rule off to make an error go away.** Do not add `eslint-disable` comments, edit `eslint.config.mjs` or `eslint.overrides.mjs`, or move files to hide them. The only exceptions are `let`, a type cast and an `as const` that cannot be avoided, each on a single line with a reason after ` -- `. If a rule seems impossible to satisfy, stop and ask.
 
 When you report a lint error to the person, explain it in plain English: what is wrong, why it matters, and what you did to fix it.
+
+## Ontology
+
+Activatus uses a fixed vocabulary, the ontology, in two parts:
+
+- **Code words** — component, utils, Decision Doc and the rest — are defined in the code standards: https://activatus-code-standards.vercel.app/docs/ontology
+- **Product words** — what this project builds and how its work is planned — are defined in `docs/product/ontology.md`.
+
+- **Read both before starting work.** If the project's ontology gives a code word a different meaning, the code standards win — point the difference out.
+- **Use their terms** in code, docs, database names and messages — never a synonym. It is `utils`, not `helpers` or `utilities`.
+- **Never use a term either ontology has removed.**
+- If a person uses a word loosely, work out which ontology term they mean and use that term. **If you are not sure what a term means, ask.** Do not guess and do not invent a new term.
+
+## Documentation
+
+The project's docs are plain Markdown in `docs/`. **Every file is a Decision Doc**: it states one decision and why it was made.
+
+- **Read them before starting work** — the three docs in `docs/overview/` first, then the docs for the area being changed. Read the files directly; do not start the docs site to read them.
+- **Check each doc's Status.** `Decided` is settled. `Current plan` may change. `Under evaluation` and `Not started` are **not decisions** — do not treat them as one and do not invent one. Ask.
+- **Never invent a product decision to unblock yourself.** If the docs do not answer it, stop and ask.
+- **Record a check only after it has run.** Never write a URL, commit, date or "passed" for a check that has not happened yet. Write what was decided, and add the result once it exists.
+- **Update the docs in the same change.** If a change makes a doc wrong, fix the doc and change its Updated date.
+- If the project has a `docsSite/`, do not edit it unless the task is about the docs viewer itself.
 
 <!-- code-standards:end -->
 

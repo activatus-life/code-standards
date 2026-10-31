@@ -61,7 +61,7 @@ Applies setup standards 7, 9 and 10. Three commits, in this order:
 1. **The config files.** Rename every config to `.mjs` ([why](/docs/Guides/setup#5-apply-the-standards)). Add `prettier.config.mjs` from the [Prettier page](/docs/Standards/prettier), with its `format` and `format:check` scripts, `.editorconfig`, `.nvmrc` and `.envrc`. Do not reformat anything yet.
 
    ```bash
-   pnpm add -D prettier prettier-plugin-tailwindcss
+   pnpm add -D prettier @ianvs/prettier-plugin-sort-imports prettier-plugin-tailwindcss
    ```
 
 2. **The reformat, on its own.** Run `pnpm format` and commit the result with nothing else in it. Every file changes, and none of it changes behaviour.
