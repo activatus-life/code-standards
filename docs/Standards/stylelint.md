@@ -5,7 +5,7 @@ sidebar_label: "Stylelint"
 
 # Stylelint Configuration
 
-Components are styled with [Tailwind CSS](/docs/Standards/styling), and Stylelint lints the CSS that is still written by hand — `globals.css` and any CSS Modules. Start from the config below that matches the project:
+Components are styled with [Tailwind CSS](/docs/Standards/styling), and Stylelint lints the CSS that is still written by hand — `globals.css` and any CSS Modules. **Every project with a `.css` or `.scss` file has Stylelint**, so a Tailwind project with only `globals.css` has it too. `pnpm standards:check` reports a missing `stylelint.config.mjs`. CSS in `vendor/` and `docsSite/` does not count. Start from the config below that matches the project:
 
 | Config                                  | Use when                                  |
 | --------------------------------------- | ----------------------------------------- |

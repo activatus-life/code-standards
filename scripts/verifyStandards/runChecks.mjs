@@ -44,7 +44,11 @@ export const runChecks = ({ projectDirectory }) => {
 			templatesDirectory,
 			packageVersion: readPackageVersion(),
 		}),
-		...checkConfigFiles({ projectDirectory, templatesDirectory }),
+		...checkConfigFiles({
+			projectDirectory,
+			templatesDirectory,
+			projectFiles,
+		}),
 		...checkRequiredFiles({ templatesDirectory, projectFiles }),
 		...checkConstants({ projectFiles }),
 		...checkStructure({ projectFiles }),

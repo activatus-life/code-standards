@@ -10,6 +10,10 @@ const ESLINT_TEMPLATE_NAMES = [
 	"nextjs",
 ];
 const STYLELINT_TEMPLATE_NAMES = ["css", "scss"];
+// Hand-written CSS. vendor/ is someone else's, and docsSite/ is the
+// standard template, ignored like it is by ESLint.
+const STYLESHEET_PATTERN = /\.(?:css|scss)$/;
+const NOT_HAND_WRITTEN_PATTERN = /(?:^|\/)(?:vendor|docsSite)\//;
 const FORMAT_SCRIPTS = {
 	format:
 		"git ls-files -z --cached --others --exclude-standard | xargs -0 prettier --write --ignore-unknown --no-error-on-unmatched-pattern",
@@ -163,14 +167,35 @@ const checkExactCopy = ({
 			];
 };
 
-const checkStylelint = ({ projectDirectory, templatesDirectory }) => {
+const hasHandWrittenCss = (projectFiles) =>
+	projectFiles.some(
+		(filePath) =>
+			STYLESHEET_PATTERN.test(filePath) &&
+			!NOT_HAND_WRITTEN_PATTERN.test(filePath),
+	);
+
+const checkStylelint = ({
+	projectDirectory,
+	templatesDirectory,
+	projectFiles,
+}) => {
 	const config = readTextFile({
 		projectDirectory,
 		filePath: "stylelint.config.mjs",
 	});
-	// Stylelint is only for projects with hand-written CSS.
+	// Stylelint is for projects with hand-written CSS, such as
+	// globals.css.
 	if (config === undefined) {
-		return [];
+		return hasHandWrittenCss(projectFiles)
+			? [
+					{
+						standard: "8",
+						message:
+							"stylelint.config.mjs is missing. The project has hand-written CSS, such as globals.css, so it needs Stylelint",
+						page: "docs/Standards/stylelint.md",
+					},
+				]
+			: [];
 	}
 	const isCopy = matchesAnyTemplate({
 		projectText: config,
@@ -193,6 +218,7 @@ const checkStylelint = ({ projectDirectory, templatesDirectory }) => {
 export const checkConfigFiles = ({
 	projectDirectory,
 	templatesDirectory,
+	projectFiles,
 }) => {
 	const nodeVersion = readTextFile({
 		projectDirectory,
@@ -201,7 +227,11 @@ export const checkConfigFiles = ({
 	return [
 		...checkEslint({ projectDirectory, templatesDirectory }),
 		...checkPrettier({ projectDirectory, templatesDirectory }),
-		...checkStylelint({ projectDirectory, templatesDirectory }),
+		...checkStylelint({
+			projectDirectory,
+			templatesDirectory,
+			projectFiles,
+		}),
 		...checkExactCopy({
 			projectDirectory,
 			templatesDirectory,

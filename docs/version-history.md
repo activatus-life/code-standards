@@ -70,9 +70,22 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.4
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.5
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.5.** If the project already applied 3.3.4, check these:
+
+- **`pnpm standards:check` now reports a missing Stylelint config.** Standard 8 covers all hand-written CSS, and a Tailwind `globals.css` is hand-written CSS, but the check only looked at `stylelint.config.mjs` when there was one. A project with a `.css` or `.scss` file outside `vendor/` and `docsSite/`, and no `stylelint.config.mjs`, now fails standard 8. See [Stylelint](/docs/Standards/stylelint).
+
+  **What to do:** if the project has no `stylelint.config.mjs`:
+
+  1. Install the packages from the [Stylelint page](/docs/Standards/stylelint#installation).
+  2. Copy `static/templates/stylelint/css/stylelint.config.mjs`, or the `scss` one for SCSS.
+  3. Add the `lint:css` and `lint:css:fix` scripts from the [Stylelint page](/docs/Standards/stylelint), run `pnpm lint:css`, and fix what it finds.
+  4. If `docs/development/coding-standards.md` says Stylelint was set up, check that it really was.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; `pnpm lint:css` passes.
 
 **Fixes in 3.3.4.** If the project already applied 3.3.3, check these:
 
