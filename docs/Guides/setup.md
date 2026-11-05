@@ -131,7 +131,7 @@ The list has nothing about branches or commit messages. Those are the project's 
 
 ## 4. Working with the agent
 
-Do this step every time, straight after step 3. Once the standards are agreed, offer the five [Working with Agents](/docs/Standards/working-with-agents) options. All five are optional: offer every one, every time, so the person can fill them in quickly and keep going.
+Do this step every time, straight after step 3. Once the standards are agreed, offer the six [Working with Agents](/docs/Standards/working-with-agents) options. All six are optional: offer every one, every time, so the person can fill them in quickly and keep going.
 
 First the **project links**. Find each one yourself, then ask the person to confirm it or say "None":
 
@@ -165,7 +165,15 @@ Would you like AI to tell you about each coding decision
 it makes that the code standards do not cover? Yes or no?
 ```
 
-**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. If they said yes to being told about decisions, write under **Decisions**: "Tell the person about each coding decision you make that the code standards do not cover, in the summary at the end of the task." If they said no, delete the Decisions line. Write all five answers in `docs/development/coding-standards.md`, under "Details", on one line, so a later update knows not to ask again: `- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no]; told about decisions [yes or no] ([date]).` See [Working with Agents](/docs/Standards/working-with-agents).
+Then **ship**. **Print this to the person exactly as it is written**:
+
+```text
+When you say "ship", should AI commit the change, push it and
+open a Pull Request that describes what changed and why?
+Yes or no?
+```
+
+**Record the answers** in the "Project workflow" section of `AGENTS.md`, from the template: each link they confirmed, and the status circles if they said yes. Delete the line for any link they said "None" to, and the status circles section if they said no. If they said yes to asking before committing, write under **Who commits**: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, write nothing about it: the agent uses its own judgement. If they said yes to being told about decisions, write under **Decisions**: "Tell the person about each coding decision you make that the code standards do not cover, in the summary at the end of the task." If they said no, delete the Decisions line. If they said yes to ship, write under **Ship**: "When the person says 'ship', commit the current change, push it, and open a Pull Request. 'Ship' is the yes for those three steps, for that change only. The Pull Request description says why the change was made, what changed, how it was checked, with the results, and what the reviewer should look at closely, and links the ticket." If they said no, delete the Ship line. Write all six answers in `docs/development/coding-standards.md`, under "Details", on one line, so a later update knows not to ask again: `- Working with the agent: GitHub repo [link or None]; Linear project [project or None]; status circles [yes or no]; ask before every commit and push [yes or no]; told about decisions [yes or no]; ship [yes or no] ([date]).` See [Working with Agents](/docs/Standards/working-with-agents).
 
 ## 5. Apply the standards
 
@@ -214,7 +222,7 @@ anything that is wrong.
 
 The project's `AGENTS.md` has the same full version as the installed package, such as 3.2.2. There are no version changes to make.
 
-1. **Check `docs/development/coding-standards.md`, under "Details",** for the [step 4](#4-working-with-the-agent) answers: the GitHub repo, the Linear project, the status circles, asking before committing and being told about decisions. Ask the person any that are not recorded, and record them as step 4 says.
+1. **Check `docs/development/coding-standards.md`, under "Details",** for the [step 4](#4-working-with-the-agent) answers: the GitHub repo, the Linear project, the status circles, asking before committing, being told about decisions and ship. Ask the person any that are not recorded, and record them as step 4 says.
 2. **Run the [standards check](#checking-a-project)**, and fix what it finds.
 3. **Tell the person** what you changed, or that the project was already up to date.
 
@@ -270,7 +278,7 @@ It reports, and never changes a file. Each finding gives the standard's number a
 | 6 to 10  | `eslint.config.mjs`, `prettier.config.mjs`, `stylelint.config.mjs`, `.editorconfig` and `.envrc` match the templates; `eslint.overrides.mjs`, `.nvmrc` and the format scripts are in place |
 | 12.1     | `lib/constants/` has `index.ts`, `routes.ts` and `strings.ts`, and no `unsortedValues.ts` is left waiting                                                                                  |
 | 13       | `components/` holds only `ui/`, `layout/` and `shared/`, every sub-component sits flat in its root component's `components/` folder, and the homepage is in `app/(homepage)/`              |
-| 21       | `docs/development/coding-standards.md` records the five agent answers under "Details", and every numbered line there is a well-formed exception                                            |
+| 21       | `docs/development/coding-standards.md` records the six agent answers under "Details", and every numbered line there is a well-formed exception                                             |
 | 11       | `docs/design/design-system.md` has a filled-in Colour palette table                                                                                                                        |
 | 15       | Every `components/ui/` component is on the Design System Components list, or recorded under "Components for the standards"                                                                 |
 | 4        | Every file that exports a function or component has a test file beside it                                                                                                                  |

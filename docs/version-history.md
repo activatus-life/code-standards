@@ -70,9 +70,28 @@ Anyone changing the standards adds a version, alongside the change:
 
 ## Version 3
 
-**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.6
+**Released:** 2026-10-17 · **Updates from:** version 2 · **Latest:** 3.3.7
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
+
+**Fixes in 3.3.7.** If the project already applied 3.3.6, check these:
+
+- **A new word, "ship", and a sixth setup question.** "Ship" means: commit the current change, push it, and open a Pull Request whose description says why the change was made, what changed, how it was checked, with the results, and what the reviewer should look at closely, and links the ticket. It is the yes for those three steps, for that one change only. It is a project workflow choice, not a code standard, so setup now asks it in [step 4](/docs/Guides/setup#4-working-with-the-agent) beside the other five, and `pnpm standards:check` reports a project whose answers do not include it. See [Ship](/docs/Standards/working-with-agents#ship) and the [ontology](/docs/ontology).
+
+  **What to do:**
+
+  1. **Print this to the person exactly as it is written**:
+
+     ```text
+     When you say "ship", should AI commit the change, push it and
+     open a Pull Request that describes what changed and why?
+     Yes or no?
+     ```
+
+  2. If they say yes, add the **Ship** line from the `AGENTS.md` template to the project's Project workflow section, filled in as setup step 4 says.
+  3. Add `ship [yes or no]` to the "Working with the agent" line under "Details" in `docs/development/coding-standards.md`, before the date.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; the "Working with the agent" line records ship; if the answer was yes, `AGENTS.md` has a Ship line under Project workflow.
 
 **Fixes in 3.3.6.** If the project already applied 3.3.5, check these:
 

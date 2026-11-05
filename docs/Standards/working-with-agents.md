@@ -5,7 +5,7 @@ sidebar_label: "Working with Agents"
 
 # Working with Agents
 
-> How an AI agent links a project's work, reports on it, asks before committing and tells the person about its decisions. The GitHub repo, the Linear project, the status circles, asking before every commit and push, and being told about decisions are all optional. [Setup](/docs/Guides/setup#4-working-with-the-agent) offers all five every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
+> How an AI agent links a project's work, reports on it, asks before committing, tells the person about its decisions and ships a change. The GitHub repo, the Linear project, the status circles, asking before every commit and push, being told about decisions and ship are all optional. [Setup](/docs/Guides/setup#4-working-with-the-agent) offers all six every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
 
 Whatever the project chooses is written into the **Project workflow** section of its `AGENTS.md`, from the [template](/docs/templates#agents), so every agent in the project follows it.
 
@@ -49,3 +49,18 @@ Optional. Setup asks: "Would you like AI to ask you before every commit and push
 ## Told about decisions
 
 Optional. Setup asks: "Would you like AI to tell you about each coding decision it makes that the code standards do not cover?" The code standards are the base, and the agent builds freely from them, so it makes many calls of its own. A person who reads the code may want to hear each one; a person who does not may not care. A yes is written under **Decisions** in Project workflow: the agent lists each such decision in its summary at the end of the task. A no means nothing is written, and the agent decides without reporting.
+
+## Ship
+
+Optional. Setup asks: "When you say 'ship', should AI commit the change, push it and open a Pull Request that describes what changed and why?" It is a project workflow choice, not a code standard. A yes is written under **Ship** in Project workflow. When the person says "ship", the agent:
+
+1. **Commits the current change**, with the project's commit message format.
+2. **Pushes it** to its branch.
+3. **Opens a Pull Request** whose description a reviewer can work from without asking:
+   - **Why:** the problem or ticket the change answers.
+   - **What changed:** each change, by area or file, in plain words.
+   - **How it was checked:** the commands run and their results, and anything tested by hand.
+   - **Look closely at:** anything risky, unfinished or worth a second opinion. "Nothing" if there is nothing.
+   - **The ticket**, linked, when there is one.
+
+**"Ship" is the yes for those three steps, for the change in hand only.** It never carries over to the next change. A project that asks before every commit and push still does: "ship" is that yes. A no means the Ship line is deleted, and the person asks for each step themselves.

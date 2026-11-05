@@ -61,7 +61,7 @@ const isLintCurrent = outdatedLintPackages.length === 0;
 console.log(
 	isLintCurrent
 		? "✓ Lint packages are the latest, as a project installs them"
-		: `✗ Lint packages are behind what a project installs. Run pnpm add -D ${LINT_PACKAGES.join(" ")} --latest, then check again:\n  ${outdatedLintPackages.join("\n  ")}`,
+		: `✗ Lint packages are behind what a project installs. Run pnpm update --latest ${LINT_PACKAGES.join(" ")}, then check again:\n  ${outdatedLintPackages.join("\n  ")}`,
 );
 
 const failedSteps = STEPS.filter((step) => {
