@@ -43,6 +43,7 @@
 
 - **Who commits**: [whether AI agents may commit, push or make branches, and when. If the person said yes to asking before committing during setup: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, leave the asking rule out]
 - **Decisions**: [Optional. If the person said yes to being told about decisions during setup: "Tell the person about each coding decision you make that the code standards do not cover, in the summary at the end of the task." Delete this line if they said no]
+- **Ship**: [Optional. If the person said yes to ship during setup: "When the person says 'ship', commit the current change, push it, and open a Pull Request. 'Ship' is the yes for those three steps, for that change only. The Pull Request description says why the change was made, what changed, how it was checked, with the results, and what the reviewer should look at closely, and links the ticket." Delete this line if they said no]
 - **Branches**: [how branches are named]
 - **Commit messages**: [the commit message format]
 - **Pull requests**: [review and CI requirements, and where Pull Requests merge to]
