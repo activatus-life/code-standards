@@ -29,7 +29,7 @@ export const Button = () => {
 
 **Build every layout with flexbox.** Reach for `flex` first, and split the layout into child components so each one styles only itself.
 
-**Only use CSS grid when it is specifically asked for.**
+**Use CSS grid only when it is genuinely the better tool — and say so when you do.** It is rare: almost everything is a one-dimensional run of boxes, and flexbox aligns it. When a layout is genuinely two-dimensional — a card grid, an aligned table of panels — use grid, and tell the person why grid fits this case. **The [Card Grid](/docs/design-system-components#cta-forms) Design System Component is the standing exception**: when the design asks for a Card Grid, that is the ask, and it uses grid.
 
 ### ✅ Flex parent, child components
 
@@ -96,13 +96,13 @@ export const PageHeader = () => {
 - **The parent positions, the child styles itself.** A parent sets direction, spacing and alignment. Each child component owns its own padding, colour and typography.
 - **Split into child components** rather than growing one long `className` or a deep tree of `div`s. Each child gets [its own folder](/docs/Structure/component-organization#nested-components).
 - **Space with `gap`**, not margins on the children.
-- **Grid only when asked.** Do not choose CSS grid on your own — use it only when the task specifically asks for a grid.
+- **Grid only when it is the better tool.** Flexbox covers almost every layout. Use CSS grid when the layout is genuinely two-dimensional — a card grid, an aligned table of panels — and flag the choice: tell the person grid fits this case, or leave a comment saying why.
 
 ---
 
 ## ❌ Avoid These
 
-- ❌ **CSS grid**, unless it was specifically asked for
+- ❌ **CSS grid for a one-dimensional run of boxes** — flexbox aligns it; grid only when the layout is genuinely two-dimensional, with the choice flagged
 
 - ❌ **Hard-coded colours** — hex, `rgb()` or named colours anywhere outside the theme
 - ❌ **Arbitrary colour values** (`bg-[#3b82f6]`) — if the colour is not in the palette, it is not used
@@ -192,7 +192,7 @@ Tailwind's built-in colours are variables too — `white` is `var(--color-white)
 ### Tailwind utilities
 
 - **Use for**: All component styling
-- **Layout**: Flexbox first; grid only when specifically asked
+- **Layout**: Flexbox first; grid when it is genuinely the better tool, flagged to the person
 - **Colours**: Global palette only — Tailwind colours and project colours from `@theme` — never arbitrary values
 - **Long class lists**: Extract a component, not a CSS class
 - **Conditional classes**: Use `clsx`

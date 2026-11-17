@@ -74,6 +74,12 @@ Anyone changing the standards adds a version, alongside the change:
 
 Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 first: it says which parts of the project's `AGENTS.md` are now the project's own to write.
 
+## Version 3.3.8 — not released yet
+
+Do not apply this version yet. Changes are added to it over time.
+
+- **A second package in the repo.** The standards and `pnpm standards:check` only look at the project root, so a second package — a Cloudflare Worker beside the app, a second app in a monorepo — is uncharted. A future version says when a repo carries a second package, what follows the standards and what gets a recorded exception. Requested by a project whose repo carries a worker beside the app.
+
 **Fixes in 3.3.7.** If the project already applied 3.3.6, check these:
 
 - **A new word, "ship", and a sixth setup question.** "Ship" means: commit the current change, push it, and open a Pull Request whose description says why the change was made, what changed, how it was checked, with the results, and what the reviewer should look at closely, and links the ticket. It is the yes for those three steps, for that one change only. It is a project workflow choice, not a code standard, so setup now asks it in [step 4](/docs/Guides/setup#4-working-with-the-agent) beside the other five, and `pnpm standards:check` reports a project whose answers do not include it. See [Ship](/docs/Standards/working-with-agents#ship) and the [ontology](/docs/ontology).
@@ -124,7 +130,23 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
   3. If they say yes, add the **Response format** section from the template to the project's Project workflow section, filled in as setup step 4 says.
   4. Add `response format [yes or no]` to the "Working with the agent" line under "Details" in `docs/development/coding-standards.md`, before the date.
 
-**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; the "Working with the agent" line records ship and the response format; if the answer was yes, `AGENTS.md` has a Ship line and a Response format section under Project workflow; generated files live in `vendor/` and their imports work; every hook sits at its ladder spot; every handler is a named export; any standalone Select is rebuilt or recorded.
+- **The version contradictions are fixed.** The Tech Stack page said "Linting: ESLint 9+" while the standard config needs ESLint 10.4 or later, and said "TypeScript 7" in its stack list while its version requirements said "5.0+". Both now agree. **What to do:** nothing — this fixes the site's words, not any config a project copies.
+
+- **TypeScript is "latest stable", not a pinned major.** The stack said "TypeScript 7", which read as a mandate for a major the linting ecosystem had not caught up with. Now said: **a project uses the latest stable TypeScript** — 7 at the time of writing — and moves up when a new major ships and its tooling has caught up. A project that stays on an older major records it as an exception with the reason. **What to do:** nothing, if the project is on the latest stable that its tooling supports. If it is on an older major on purpose, record the exception; if it can move up, do.
+
+- **Grid is allowed when it is genuinely better — flagged.** The rule was "only use CSS grid when it is specifically asked for", which read as a ban, but some layouts are genuinely two-dimensional and grid is the right tool for them. Now said: **flexbox first, always; use grid when the layout is genuinely two-dimensional — a card grid, an aligned table of panels — and say so when you do**, to the person or in a comment. The [Card Grid](/docs/design-system-components#cta-forms) Design System Component is the standing exception: a design that asks for one is the ask. See [Layout: Flexbox First](/docs/Standards/styling#-layout-flexbox-first).
+
+  **What to do:** nothing — this loosens the rule, so no project has anything to unwind. The `AGENTS.md` copy from an earlier change carries the new wording into the project.
+
+- **A new standard, 17.1: the sitemap travels with the routes.** A project with public pages keeps `app/sitemap.ts` in sync as it routes: a public page added, renamed or removed changes the sitemap in the same change, never as a cleanup at the end. Public pages only — pages behind sign-in, API routes and redirecting handlers are not listed. A project with no public pages has no sitemap until the first one arrives. See [The sitemap travels with the routes](/docs/Structure/api-routes#sitemap).
+
+  **What to do:** if the project has public pages, check `app/sitemap.ts` exists and lists every one of them; build or complete it if not. If it has none, nothing. The `AGENTS.md` copy from an earlier change carries the rule into the project.
+
+- **Setup asks about Biome when the project already has it.** A project that already lints or formats with Biome is asked at setup: keep Biome, or move to the standards' ESLint and Prettier? Keeping it is recorded as `6. ESLint — skipped` and `7. Prettier — skipped`, with the reason, and it runs by its own setup — the standards ship no Biome config. A project with no Biome gets no question: it uses ours. See [Agree the standards](/docs/Guides/setup#3-agree-the-standards).
+
+  **What to do:** for a project set up before this version that uses Biome, check the two exception lines are recorded in `docs/development/coding-standards.md`; ask and record them if not. Every other project: nothing.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; the "Working with the agent" line records ship and the response format; if the answer was yes, `AGENTS.md` has a Ship line and a Response format section under Project workflow; generated files live in `vendor/` and their imports work; every hook sits at its ladder spot; every handler is a named export; any standalone Select is rebuilt or recorded; a project with public pages has an `app/sitemap.ts` that lists them.
 
 **Fixes in 3.3.6.** If the project already applied 3.3.5, check these:
 
