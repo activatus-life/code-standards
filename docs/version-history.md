@@ -91,7 +91,40 @@ Install it with `pnpm add -D @activatus/code-standards@latest`. Do change 1 firs
   2. If they say yes, add the **Ship** line from the `AGENTS.md` template to the project's Project workflow section, filled in as setup step 4 says.
   3. Add `ship [yes or no]` to the "Working with the agent" line under "Details" in `docs/development/coding-standards.md`, before the date.
 
-**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; the "Working with the agent" line records ship; if the answer was yes, `AGENTS.md` has a Ship line under Project workflow.
+- **Generated code has a home in `vendor/`, and AI-written code is ours.** `vendor/` was described as only for third-party code. A file a tool generates and replaces wholesale — such as the database types the Supabase CLI rewrites after every migration — is not ours either: nobody hand-edits it, and the next run of the tool replaces it. It now lives in `vendor/`, at any level, and is never linted, by the same `**/vendor/**` ignore that was already in every config. The other side is now written down too: **code an AI agent writes is our code**, and so is a script we write to drive a tool, such as a database migration — every standard applies to both. See [Third-party code is exempt](/docs/Standards/eslint#third-party-code-is-exempt).
+
+  **What to do:** find files a tool generates that the project keeps outside `vendor/` (search for the file the project's tool rewrites, such as a `database.types.ts`), move them into `vendor/`, and fix their imports. Check nothing hand-written went with them: a file with our edits in it is ours and comes back out. Then copy the `AGENTS.md` template over the project's `AGENTS.md`, keeping the project's own sections, and re-record any answers in the Project workflow section.
+
+- **Custom hooks follow the utils ladder.** The standards said where utils live at every level — global, section, component — and where components live, but never said where hooks go beyond a root `hooks/` folder, so every hook placement was a guess. Now said: **a hook follows the same ladder as a util.** It starts in the component's `hooks/`, moves to the section's `hooks/` when another component in the section needs it, and moves to the global `hooks/` when anything outside the section needs it. One folder per hook, named after it, with its test and an `index.ts`. See [Hooks live the same way](/docs/Structure/folder-structure#hooks-live-the-same-way).
+
+  **What to do:** if the project already keeps hooks at section or component level, nothing — that placement is now the rule, not an accident. Record nothing. A hook sitting loose in a component file or in a guessed folder moves to the ladder spot its users say. The `AGENTS.md` copy from the previous change carries the rule into the project.
+
+- **Route handlers outside `app/api/` are covered.** The standards only described handlers under `app/api/`, but Next.js gives every `route.ts` in `app/` a URL, so a project's auth callback — a URL the identity provider sends the browser back to, which reads the result and redirects on — was uncharted. Now said: a handler that returns JSON belongs under `app/api/`; a handler that redirects belongs at the URL the outside world already expects. Same rules apply there, handlers are **named exports** (`export async function GET`), never a default export, and their helpers follow the utils ladder. See [Route handlers outside `app/api/`](/docs/Structure/api-routes#-route-handlers-outside-appapi).
+
+  **What to do:** nothing, if the project's handlers already use named exports. Check any handler outside `app/api/` for a default export and convert it. Check its helpers are not sitting in the handler file itself.
+
+- **There is no Select component.** The Design System Components list has Input with `type: select` in its variants, but nothing said so in words, and a project built Select as its own component, duplicating Input's name, label, help text, validation and error states. Now said in words under the list: **a field where the person picks one option from a list is an Input with `type: select`** (or `dropdown` or `auto-select`), with the choices passed through its `options` prop. Never a standalone component.
+
+  **What to do:** if the project built a standalone Select, rebuild it as an Input type, or record it as a deliberate exception in `docs/development/coding-standards.md` under "Details". The `AGENTS.md` copy from the previous change carries the rule into the project.
+
+- **A seventh, optional question: the response format.** Like ship, this is a project workflow choice, not a code standard, so setup asks it in [step 4](/docs/Guides/setup#4-working-with-the-agent) beside the other six. A yes writes a **Response format** section into the project's `AGENTS.md`: every substantive reply — anything with findings, results, options or a plan — opens with the status line, then an overview, names each problem plainly, puts results in tables, gives fixes as numbered steps, and closes with the next action as a question. A plain yes or no stays plain. `pnpm standards:check` reports a project whose recorded answers do not include it, and the setup guide's update flow asks any answer that is not recorded. See [Setup, step 4](/docs/Guides/setup#4-working-with-the-agent).
+
+  **What to do:**
+
+  1. Copy the `AGENTS.md` template over the project's `AGENTS.md`, keeping the project's own sections.
+  2. **Print this to the person exactly as it is written**:
+
+     ```text
+     Response format (optional). Want the agent to answer with a
+     status line, an overview, problems named, results in tables,
+     numbered fixes, and the next action as a question?
+     Yes or no?
+     ```
+
+  3. If they say yes, add the **Response format** section from the template to the project's Project workflow section, filled in as setup step 4 says.
+  4. Add `response format [yes or no]` to the "Working with the agent" line under "Details" in `docs/development/coding-standards.md`, before the date.
+
+**How to check:** `pnpm standards:check` passes, or lists only recorded exceptions; the "Working with the agent" line records ship and the response format; if the answer was yes, `AGENTS.md` has a Ship line and a Response format section under Project workflow; generated files live in `vendor/` and their imports work; every hook sits at its ladder spot; every handler is a named export; any standalone Select is rebuilt or recorded.
 
 **Fixes in 3.3.6.** If the project already applied 3.3.5, check these:
 

@@ -87,7 +87,7 @@ project-root/
 │   │   ├── formatDate.test.ts
 │   │   └── index.ts
 │   └── index.ts                                     # Exports every function
-├── hooks/                                           # Custom React hooks
+├── hooks/                                           # Custom React hooks used across the app
 ├── services/                                        # Business logic: what the app does
 ├── stores/                                          # State management stores
 ├── styles/                                          # Global styles
@@ -295,6 +295,18 @@ Add the export to `utils/index.ts` whenever you add a function.
 - **Every function has a test file** in the same folder. See [Readable Code](/docs/Standards/readable-code#every-function-and-component-has-a-test-file).
 - **Import from the `utils` folder**, never from the files inside it.
 - **Keep UI files clean.** If a function could be written in another file, it does not belong in the component file. See [Writing a component](/docs/Structure/component-organization#-writing-a-component).
+
+### Hooks live the same way {#hooks-live-the-same-way}
+
+**A custom hook follows the same ladder as a util.** It starts in the component's `hooks/`, moves to the section's `hooks/` when another component in the section needs it, and moves to the global `hooks/` folder at the project root when anything outside the section needs it:
+
+| Used by       | Location                                         | Example                                                          |
+| ------------- | ------------------------------------------------ | ---------------------------------------------------------------- |
+| The whole app | Global `hooks/` folder at the project root       | `hooks/useMediaQuery/`                                           |
+| One section   | A `hooks/` folder in that section's route group  | `app/(billing)/hooks/useInvoiceTotals/`                          |
+| One component | A `hooks/` folder inside that component's folder | `app/(billing)/components/invoiceTable/hooks/useSortedInvoices/` |
+
+The folder shape is the same too: **one folder per hook**, named after it (`useUserData/useUserData.ts`), with the hook, its test file and an `index.ts`, and an `index.ts` in the `hooks/` folder that exports them all. A hook used by more than one component, or that wraps stateful logic a component should not hold itself, goes in a `hooks/` folder from the start, never inside the component file.
 
 ---
 

@@ -5,7 +5,7 @@ sidebar_label: "Working with Agents"
 
 # Working with Agents
 
-> How an AI agent links a project's work, reports on it, asks before committing, tells the person about its decisions and ships a change. The GitHub repo, the Linear project, the status circles, asking before every commit and push, being told about decisions and ship are all optional. [Setup](/docs/Guides/setup#4-working-with-the-agent) offers all six every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
+> How an AI agent links a project's work, reports on it, asks before committing, tells the person about its decisions, ships a change and answers in a readable shape. The GitHub repo, the Linear project, the status circles, asking before every commit and push, being told about decisions, ship and the response format are all optional. [Setup](/docs/Guides/setup#4-working-with-the-agent) offers all seven every time, so they take a moment to fill in, and a project can leave out any of them. They work the same with Claude Code, ChatGPT, Codex or any agent that reads `AGENTS.md`.
 
 Whatever the project chooses is written into the **Project workflow** section of its `AGENTS.md`, from the [template](/docs/templates#agents), so every agent in the project follows it.
 
@@ -64,3 +64,37 @@ Optional. Setup asks: "When you say 'ship', should AI commit the change, push it
    - **The ticket**, linked, when there is one.
 
 **"Ship" is the yes for those three steps, for the change in hand only.** It never carries over to the next change. A project that asks before every commit and push still does: "ship" is that yes. A no means the Ship line is deleted, and the person asks for each step themselves.
+
+## Response format
+
+Optional. Setup asks: "Want the agent to answer with a clear structure — a short overview of the problem, results in tables, numbered action steps, and what it needs from you next?" A yes is written as the **Response format** section in Project workflow. Then every substantive reply — anything with findings, results, options or a plan — follows the same shape, and a plain yes or no stays plain:
+
+1. **The status line first**, when status circles are on: where the work is up to.
+2. **An overview** — what happened or what was found, in a line or two.
+3. **Each problem plainly** — what is wrong and why it matters.
+4. **Results in tables** — one row per item.
+5. **"How to fix it" as numbered steps.**
+6. **The next action as a question.**
+
+Emojis are welcome where they make the reply quicker to read — a ✅/❌ per row in a results table, 🎉 when something lands. The seven status circles appear only on a status line, never as decoration: a ✅/❌ tick in a results table marks pass and fail, not the circle's status meaning.
+
+```md title="A reply in the response format"
+🟣 Response format: template, setup and docs done; the checker is left.
+
+I added the response format as a setup choice, like status circles. One problem: the recorded-answers check only knows six answers, so `standards:check` would pass a project that said yes without the answer recorded.
+
+| File | Result |
+| --- | --- |
+| AGENTS.md template | ✅ Response format section added |
+| Setup step 4 | ✅ Seventh offer added |
+| working-with-agents.md | ✅ This section |
+| checkRecordedAnswers.mjs | ❌ Missing the seventh answer |
+
+How to fix it:
+
+1. Add the response format to the checker's list of answers.
+2. Update the checker's test to expect seven answers.
+3. Run the tests and `pnpm standards:check`.
+
+Want me to finish the checker now?
+```

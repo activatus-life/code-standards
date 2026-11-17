@@ -1000,24 +1000,30 @@ Add scripts to `package.json`:
 
 ## Third-party code is exempt
 
-**The standards apply to code we write. They do not apply to packages we pull in.**
+**The standards apply to code we write. They do not apply to packages we pull in, or to files a tool generates and replaces wholesale.**
 
-| Code                                              | Linted?                              |
-| ------------------------------------------------- | ------------------------------------ |
-| Our own code                                      | ✅ Yes — every rule applies          |
-| `node_modules/`                                   | ❌ No — ESLint ignores it by default |
-| `vendor/` (third-party code copied into the repo) | ❌ No — ignored by the config        |
-| Build output (`dist/`, `build/`, `.next/`)        | ❌ No — ignored by the config        |
+| Code                                                    | Linted?                              |
+| ------------------------------------------------------- | ------------------------------------ |
+| Our own code                                            | ✅ Yes — every rule applies          |
+| `node_modules/`                                         | ❌ No — ESLint ignores it by default |
+| `vendor/` (third-party or generated code we never edit) | ❌ No — ignored by the config        |
+| Build output (`dist/`, `build/`, `.next/`)              | ❌ No — ignored by the config        |
 
 Third-party code that is copied into the repository lives in a `vendor/` folder, at any level. The configs ignore `**/vendor/**`, so it is never linted.
 
-- **Do not fix lint errors in third-party code.** It is not ours, and the fix would be lost on the next update.
+**Generated code lives in `vendor/` too.** A file a tool writes and rewrites is not ours any more than a copied-in package: nobody hand-edits it, and it is replaced wholesale each time it changes. The main case is **database types a CLI regenerates**, such as the Supabase types rewritten after every migration. They live in `vendor/`, at any level, and are never linted.
+
+- **Do not fix lint errors in third-party or generated code.** It is not ours, and the fix would be lost the next time the tool runs.
 - **Do not rename or restructure it** to match our naming or folder rules.
 - **Do not add `eslint-disable` comments to it.** Put it in `vendor/` instead.
 
+### Code an AI agent writes is ours
+
+**Who wrote the code does not matter — whether they edit it does.** Code an AI agent generates is our code, and every standard applies to it. The same goes for a script we write to drive a tool, such as a database migration or a seed script: we write it, we read it, we maintain it, so it is linted and held to the standards like any other file.
+
 ### Copied-in code we maintain is ours
 
-`vendor/` is only for third-party code we **do not change** — code that is replaced wholesale when the package updates.
+`vendor/` is only for code we **do not change** — third-party code copied in, and generated files the tool replaces wholesale.
 
 Code that is copied into the project and then **owned and edited by us** is our code, and every standard applies to it. The main case is **shadcn/ui**: the CLI copies component source into the project, and from then on it is ours. It is converted to our standards and lives in `components/ui/`, never in `vendor/`. See [Adding a shadcn component](/docs/Guides/component-library-workflow#adding-a-shadcn-component).
 
@@ -1025,6 +1031,9 @@ Code that is copied into the project and then **owned and edited by us** is our 
 | --------------------------------------------------------- | ------- | ------------------------------------------ |
 | A package installed with `pnpm add`                       | No      | No                                         |
 | Third-party code copied in and left untouched (`vendor/`) | No      | No                                         |
+| Files a tool regenerates (`vendor/`)                      | No      | No                                         |
+| Code an AI agent writes                                   | **Yes** | **Yes**                                    |
+| A script we write to drive a tool                         | **Yes** | **Yes**                                    |
 | shadcn components added with the CLI                      | **Yes** | **Yes — convert them when they are added** |
 | Code generated once and then edited by us                 | **Yes** | **Yes**                                    |
 
