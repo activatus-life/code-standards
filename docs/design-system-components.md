@@ -100,6 +100,8 @@ This applies to everyone building components, **including AI agents**.
 | 54  | **Button**                 | primary, secondary, ghost                           | link<br />size (small/medium/large)<br />icon<br />iconPosition<br />fullWidth (boolean)                   |
 | 55  | **Cookie Banner**          | —                                                   | text (richtext)<br />acceptLabel<br />rejectLabel<br />policyLink                                          |
 
+**There is no Select component.** A field where the person picks one option from a list is an **Input with `type: select`** (or `type: dropdown` or `type: auto-select`), with the choices passed through its `options` prop. Build it as an Input, never as a standalone component — a separate Select would duplicate Input's name, label, help text, validation and error states.
+
 ## Utility (low-level primitives)
 
 | #   | Component        | Variants                             | Key props                                                                       |

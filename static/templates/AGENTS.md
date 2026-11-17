@@ -43,6 +43,7 @@
 
 - **Who commits**: [whether AI agents may commit, push or make branches, and when. If the person said yes to asking before committing during setup: "Ask the person before every commit and push, and wait for a clear yes to that specific action. A yes covers one action only." If they said no, leave the asking rule out]
 - **Decisions**: [Optional. If the person said yes to being told about decisions during setup: "Tell the person about each coding decision you make that the code standards do not cover, in the summary at the end of the task." Delete this line if they said no]
+- **Ship**: [Optional. If the person said yes to ship during setup: "When the person says 'ship', commit the current change, push it, and open a Pull Request. 'Ship' is the yes for those three steps, for that change only. The Pull Request description says why the change was made, what changed, how it was checked, with the results, and what the reviewer should look at closely, and links the ticket." Delete this line if they said no]
 - **Branches**: [how branches are named]
 - **Commit messages**: [the commit message format]
 - **Pull requests**: [review and CI requirements, and where Pull Requests merge to]
@@ -73,6 +74,21 @@ Example: `🟢 [ABC-12](https://linear.app/[workspace]/issue/ABC-12) Short title
 - Every ticket ID links to its ticket, and every Pull Request number links to the Pull Request.
 - Work with no ticket is just the circle and a short title.
 - Only what the person needs to act on. Leave out what they already know.
+
+### Response format
+
+[Only if the person chose the response format during setup. Otherwise delete this section.]
+
+Answer every substantive reply — anything with findings, results, options or a plan — in this shape. A plain yes or no stays plain.
+
+1. **The status line first**, when status circles are on: where the work is up to, before anything else, in the format the Status circles section defines.
+2. **An overview** — one or two lines: what happened or what was found, before any detail.
+3. **Each problem named plainly** — what is wrong and why it matters, one per item, not buried in prose.
+4. **Results and comparisons in tables** — check results, before and after, options — one row per item.
+5. **"How to fix it" as numbered steps**, each concrete enough to action on its own.
+6. **The next action as a question**, so the person only has to answer it.
+
+**Emojis where they help, not everywhere.** Use them when they make the reply quicker to read than a slab of text — ✅/❌ per row in a results table, 🎉 when something lands, 🔧 for work in progress. The whole range is welcome; not every reply needs them. **Traffic-light circles are the exception:** the seven status circles (✅ 🟢 🟣 🟡 🟠 🔴 ⚪) carry one meaning each from the Status circles section and appear only on a status line. For flavour use other symbols. A ✅/❌ tick in a results table marks pass and fail, not the circle's status meaning — that is fine.
 
 ## Environment variables
 
@@ -138,6 +154,7 @@ Follow these rules in every change:
 - **A component's children sit flat in its own `components/` folder**, `accordion/components/item/` and `accordion/components/ctaArrow/`, even when one child is only used by another. Never a `components/` folder inside a child: two levels at most.
 - **Component file order**: imports, component, variables, state, `useMemo` values, `useCallback` functions, effects, render. No inline functions in render.
 - **Reusable functions live in a `utils/` folder** — global, section or component level — one folder per function, with an `index.ts`. A function that sorts, finds, gets, filters or formats the data passed to it goes in a `utils/` folder the first time it is written. Move a function up a level when a second user needs it.
+- **Custom hooks live in a `hooks/` folder the same way** — global, section or component level — one folder per hook, named after it, with its test and an `index.ts`. Move a hook up a level when a second user needs it. Never a hook inside the component file.
 - **Components live where they are used:** Design System Components in `components/ui/`, plus any props-only component not on the list yet, recorded under "Components for the standards" in `docs/development/coding-standards.md`; the site frame (navigation, header, footer) in `components/layout/`; the homepage's components in `app/(homepage)/components/`; components used on three or more pages in `components/shared/`; components used by three or more pages in one section in that section's route group (`app/(billing)/components/`); everything else in its page's `components/` folder. Start a new component beside its page. When a second page needs it, copy it there: one copy only, and each copy has a comment naming the other. When a third page needs it, merge the copies into one shared component, with props designed from all three uses. No `components/features/` folder.
 - **Code file names are camelCase**; component files are PascalCase. **Anything that becomes a URL is kebab-case**: route folders and documentation folders and files (`docs/architecture/background-jobs.md`). CSS variables are kebab-case too.
 - **Lay out with flexbox first**, and split layouts into child components. Only use CSS grid when specifically asked.
@@ -145,9 +162,9 @@ Follow these rules in every change:
 - **Comments explain why, not what.** Never leave commented-out code. Mark unfinished work with `// TODO: Message` (`{/* TODO: Message */}` in JSX).
 - **Error messages say what happened and what to do.**
 
-**Third-party code is exempt.** Code in `node_modules/` and `vendor/` belongs to someone else: do not lint it, do not reformat it, do not edit it to meet these rules.
+**Third-party and generated code is exempt.** Code in `node_modules/` and `vendor/` belongs to someone else: do not lint it, do not reformat it, do not edit it to meet these rules. **Files a tool generates and replaces wholesale** — such as database types the Supabase CLI rewrites after every migration — belong in `vendor/` too, never hand-edited. **Code an AI agent writes is ours**, and so is a script we write to drive a tool, such as a migration: every standard applies.
 
-**shadcn components are not third-party.** Code the shadcn CLI copies into the project is ours. Convert it to these standards in the same change that adds it — its own camelCase folder, one component per file, `types.ts`, `index.ts` and a test — keep only the parts that are used, and never put it in `vendor/`. **Do not change a component's props or behaviour** — only its styling. Components work identically in every Activatus project.
+**shadcn components are not third-party.** Code the shadcn CLI copies into the project is ours. Convert it to these standards in the same change that adds it — its own camelCase folder, one component per file, `types.ts`, `index.ts` and a test — keep only the parts that are used, and never put it in `vendor/`. **Do not change a component's props or behaviour** — only its styling. Components work identically in every Activatus project. **There is no Select component**: a pick-one-option field is an Input with `type: select`, through its `options` prop.
 
 **Look before you build a component.** Check the project's `components/ui/`, then the Design System Components in the code standards, then other Activatus projects, then shadcn. Build to the props listed in the Design System Components; never invent new prop names for a component that is already listed. A component in `components/ui/` takes everything through props and never imports from features, services, stores or `app/`.
 

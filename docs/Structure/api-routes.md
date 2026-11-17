@@ -100,6 +100,31 @@ app/api/
 
 ---
 
+## 🚪 Route handlers outside `app/api/`
+
+**A `route.ts` anywhere in `app/` is a route handler**, not just under `app/api/`. Next.js gives every `route.ts` the URL its folder path describes, so a handler lives outside `app/api/` when its URL is not an API endpoint but a page-shaped stop on the way somewhere else. The main case is an **auth callback**: a URL the identity provider sends the browser back to, which reads the result and redirects on, like `app/sign-in/confirm/route.ts` serving `/sign-in/confirm`.
+
+**The same rules apply outside `app/api/`**: kebab-case folders, the file is `route.ts`, and every other standard holds. A handler that returns JSON belongs under `app/api/`; a handler that redirects or rewrites belongs at the URL the outside world already expects, which is usually not under `app/api/`.
+
+### Named exports
+
+**Handlers are exported as named functions, never a default export.** Next.js wires the HTTP method by the export's name:
+
+```typescript
+// ✅ Correct — named export per HTTP method
+export async function GET(request: Request) { … }
+export async function POST(request: Request) { … }
+
+// ❌ Incorrect — a default export does nothing
+export default async function handler(request: Request) { … }
+```
+
+### Where a handler's helpers go
+
+Functions written for one route handler follow the [utils ladder](/docs/Structure/folder-structure#-utils): a helper only this handler uses goes in that section's `utils/` folder, and a helper used across the app goes in the global `utils/`. Code that talks to an outside service goes in `lib/integrations/`, never in the handler file itself.
+
+---
+
 ## 🔒 Security Best Practices
 
 - **Validate input** - Use Zod schemas
