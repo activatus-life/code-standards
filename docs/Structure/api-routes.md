@@ -136,6 +136,16 @@ Functions written for one route handler follow the [utils ladder](/docs/Structur
 
 ---
 
+## 🗺️ The sitemap travels with the routes {#sitemap}
+
+**A project with public pages keeps `app/sitemap.ts` in sync as it routes** — never as a cleanup at the end. When a public page is added, its URL goes into the sitemap in the same change; when one is renamed or removed, its line changes or goes in the same change. The sitemap is how search engines learn the pages exist, so a page that is routed but not listed is a page nobody is told about.
+
+- **Build it with the routing, not after it.** Adding the page and updating `app/sitemap.ts` is one change, not two.
+- **Public pages only.** Pages behind sign-in, API routes and route handlers that redirect are not listed.
+- **A project with no public pages has no sitemap**, and that is correct — build one the day the first public page arrives.
+
+---
+
 ## 📚 Related Documentation
 
 - [Folder Structure](/docs/Structure/folder-structure) - Overall project structure

@@ -11,13 +11,17 @@ Standard technology choices for Activatus projects.
 ## 📋 Standard Stack
 
 - **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript 7
+- **Language**: TypeScript, latest stable — 7 at the time of writing
 - **Package Manager**: pnpm (monorepo: workspaces)
 - **Styling**: Tailwind CSS
 - **Node Version**: `^22.11 || ^24 || >=26`
 - **Build Tool**: Turbopack (Next.js built-in)
 
-### TypeScript 7
+### The latest TypeScript
+
+**A project uses the latest stable TypeScript.** The standards do not pin a
+major: when a new one ships and the tooling around it has caught up, a project
+moves up. The notes below describe 7, the latest at the time of writing.
 
 TypeScript 7 is the compiler rewritten in Go. It is a drop-in replacement for
 the JavaScript implementation for compiling and type-checking, but two things
@@ -134,7 +138,7 @@ See `package.json` for specific version requirements. Key dependencies:
 
 ## 🔧 Development Tools
 
-- **Linting**: ESLint 9+
+- **Linting**: ESLint 10.4 or later — the standard config needs it
 - **Formatting**: Prettier
 - **Monorepo**: Turborepo
 - **Documentation**: Docusaurus
@@ -152,6 +156,6 @@ See `package.json` for specific version requirements. Key dependencies:
 
 ### TypeScript
 
-- **Version**: 5.0+
+- **Version**: the latest stable — 7 at the time of writing, run side by side with the TypeScript 6 API for linting until `typescript-eslint` supports 7 (see the [note on the ESLint page](/docs/Standards/eslint#installation))
 - **Strict Mode**: Enabled
 - **Target**: ES2022+

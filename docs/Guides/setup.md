@@ -92,6 +92,7 @@ Tell me the numbers to skip or change, or say "all good".
 15. Design System Components: every project builds the standard components with the same props
 16. Imports: no circular imports, import from folders not files
 17. API routes: one folder per route, kebab-case
+17.1. Sitemap: a project with public pages keeps app/sitemap.ts in sync as it routes
 18. Docs: every file in docs/ is a Decision Doc, shown at /docs by the docs site
 19. Removed in version 3: commit messages are the project's own workflow
 20. Removed in version 3: branch names are the project's own workflow
@@ -124,6 +125,8 @@ Then wait for the answer.
 ```
 
 **Every path after `for` goes in backticks**: a `for` with none fails the check, because it would otherwise cover every file. **Start no other line under "Details" with a number.** The [standards check](#checking-a-project) reads a line that starts with a number as an exception to that standard, and fails on one it cannot read. Use bullet points for anything else. If nothing is different, write "No differences". Copy the file from `static/templates/docs/development/coding-standards.md` if it does not exist.
+
+**Biome.** If the project already lints or formats with Biome, ask the person: keep Biome, or move to the standards' ESLint and Prettier? Keeping it is recorded as two exception lines, `6. ESLint — skipped` and `7. Prettier — skipped`, with the reason. A project that keeps Biome runs it by its own setup — the standards ship no Biome config. If the project has no Biome, use ours and ask nothing: do not offer Biome to a project that does not have it.
 
 The list has nothing about branches or commit messages. Those are the project's own workflow. Ask the person how they work, and write it in the "Project workflow" section of `AGENTS.md`. See [Project workflow](/docs/Standards/agent-specs#project-workflow).
 
